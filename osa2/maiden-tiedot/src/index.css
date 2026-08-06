@@ -1,0 +1,29 @@
+.country {
+  list-style: none;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-width: 400px;
+}
+
+.country button {
+  margin-left: 10px;
+  padding: 4px 8px;
+  cursor: pointer;
+  float:right;
+}
+
+.country-details {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border-top: 1px solid #ddd;
+}
+
+.country-details h2 {
+  margin-top: 0;
+}
+
+.country-details ul {
+  padding-left: 20px;
+}
