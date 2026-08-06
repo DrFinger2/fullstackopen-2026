@@ -1,6 +1,7 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Test from './utils/Test'
+import axios from 'axios'
 
 const Person = ({ person }) =>  (
   <li> {person.name} {person.number}</li>
@@ -25,12 +26,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSearch, setNewSearch] = useState('')
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([])
 
   const onValueSubmit = (e) => {
     e.preventDefault()
@@ -49,6 +45,18 @@ const App = () => {
     setNewName('')
     setNewPhone('')
   }
+
+  const hook = () => {
+    console.log("Effect");
+    axios.get("http://localhost:3001/persons")
+    .then(result => {
+      console.log("Promise fulfilled!");
+      const persons = result.data;
+      setPersons(persons);
+    })
+  }
+
+  useEffect(hook, []);
 
   const filteredPersons = newSearch.length === 0 
     ? persons 
