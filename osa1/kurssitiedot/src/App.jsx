@@ -13,7 +13,7 @@ const Part = (props) => {
 const Content = (props) => {
   return (
     <div>
-      { props.course.parts.map(part => <Part part={part}/>) }
+      { props.course.parts.map(part => <Part key={part.name} part={part}/>) }
     </div>
   );
 }
