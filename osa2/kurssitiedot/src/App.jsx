@@ -1,5 +1,4 @@
 import Course from './components/Course'
-import Header from './components/Header'
 
 const App = () => {
   const courses = [
@@ -52,10 +51,7 @@ const App = () => {
     <div>
       {
         courses.map((course) => (
-          <div key={course.id}>
-            <Header text={course.name}/>
-            <Course course={course}/>
-          </div>
+          <Course key={course.id} course={course}/>
         ))
       }
     </div>
