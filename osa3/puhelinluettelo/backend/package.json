@@ -6,8 +6,9 @@
   "author": "",
   "type": "commonjs",
   "main": "index.js",
+  
   "scripts": {
-    "build:render": "rm -rf dist && cd ../frontend/ && npm run build && cp -r dist ../backend",
+    "build:render": "rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend",
     "build:windows": "powershell -NoProfile -Command \"if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force\"",
     "start": "node index.js",
     "dev": "node --watch index.js",
