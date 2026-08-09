@@ -192,7 +192,7 @@ app.put('/api/persons/:id', (request, response) => {
     const id = request.params.id
     let { name, number } = request.body || {};
     
-    const person = persons.find(person => persons.id === id);
+    const person = persons.find(person => person.id === id);
     if (!person) {
         return response.status(404).json({ error: "Person not found!" });
     }
