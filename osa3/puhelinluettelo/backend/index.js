@@ -151,6 +151,8 @@ app.get('/api/persons/:id', (request, response) => {
 
 // 3. API Delete method
 app.delete('/api/persons/:id', (request, response) => {
+    console.log('DELETE HIT:', request.method, request.originalUrl);
+
     const id = request.params.id;
     const person = persons.find(person => person.id === id);
 
@@ -161,7 +163,6 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id);
     return response.status(204).end();
 });
-
 
 // 4. API post method
 app.post('/api/persons', (request, response) => {
