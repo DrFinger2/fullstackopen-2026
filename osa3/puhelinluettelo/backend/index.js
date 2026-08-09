@@ -221,8 +221,10 @@ app.put('/api/persons/:id', (request, response) => {
 
 
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
-    console.log(`API PERSONS: http://localhost:${PORT}/api/persons\n`);
+    console.log(`Host Address: ${HOST}`);
 });
 
