@@ -225,6 +225,6 @@ const HOST = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
-    console.log(`Host Address: ${HOST}`);
+    console.log(`Host Address: ${HOST}\n`);
 });
 
