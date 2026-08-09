@@ -61,8 +61,10 @@ let persons = [
 morgan.token(
     'test-token',
     request => {
-        if (request.method === 'POST') { return JSON.stringify(request.body);}
-        return '';
+        if (request.method === 'POST')
+            return JSON.stringify(request.body);
+        else
+            return '';
     }
 );
 morgan.format(
@@ -185,7 +187,7 @@ app.post('/api/persons', (request, response) => {
 })
 
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
     console.log(`API PERSONS: http://localhost:${PORT}/api/persons\n`);
