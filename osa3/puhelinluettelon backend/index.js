@@ -75,6 +75,7 @@ morgan.format(
 const app = express();
 app.use(express.json())
 app.use(morgan('test-format'));
+app.use(express.static('dist'));
 
 
 // 1. Helper methods
@@ -87,17 +88,20 @@ const generateId = () => {
 };
 
 
-const validateName = (name) => {
+const validateName = (name, id = null) => {
     if (name === undefined || name === null) {
         return { ok: false, error: 'Name is missing.' };
     }
+
     if (typeof name !== 'string') {
         return { ok: false, error: 'Name is in invalid format.' };
     }
+
     if (name.trim() === '') {
         return { ok: false, error: 'Name is missing.' };
     }
-    if (persons.some(person => person.name === name)) {
+
+    if (persons.some(person => person.name === name && person.id !== id)) {
         return { ok: false, error: 'Name must be unique.' };
     }
 
@@ -119,14 +123,9 @@ const validatePhoneNumber = (number) => {
 
 
 // 2. API GET methods
-app.get('/', (request, response) => {
-    return response.status(200).send('<h1>Home page</h1>');
-});
-
 app.get('/info', (request, response) => {
     const infoText = (persons.length === 0) ? 'Phonebook is empty.' : `Phonebook has info for ${persons.length} people.`;
     const requestTime = new Date().toLocaleString();
-
     response.status(200).send(
         `<h3>${infoText}</h3>
         <p><strong>Request time: </strong>${requestTime}</p>`);
@@ -146,6 +145,8 @@ app.get('/api/persons/:id', (request, response) => {
 
     return response.status(200).json(person);
 });
+
+
 
 // 3. API Delete method
 app.delete('/api/persons/:id', (request, response) => {
@@ -184,6 +185,38 @@ app.post('/api/persons', (request, response) => {
     };
     persons = persons.concat(person);
     return response.status(201).json(person);
+})
+
+// 5. API put method
+app.put('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    let { name, number } = request.body || {};
+    
+    const person = persons.find(person => persons.id === id);
+    if (!person) {
+        return response.status(404).json({ error: "Person not found!" });
+    }
+
+    name = formatName(name);
+    const nameResult = validateName(name, id);
+    if (!nameResult.ok) {
+        return response.status(400).json({ error: nameResult.error });
+    }
+
+    number = formatNumber(number);
+    const numberResult = validatePhoneNumber(number);
+    if (!numberResult.ok) {
+        return response.status(400).json({ error: numberResult.error });
+    }
+
+    const updatedPerson = {
+        id: person.id,
+        name: name,
+        number: number
+    };
+
+    persons = persons.map(person => person.id === id ? updatedPerson : person );
+    return response.status(200).json(updatedPerson);
 })
 
 
