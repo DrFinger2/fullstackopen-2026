@@ -57,6 +57,8 @@ let persons = [
     }
 ];
 
+const app = express();
+app.use(express.json())
 
 morgan.token(
     'test-token',
@@ -72,11 +74,8 @@ morgan.format(
     ':method :url :status :response-time ms :test-token'
 );
 
-const app = express();
-app.use(express.json())
 app.use(morgan('test-format'));
 app.use(express.static('dist'));
-
 
 // 1. Helper methods
 const generateId = () => {
