@@ -110,8 +110,8 @@ const App = () => {
       phoneService
       .remove(person.id)
       .then((removed) => {
-        phonebook.remove(removed.id)
-        notification.success(`Removed ${removed.name} from phonebook`)
+        phonebook.remove(person.id)
+        notification.success(`Removed ${person.name} from phonebook`)
       })
       .catch(error => {
         notification.error(`Person '${person.name}' has already been removed from server`)
