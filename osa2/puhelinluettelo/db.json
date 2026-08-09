@@ -4,11 +4,6 @@
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
-    },
-    {
-      "name": "Juri Auvinen",
-      "number": "0444004000",
-      "id": "jBtYg9yg89g"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
