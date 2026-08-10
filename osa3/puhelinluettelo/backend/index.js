@@ -148,30 +148,29 @@ const createRoute = (db) => ({
 
     postPerson: (request, response) => {
         let { name, number } = request.body || {};
-
-        name = formatName(name);
+        
         const nameResult = validateName(name);
         if (!nameResult.ok) {
             return response.status(400).json({ error: nameResult.error });
         }
 
-        number = formatNumber(number);
         const numberResult = validateNumber(number);
         if (!numberResult.ok) {
             return response.status(400).json({ error: numberResult.error });
         }
 
+        name = formatName(name);
+        number = formatNumber(number);
+
         db.nameExists(name).then(exists => {
             if (exists) {
                 return response.status(400).json({ error: 'Name must be unique.' });
             }
-
             const person = {
                 id: generateId(),
                 name: name,
                 number: number
             };
-
             return db.add(person).then(() => {
                 return response.status(201).json(person);
             });
@@ -192,17 +191,18 @@ const createRoute = (db) => ({
                     return response.status(404).json({ error: "Person not found!" });
                 }
 
-                name = formatName(name);
                 const nameResult = validateName(name);
                 if (!nameResult.ok) {
                     return response.status(400).json({ error: nameResult.error });
                 }
-
-                number = formatNumber(number);
+                
                 const numberResult = validateNumber(number);
                 if (!numberResult.ok) {
                     return response.status(400).json({ error: numberResult.error });
                 }
+                
+                name = formatName(name);
+                number = formatNumber(number);
 
                 return db.nameExists(name, id).then(exists => {
                     if (exists) {
