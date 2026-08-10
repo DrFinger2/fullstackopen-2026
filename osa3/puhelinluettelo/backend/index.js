@@ -12,8 +12,6 @@ const { formatName, formatNumber } = require('./utils/formatting.js');
 const { validateName, validateNumber } = require('./utils/validate.js');
 
 function main() {
-    const app = express();
-
     const port = (process.env.PORT || 3001);
     const address = (process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`);
     const username = 'fullstack';
@@ -23,39 +21,57 @@ function main() {
     console.log("password: ", password);
 
     const db = createDatabase(username, password)
-    db.connect()
-        .then(() => {
-            const route = createRoute(db);
-            morgan.token('test-token', request => {
-                if (request.method === 'POST') return JSON.stringify(request.body);
-                else return '';
-            });
 
-            morgan.format(
-                'test-format',
-                ':method :url :status :response-time ms :test-token'
-            );
+    // 1. Connect to DB first
+    db.connect().then(() => {
 
-            app.use(express.static('dist'));
-            app.use(express.json());
-            app.use(morgan('test-format'));
-
-            app.get('/info',                route.getInfo);
-            app.get('/api/persons',         route.getPersons);
-            app.get('/api/persons/:id',     route.getPerson);
-            app.delete('/api/persons/:id',  route.deletePerson);
-            app.post('/api/persons',        route.postPerson);
-            app.put('/api/persons/:id',     route.putPerson);
-
-            app.listen(port, '0.0.0.0', () => {
-                console.log(`Server running on port: ${port}`);
-                console.log(`Host Address: ${address}\n`);
-            });
-        })
-        .catch(error => {
-            console.error('MongoDB connection failed:');
-            console.error(error);
+        // 2. Setup Express & Middleware
+        const app = express();
+        const route = createRoute(db);
+        
+        morgan.token('test-token', request => {
+            if (request.method === 'POST') return JSON.stringify(request.body);
+            else return '';
         });
+
+        morgan.format(
+            'test-format',
+            ':method :url :status :response-time ms :test-token'
+        );
+
+        app.use(express.static('dist'));
+        app.use(express.json());
+        app.use(morgan('test-format'));
+
+        // 3. Register Routes
+        app.get('/info',                route.getInfo);
+        app.get('/api/persons',         route.getPersons);
+        app.get('/api/persons/:id',     route.getPerson);
+        app.delete('/api/persons/:id',  route.deletePerson);
+        app.post('/api/persons',        route.postPerson);
+        app.put('/api/persons/:id',     route.putPerson);
+
+        // 4. Start Server
+        app.listen(port, () => {
+            console.log(`Server running on port: ${port}`);
+            console.log(`Host Address: ${address}\n`);
+        });
+    
+        // 5. Shutdown
+        process.on('SIGINT', () => {
+            console.log('Shutting down...');
+            server.close(() => {
+                db.disconnect().then(() => {
+                    console.log('MongoDB connection closed');
+                    process.exit(0);
+                });
+            });
+        });
+    })
+    .catch(error => {
+        console.error('MongoDB connection failed:');
+        console.error(error);
+    });
     
 }
 
@@ -89,29 +105,29 @@ function createDatabase(username, password)
             mongoose.set('strictQuery',false)
             return mongoose.connect(url, { family: 4 })
         },
-        diconnect: () => {
-             return mongoose.connection.close();
+        disconnect: () => {
+            return mongoose.connection.close();
         },
         getAll: () => {
             return PersonModel.find({})
         },
         getById: (id) => {
-            return Promise.resolve(persons.find(person => person.id === id));
+            return PersonModel.findById(id);
         },
         getCount: () => {
-            return Promise.resolve(persons.length)
+            return PersonModel.countDocuments()
         },
         add: (person) => {
-            persons = persons.concat(person);
-            return Promise.resolve();
+            const newPerson = new PersonModel({name: person.name, number: person.number})
+            return newPerson.save();
         },
         remove: (id) => {
-            persons = persons.filter(person => person.id !== id);
-            return Promise.resolve();
+            return PersonModel.findByIdAndDelete(id);
         },
         update: (id, updatedPerson) => {
-            persons = persons.map(person => person.id === id ? updatedPerson : person);
-            return Promise.resolve();
+            return PersonModel.findByIdAndUpdate(id, result => {
+
+            });
         },
         idExists: (id) => {
             return Promise.resolve(persons.some(person => person.id === id));
