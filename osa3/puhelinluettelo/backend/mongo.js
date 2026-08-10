@@ -14,12 +14,10 @@ function main() {
     const args = process.argv;
     const argumentCount = args.length;
 
-    if (argumentCount < 3) {
-        console.log('give password as argument');
-        process.exit(1);
-    }
     if (argumentCount !== 3 && argumentCount !== 5) {
-        console.log('Invalid number of arguments');
+        console.log('Usage:');
+        console.log(' • node mongo.js <password>                            List all persons in the phonebook');
+        console.log(' • node mongo.js <password> <name> <phonenumber>       Add a new person to the phonebook');
         process.exit(1);
     }
 
