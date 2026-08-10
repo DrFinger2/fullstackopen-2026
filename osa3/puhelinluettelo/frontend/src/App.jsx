@@ -61,8 +61,7 @@ const App = () => {
   
   const notification = useNotification(3); 
   const phonebook = usePhonebook()
-  const phoneRegex = /^(?:0\d{2,3}[- ]?\d{5,8}|\+358\d{2,3}[- ]?\d{5,8})$/
-
+  const phoneRegex = /^\+?\d(?:[ -]?\d){6,}$/
   
   const onValueSubmit = (e) => {
     e.preventDefault()
@@ -89,9 +88,18 @@ const App = () => {
           setNewPhone('');
         })
         .catch(error => {
-          notification.error( `Person '${foundPerson.name}' has already been removed from server`)
-          phonebook.remove(foundPerson.id)
+          if (error.response && error.response.status === 404) {
+            notification.error(`Person '${foundPerson.name}' has already been removed from server`)
+            phonebook.remove(foundPerson.id)
+          }
+          else if (error.response && error.response.data && error.response.data.error) {
+            notification.error(error.response.data.error)
+          }
+          else {
+            notification.error('Something went wrong, please try again')
+          }
         })
+
       }
       return
     }
@@ -114,9 +122,18 @@ const App = () => {
         notification.success(`Removed ${person.name} from phonebook`)
       })
       .catch(error => {
-        notification.error(`Person '${person.name}' has already been removed from server`)
-        phonebook.remove(person.id)
+        if (error.response && error.response.status === 404) {
+          notification.error(`Person '${foundPerson.name}' has already been removed from server`)
+          phonebook.remove(foundPerson.id)
+        }
+        else if (error.response && error.response.data && error.response.data.error) {
+          notification.error(error.response.data.error)
+        }
+        else {
+          notification.error('Something went wrong, please try again')
+        }
       })
+
     }
   }
 
