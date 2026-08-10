@@ -21,36 +21,37 @@ function main() {
 
     console.log("username: ", username);
     console.log("password: ", password);
-    
+
     const db = createDatabase(username, password)
-    db.connect(() => {
-        const route = createRoute(db);
-        morgan.token('test-token', request => {
-            if (request.method === 'POST') return JSON.stringify(request.body);
-            else return '';
-        });
+    db.connect()
+        .then(() => {
+            const route = createRoute(db);
+            morgan.token('test-token', request => {
+                if (request.method === 'POST') return JSON.stringify(request.body);
+                else return '';
+            });
 
-        morgan.format(
-            'test-format',
-            ':method :url :status :response-time ms :test-token'
-        );
+            morgan.format(
+                'test-format',
+                ':method :url :status :response-time ms :test-token'
+            );
 
-        app.use(express.static('dist'));
-        app.use(express.json());
-        app.use(morgan('test-format'));
+            app.use(express.static('dist'));
+            app.use(express.json());
+            app.use(morgan('test-format'));
 
-        app.get('/info',                route.getInfo);
-        app.get('/api/persons',         route.getPersons);
-        app.get('/api/persons/:id',     route.getPerson);
-        app.delete('/api/persons/:id',  route.deletePerson);
-        app.post('/api/persons',        route.postPerson);
-        app.put('/api/persons/:id',     route.putPerson);
+            app.get('/info',                route.getInfo);
+            app.get('/api/persons',         route.getPersons);
+            app.get('/api/persons/:id',     route.getPerson);
+            app.delete('/api/persons/:id',  route.deletePerson);
+            app.post('/api/persons',        route.postPerson);
+            app.put('/api/persons/:id',     route.putPerson);
 
-        app.listen(port, '0.0.0.0', () => {
-            console.log(`Server running on port: ${port}`);
-            console.log(`Host Address: ${address}\n`);
-        });
-    })
+            app.listen(port, '0.0.0.0', () => {
+                console.log(`Server running on port: ${port}`);
+                console.log(`Host Address: ${address}\n`);
+            });
+        })
     
 }
 
