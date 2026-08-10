@@ -22,7 +22,7 @@ function main() {
         process.exit(1);
     }
 
-    const DATABASE = 'phonebook';
+    const DATABASE = 'people';
     const USERNAME = 'fullstack';
     const password = args[2];
     const url = `mongodb+srv://${USERNAME}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
@@ -45,7 +45,8 @@ function printPersons(url) {
             return PersonModel.find({})
         })
         .then(result => {
-            result.forEach(person => console.log(person));
+            console.log('Phonebook:');
+            result.forEach(person => console.log(`${person.name} ${person.number}`));
         })
         .catch(error => {
             console.log("Error: ", error);
@@ -57,7 +58,7 @@ function printPersons(url) {
 
 function addPerson(url, name, phoneNumber) {
     if (!name || !phoneNumber) {
-        console.log('Name and phone-number are required');
+        console.log('Name and phone number are required');
         process.exit(1);
     }
 
