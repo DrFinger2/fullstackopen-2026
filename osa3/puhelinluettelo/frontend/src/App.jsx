@@ -61,8 +61,7 @@ const App = () => {
   
   const notification = useNotification(3); 
   const phonebook = usePhonebook()
-  const phoneRegex = /^\+?\d(?:[ -]?\d){6,}$/
-  
+
   const onValueSubmit = (e) => {
     e.preventDefault()
 
@@ -72,10 +71,7 @@ const App = () => {
     if (!newPhone.length) {
       return notification.warning('Phone number field is empty')
     }
-    if (!phoneRegex.test(newPhone)) {
-      return notification.error(`Phone number '${newPhone}' is invalid`)
-    }
-
+    
     const foundPerson = phonebook.find(person => person.name === newName)
     if (foundPerson) {
       if (window.confirm(`Do you want to replace '${foundPerson.name}' phone number?`)) {
