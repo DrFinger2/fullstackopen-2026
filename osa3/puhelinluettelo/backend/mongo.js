@@ -15,9 +15,10 @@ function main() {
     const argumentCount = args.length;
 
     if (argumentCount !== 3 && argumentCount !== 5) {
+        console.log(`Invalid number of arguments: ${argumentCount}\n`);
         console.log('Usage:');
-        console.log(' • node mongo.js <password>                            List all persons in the phonebook');
-        console.log(' • node mongo.js <password> <name> <phonenumber>       Add a new person to the phonebook');
+        console.log(' • node mongo.js <password>                          - List all persons in the phonebook');
+        console.log(' • node mongo.js <password> <name> <phonenumber>     - Add a new person to the phonebook');
         process.exit(1);
     }
 
@@ -56,7 +57,7 @@ function printPersons(url) {
 
 function addPerson(url, name, phoneNumber) {
     if (!name || !phoneNumber) {
-        console.log('name and number are required');
+        console.log('Name and phone-number are required');
         process.exit(1);
     }
 
