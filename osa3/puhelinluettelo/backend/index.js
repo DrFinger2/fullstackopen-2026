@@ -150,7 +150,7 @@ const createRoute = (db) => ({
         let { name, number } = request.body || {};
 
         name = format.name(name);
-        const nameResult = validate.name(db, name);
+        const nameResult = validate.name(name);
         if (!nameResult.ok) {
             return response.status(400).json({ error: nameResult.error });
         }
@@ -161,20 +161,25 @@ const createRoute = (db) => ({
             return response.status(400).json({ error: numberResult.error });
         }
 
-        const person = {
-            id: generateId(),
-            name: name,
-            number: number
-        };
-            
-        db.add(person)
-            .then(() => {
-                return response.status(201).json(person)
-            })
-            .catch(err => {
-                console.error(err);
-                return response.status(500).json({ error: 'Internal server error' });
+        db.nameExists(name).then(exists => {
+            if (exists) {
+                return response.status(400).json({ error: 'Name must be unique.' });
+            }
+
+            const person = {
+                id: generateId(),
+                name: name,
+                number: number
+            };
+
+            return db.add(person).then(() => {
+                return response.status(201).json(person);
             });
+        })
+        .catch(err => {
+            console.error(err);
+            return response.status(500).json({ error: 'Internal server error' });
+        });
     },
 
     putPerson: (request, response) => {
@@ -188,7 +193,7 @@ const createRoute = (db) => ({
                 }
 
                 name = format.name(name);
-                const nameResult = validate.name(db, name, id);
+                const nameResult = validate.name(name);
                 if (!nameResult.ok) {
                     return response.status(400).json({ error: nameResult.error });
                 }
@@ -199,9 +204,20 @@ const createRoute = (db) => ({
                     return response.status(400).json({ error: numberResult.error });
                 }
 
-                const updatedPerson = { id, name, number };
-                return db.update(id, updatedPerson).then(() => {
-                    return response.status(200).json(updatedPerson);
+                return db.nameExists(name, id).then(exists => {
+                    if (exists) {
+                        return response.status(400).json({ error: 'Name must be unique.' });
+                    }
+
+                    const updatedPerson = {
+                        id: id,
+                        name: name,
+                        number: number
+                    };
+
+                    return db.update(id, updatedPerson).then(() => {
+                        return response.status(200).json(updatedPerson);
+                    });
                 });
             })
             .catch(err => {

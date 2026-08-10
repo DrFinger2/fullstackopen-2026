@@ -1,4 +1,4 @@
-const validateName = (db, name, id = null) => {
+const validateName = (name) => {
     if (name === undefined || name === null) {
         return { ok: false, error: 'Name is missing.' };
     }
@@ -7,9 +7,6 @@ const validateName = (db, name, id = null) => {
     }
     if (name.trim() === '') {
         return { ok: false, error: 'Name is missing.' };
-    }
-    if (db.nameExists(name, id)) { 
-        return { ok: false, error: 'Name must be unique.' };
     }
     return { ok: true };
 };
@@ -27,4 +24,4 @@ const validatePhoneNumber = (number) => {
     return { ok: true };
 };
 
-module.exports =  { name: validateName, phoneNumber: validatePhoneNumber }
+module.exports = { name: validateName, phoneNumber: validatePhoneNumber };
