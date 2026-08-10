@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dns = require('dns');
 
+// Using Googles DNS server because I couldnt connect to the database from my home computer
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 
 const PersonModel = mongoose.model('person',
