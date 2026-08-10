@@ -93,25 +93,25 @@ const createRoute = (db) => ({
         .then(count => {
             const infoText = count === 0 ? 'Phonebook is empty.': `Phonebook has info for ${count} people.`;
             const requestTime = new Date().toLocaleString();
-            response.status(200).send(
+            return response.status(200).send(
                 `<h3>${infoText}</h3>
                 <p><strong>Request time: </strong>${requestTime}</p>`
             );
         })
         .catch(err => {
             console.error(err);
-            response.status(500).json({ error: 'Internal server error' });
+            return response.status(500).json({ error: 'Internal server error' });
         });
     },
 
     getPersons: (request, response) => {
         db.getAll()
-            .then(results =>
-                response.status(200).json(results)
-            )
+            .then(results => {
+                return response.status(200).json(results)
+            })
             .catch(err => {
                 console.error(err);
-                response.status(500).json({ error: 'Internal server error' });
+                return response.status(500).json({ error: 'Internal server error' });
             });
     },
 
@@ -120,28 +120,29 @@ const createRoute = (db) => ({
         db.getById(id)
             .then(person => {
                 if (!person) return response.status(404).json({ error: 'Person not found.' });
-                response.status(200).json(person);
+                return response.status(200).json(person);
             })
             .catch(err => {
                 console.error(err);
-                response.status(500).json({ error: 'Internal server error' });
+                return response.status(500).json({ error: 'Internal server error' });
             });
     },
 
     deletePerson: (request, response) => {
         const id = request.params.id;
-        
+
         db.getById(id)
             .then(person => {
-                if (!person) return response.status(404).json({ error: 'Person not found.' });
-                return db.remove(id);
+                if (!person) {
+                    return response.status(404).json({ error: 'Person not found.' });
+                }
+                return db.remove(id).then(() => {
+                    return response.status(204).end();
+                });
             })
-            .then(() =>
-                response.status(204).end()
-            )
             .catch(err => {
                 console.error(err);
-                response.status(500).json({ error: 'Internal server error' });
+                return response.status(500).json({ error: 'Internal server error' });
             });
     },
 
@@ -167,12 +168,12 @@ const createRoute = (db) => ({
         };
             
         db.add(person)
-            .then(() =>
-                response.status(201).json(person)
-            )
+            .then(() => {
+                return response.status(201).json(person)
+            })
             .catch(err => {
                 console.error(err);
-                response.status(500).json({ error: 'Internal server error' });
+                return response.status(500).json({ error: 'Internal server error' });
             });
     },
 
@@ -182,27 +183,30 @@ const createRoute = (db) => ({
 
         db.getById(id)
             .then(person => {
-                if (!person)
+                if (!person) {
                     return response.status(404).json({ error: "Person not found!" });
+                }
 
                 name = format.name(name);
                 const nameResult = validate.name(db, name, id);
-                if (!nameResult.ok) return response.status(400).json({ error: nameResult.error });
+                if (!nameResult.ok) {
+                    return response.status(400).json({ error: nameResult.error });
+                }
 
                 number = format.phoneNumber(number);
                 const numberResult = validate.phoneNumber(number);
-                if (!numberResult.ok) return response.status(400).json({ error: numberResult.error });
+                if (!numberResult.ok) {
+                    return response.status(400).json({ error: numberResult.error });
+                }
 
                 const updatedPerson = { id, name, number };
-                    return db.update(id, updatedPerson).then(() => updatedPerson);
-            })
-            .then(updatedPerson => {
-                if (updatedPerson)
-                    response.status(200).json(updatedPerson);
+                return db.update(id, updatedPerson).then(() => {
+                    return response.status(200).json(updatedPerson);
+                });
             })
             .catch(err => {
                 console.error(err);
-                response.status(500).json({ error: 'Internal server error' });
+                return response.status(500).json({ error: 'Internal server error' });
             });
     }
 });
