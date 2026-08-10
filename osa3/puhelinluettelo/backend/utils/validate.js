@@ -24,4 +24,4 @@ const validatePhoneNumber = (number) => {
     return { ok: true };
 };
 
-module.exports = { name: validateName, phoneNumber: validatePhoneNumber };
+module.exports = { validateName: validateName, validateNumber: validatePhoneNumber };

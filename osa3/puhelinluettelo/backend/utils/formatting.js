@@ -38,4 +38,4 @@ const formatNumber = (number) => {
 };
 
 
-module.exports =  {name: formatName, phoneNumber: formatNumber}
+module.exports =  {formatName: formatName, formatNumber: formatNumber}
