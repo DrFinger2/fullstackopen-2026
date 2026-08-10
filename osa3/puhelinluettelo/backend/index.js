@@ -62,7 +62,7 @@ function main() {
 
 function createDatabase(username, password)
 {
-    const DATABASE = 'people';
+    const DATABASE = 'phonebook';
     const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
     const PersonModel = mongoose.model('person',
         new mongoose.Schema({
