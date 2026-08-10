@@ -126,20 +126,23 @@ const validatePhoneNumber = (number) => {
 // 2. API GET methods
 app.get('/info', (request, response) => {
     console.log('GET INFO HIT:', request.method, request.originalUrl);
+
     const infoText = (persons.length === 0) ? 'Phonebook is empty.' : `Phonebook has info for ${persons.length} people.`;
     const requestTime = new Date().toLocaleString();
-    response.status(200).send(
+    return response.status(200).send(
         `<h3>${infoText}</h3>
         <p><strong>Request time: </strong>${requestTime}</p>`);
 });
 
 app.get('/api/persons', (request, response) => {
     console.log('GET PERSONS HIT:', request.method, request.originalUrl);
-    response.status(200).json(persons);
+
+   return response.status(200).json(persons);
 });
 
 app.get('/api/persons/:id', (request, response) => {
     console.log('GET PERSON HIT:', request.method, request.originalUrl);
+
     const id = request.params.id;
     const person = persons.find(person => person.id === id);
 
@@ -170,8 +173,8 @@ app.delete('/api/persons/:id', (request, response) => {
 // 4. API post method
 app.post('/api/persons', (request, response) => {
     console.log('POST HIT:', request.method, request.originalUrl);
+
     let { name, number } = request.body || {};
-    
     name = formatName(name)
     const nameResult = validateName(name);
     if (!nameResult.ok) {
@@ -196,6 +199,7 @@ app.post('/api/persons', (request, response) => {
 // 5. API put method
 app.put('/api/persons/:id', (request, response) => {
     console.log('PUT HIT:', request.method, request.originalUrl);
+
     const id = request.params.id
     let { name, number } = request.body || {};
     

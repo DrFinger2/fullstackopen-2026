@@ -6,16 +6,16 @@
   "author": "",
   "type": "commonjs",
   "main": "index.js",
-  
   "scripts": {
-      "build:render": "npm install && rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend"
-    , "build:windows": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\""
-    , "start": "node index.js"
-    , "dev": "node --watch index.js"
-    , "test": "echo \"Error: no test specified\" && exit 1"
+    "build:render": "npm install && rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend",
+    "build:windows": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\"",
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "express": "^5.2.1",
+    "mongoose": "^9.9.1",
     "morgan": "^1.11.0"
   }
 }
