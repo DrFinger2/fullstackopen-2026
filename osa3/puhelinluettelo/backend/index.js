@@ -52,6 +52,10 @@ function main() {
                 console.log(`Host Address: ${address}\n`);
             });
         })
+        .catch(error => {
+            console.error('MongoDB connection failed:');
+            console.error(error);
+        });
     
 }
 
