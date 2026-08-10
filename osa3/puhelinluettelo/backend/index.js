@@ -127,14 +127,14 @@ const createRoute = (db) => {
                 return response.status(400).json({ error: nameResult.error });
             }
 
-            number = format.number(number);
-            const numberResult = validate.number(number);
+            number = format.phoneNumber(number);
+            const numberResult = validate.phoneNumber(number); 
             if (!numberResult.ok) {
                 return response.status(400).json({ error: numberResult.error });
             }
 
             const person = {
-                id: Utils.generateId(db),
+                id: generateId(db), 
                 name: name,
                 number: number
             };
@@ -157,14 +157,14 @@ const createRoute = (db) => {
                 return response.status(400).json({ error: nameResult.error });
             }
 
-            number = format.number(number);
-            const numberResult = validate.number(number);
+            number = format.phoneNumber(number);
+            const numberResult = validate.phoneNumber(number);
             if (!numberResult.ok) {
                 return response.status(400).json({ error: numberResult.error });
             }
 
             const updatedPerson = {
-                id: generateId(db),
+                id: id,    
                 name: name,
                 number: number
             };
