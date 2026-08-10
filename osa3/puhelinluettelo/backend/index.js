@@ -56,124 +56,156 @@ function createDatabase() {
 
     return {
         getAll: () => {
-            return persons;
+            return Promise.resolve(persons);
         },
         getById: (id) => {
-            return persons.find(person => person.id === id)
+            return Promise.resolve(persons.find(person => person.id === id));
         },
         getCount: () => {
-            return persons.length
+            return Promise.resolve(persons.length)
         },
         add: (person) => {
             persons = persons.concat(person);
+            return Promise.resolve();
         },
         remove: (id) => {
             persons = persons.filter(person => person.id !== id);
+            return Promise.resolve();
         },
         update: (id, updatedPerson) => {
             persons = persons.map(person => person.id === id ? updatedPerson : person);
+            return Promise.resolve();
         },
         idExists: (id) => {
-            return persons.some(person => person.id === id)
+            return Promise.resolve(persons.some(person => person.id === id));
         },
         nameExists: (name, excludeId = null) => {
-            return persons.some(person => person.name === name && person.id !== excludeId);
+            return Promise.resolve(persons.some(person => person.name === name && person.id !== excludeId));
         }
     };
 }
 
-const createRoute = (db) => {
-    return {
-        getInfo: (request, response) => {
-            const count = db.getCount();
-            const infoText = (count === 0) ? 'Phonebook is empty.' : `Phonebook has info for ${count} people.`;
+const createRoute = (db) => ({
+    // I know that this doesnt make much sense at this point but im doing this so that i do not need to refactor alot of the code when I integrate mongo db
+
+    getInfo: (request, resolve) => {
+        db.getCount()
+        .then(count => {
+            const infoText = count === 0 ? 'Phonebook is empty.': `Phonebook has info for ${count} people.`;
             const requestTime = new Date().toLocaleString();
-        
-            return response.status(200).send(
+            resolve.status(200).send(
                 `<h3>${infoText}</h3>
-             <p><strong>Request time: </strong>${requestTime}</p>`
+                <p><strong>Request time: </strong>${requestTime}</p>`
             );
-        },
-        getPersons: (request, response) => {
-            const results = db.getAll()
-            return response.status(200).json(results);
-        },
-        getPerson: (request, response) => {
-            const id = request.params.id;
-            const person = db.getById(id);
+        })
+        .catch(err => {
+            console.error(err);
+            resolve.status(500).json({ error: 'Internal server error' });
+        });
+    },
 
-            if (!person) {
-                return response.status(404).json({ error: 'Person not found.' });
-            }
-            return response.status(200).json(person);
-        },
-        deletePerson: (request, response) => {
-            const id = request.params.id;
-            const person = db.getById(id);
+    getPersons: (request, resolve) => {
+        db.getAll()
+            .then(results =>
+                resolve.status(200).json(results)
+            )
+            .catch(err => {
+                console.error(err);
+                resolve.status(500).json({ error: 'Internal server error' });
+            });
+    },
 
-            if (!person) {
-                return response.status(404).json({ error: 'Person not found.' });
-            }
+    getPerson: (request, resolve) => {
+        const id = request.params.id;
+        db.getById(id)
+            .then(person => {
+                if (!person) return resolve.status(404).json({ error: 'Person not found.' });
+                resolve.status(200).json(person);
+            })
+            .catch(err => {
+                console.error(err);
+                resolve.status(500).json({ error: 'Internal server error' });
+            });
+    },
 
-            db.remove(id);
-            return response.status(204).end();
-        },
-        postPerson: (request, response) => {
-            let { name, number } = request.body || {};
+    deletePerson: (request, resolve) => {
+        const id = request.params.id;
+        
+        db.getById(id)
+            .then(person => {
+                if (!person) return resolve.status(404).json({ error: 'Person not found.' });
+                return db.remove(id);
+            })
+            .then(() =>
+                resolve.status(204).end()
+            )
+            .catch(err => {
+                console.error(err);
+                resolve.status(500).json({ error: 'Internal server error' });
+            });
+    },
 
-            name = format.name(name);
-            const nameResult = validate.name(db, name);
-            if (!nameResult.ok) {
-                return response.status(400).json({ error: nameResult.error });
-            }
+    postPerson: (request, resolve) => {
+        let { name, number } = request.body || {};
 
-            number = format.phoneNumber(number);
-            const numberResult = validate.phoneNumber(number); 
-            if (!numberResult.ok) {
-                return response.status(400).json({ error: numberResult.error });
-            }
-
-            const person = {
-                id: generateId(), 
-                name: name,
-                number: number
-            };
-
-            db.add(person);
-            return response.status(201).json(person);
-        },
-        putPerson: (request, response) => {
-            const id = request.params.id;
-            let { name, number } = request.body || {};
-
-            const person = db.getById(id);
-            if (!person) {
-                return response.status(404).json({ error: "Person not found!" });
-            }
-
-            name = format.name(name);
-            const nameResult = validate.name(db, name, id);
-            if (!nameResult.ok) {
-                return response.status(400).json({ error: nameResult.error });
-            }
-
-            number = format.phoneNumber(number);
-            const numberResult = validate.phoneNumber(number);
-            if (!numberResult.ok) {
-                return response.status(400).json({ error: numberResult.error });
-            }
-
-            const updatedPerson = {
-                id: id,    
-                name: name,
-                number: number
-            };
-
-            db.update(id, updatedPerson);
-            return response.status(200).json(updatedPerson);
+        name = format.name(name);
+        const nameResult = validate.name(db, name);
+        if (!nameResult.ok) {
+            return resolve.status(400).json({ error: nameResult.error });
         }
+
+        number = format.phoneNumber(number);
+        const numberResult = validate.phoneNumber(number);
+        if (!numberResult.ok) {
+            return resolve.status(400).json({ error: numberResult.error });
+        }
+
+        const person = {
+            id: generateId(),
+            name: name,
+            number: number
+        };
+            
+        db.add(person)
+            .then(() =>
+                resolve.status(201).json(person)
+            )
+            .catch(err => {
+                console.error(err);
+                resolve.status(500).json({ error: 'Internal server error' });
+            });
+    },
+
+    putPerson: (request, resolve) => {
+        const id = request.params.id;
+        let { name, number } = request.body || {};
+
+        db.getById(id)
+            .then(person => {
+                if (!person)
+                    return resolve.status(404).json({ error: "Person not found!" });
+
+                name = format.name(name);
+                const nameResult = validate.name(db, name, id);
+                if (!nameResult.ok) return resolve.status(400).json({ error: nameResult.error });
+
+                number = format.phoneNumber(number);
+                const numberResult = validate.phoneNumber(number);
+                if (!numberResult.ok) return resolve.status(400).json({ error: numberResult.error });
+
+                const updatedPerson = { id, name, number };
+                    return db.update(id, updatedPerson).then(() => updatedPerson);
+            })
+            .then(updatedPerson => {
+                if (updatedPerson)
+                    resolve.status(200).json(updatedPerson);
+            })
+            .catch(err => {
+                console.error(err);
+                resolve.status(500).json({ error: 'Internal server error' });
+            });
     }
-};
+});
 
 
 main();
