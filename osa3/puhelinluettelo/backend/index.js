@@ -1,6 +1,11 @@
 
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+const dns = require('dns');
+
+dns.setServers(['1.1.1.1', '8.8.8.8'])
+
 
 const generateId = require('./utils/generateId.js');
 const { formatName, formatNumber } = require('./utils/formatting.js');
@@ -11,37 +16,54 @@ function main() {
 
     const port = (process.env.PORT || 3001);
     const address = (process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`);
-    const db = createDatabase();
-    const route = createRoute(db);
+    const username = 'fullstack';
+    const password = process.argv[2]
 
-    morgan.token('test-token', request => {
-        if (request.method === 'POST') return JSON.stringify(request.body);
-        else return '';
-    });
-    morgan.format(
-        'test-format',
-        ':method :url :status :response-time ms :test-token'
-    );
+    const db = createDatabase(username, password)
+    db.connect(() => {
+        const route = createRoute(db);
+        morgan.token('test-token', request => {
+            if (request.method === 'POST') return JSON.stringify(request.body);
+            else return '';
+        });
 
-    app.use(express.static('dist'));
-    app.use(express.json());
-    app.use(morgan('test-format'));
+        morgan.format(
+            'test-format',
+            ':method :url :status :response-time ms :test-token'
+        );
 
-    app.get('/info',                route.getInfo);
-    app.get('/api/persons',         route.getPersons);
-    app.get('/api/persons/:id',     route.getPerson);
-    app.delete('/api/persons/:id',  route.deletePerson);
-    app.post('/api/persons',        route.postPerson);
-    app.put('/api/persons/:id',     route.putPerson);
+        app.use(express.static('dist'));
+        app.use(express.json());
+        app.use(morgan('test-format'));
 
-    app.listen(port, () => {
-        console.log(`Server running on port: ${port}`);
-        console.log(`Host Address: ${address}\n`);
-    });
+        app.get('/info',                route.getInfo);
+        app.get('/api/persons',         route.getPersons);
+        app.get('/api/persons/:id',     route.getPerson);
+        app.delete('/api/persons/:id',  route.deletePerson);
+        app.post('/api/persons',        route.postPerson);
+        app.put('/api/persons/:id',     route.putPerson);
+
+        app.listen(port, () => {
+            console.log(`Server running on port: ${port}`);
+            console.log(`Host Address: ${address}\n`);
+        });
+    })
+    
 }
 
-function createDatabase() {
-    let persons = [
+
+function createDatabase(username, password)
+{
+    const DATABASE = 'people';
+    const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
+    const PersonModel = mongoose.model('person',
+        new mongoose.Schema({
+            name: String,
+            number: String,
+        })
+    );
+
+     let persons = [
         { "id": "1", "name": "Lena Hartmann", "number": "040-7182934" },
         { "id": "2", "name": "Noah Bennett", "number": "39-52-1847261" },
         { "id": "3", "name": "Maya Thompson", "number": "12-63-927415" },
@@ -53,10 +75,19 @@ function createDatabase() {
         { "id": "9", "name": "Nora Fischer", "number": "040-5928174" },
         { "id": "10", "name": "Leo Campbell", "number": "076-238-5149" }
     ];
-
+    
     return {
+        connect: () => {
+            mongoose.set('strictQuery',false)
+            return mongoose.connect(url, { family: 4 })
+        },
+        diconnect: () => {
+             return mongoose.connection.close();
+        },
         getAll: () => {
-            return Promise.resolve(persons);
+            return PersonModel.find({}).then(person => {
+                response.json(person)
+            })
         },
         getById: (id) => {
             return Promise.resolve(persons.find(person => person.id === id));
@@ -85,9 +116,9 @@ function createDatabase() {
     };
 }
 
-const createRoute = (db) => ({
-    // I know that then catch doesnt make much sense at this point but im using them so that I do not need to refactor alot of the code when I integrate mongo db
 
+
+const createRoute = (db) => ({
     getInfo: (request, response) => {
         db.getCount()
         .then(count => {
