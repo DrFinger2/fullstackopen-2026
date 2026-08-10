@@ -1,3 +1,4 @@
+
 const validateName = (name) => {
     if (name === undefined || name === null) {
         return { ok: false, error: 'Name is missing.' };
