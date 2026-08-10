@@ -3,8 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 
 const generateId = require('./utils/generateId.js');
-const format = require('./utils/formatting.js');
-const validate = require('./utils/validate.js');
+const { formatName, formatNumber } = require('./utils/formatting.js');
+const { validateName, validateNumber } = require('./utils/validate.js');
 
 function main() {
     const app = express();
@@ -149,14 +149,14 @@ const createRoute = (db) => ({
     postPerson: (request, response) => {
         let { name, number } = request.body || {};
 
-        name = format.name(name);
-        const nameResult = validate.name(name);
+        name = formatName(name);
+        const nameResult = validateName(name);
         if (!nameResult.ok) {
             return response.status(400).json({ error: nameResult.error });
         }
 
-        number = format.phoneNumber(number);
-        const numberResult = validate.phoneNumber(number);
+        number = formatNumber(number);
+        const numberResult = validateNumber(number);
         if (!numberResult.ok) {
             return response.status(400).json({ error: numberResult.error });
         }
@@ -192,14 +192,14 @@ const createRoute = (db) => ({
                     return response.status(404).json({ error: "Person not found!" });
                 }
 
-                name = format.name(name);
-                const nameResult = validate.name(name);
+                name = formatName(name);
+                const nameResult = validateName(name);
                 if (!nameResult.ok) {
                     return response.status(400).json({ error: nameResult.error });
                 }
 
-                number = format.phoneNumber(number);
-                const numberResult = validate.phoneNumber(number);
+                number = formatNumber(number);
+                const numberResult = validateNumber(number);
                 if (!numberResult.ok) {
                     return response.status(400).json({ error: numberResult.error });
                 }
