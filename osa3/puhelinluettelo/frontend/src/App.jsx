@@ -71,7 +71,7 @@ const App = () => {
     if (!newPhone.length) {
       return notification.warning('Phone number field is empty')
     }
-    
+
     const foundPerson = phonebook.find(person => person.name === newName)
     if (foundPerson) {
       if (window.confirm(`Do you want to replace '${foundPerson.name}' phone number?`)) {
@@ -106,6 +106,13 @@ const App = () => {
       phonebook.add(created)
       setNewName('')
       setNewPhone('')
+    })
+    .catch(error => {
+      if (error.response && error.response.data && error.response.data.error) {
+        notification.error(error.response.data.error)
+      } else {
+        notification.error('Something went wrong, please try again')
+      }
     })
   }
 
