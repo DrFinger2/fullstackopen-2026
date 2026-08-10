@@ -86,7 +86,7 @@ function createDatabase() {
 }
 
 const createRoute = (db) => ({
-    // I know that this doesnt make much sense at this point but im doing this so that i do not need to refactor alot of the code when I integrate mongo db
+    // I know that try catch doesnt make much sense at this point but im using them so that I do not need to refactor alot of the code when I integrate mongo db
 
     getInfo: (request, resolve) => {
         db.getCount()
