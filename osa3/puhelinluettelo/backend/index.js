@@ -19,6 +19,9 @@ function main() {
     const username = 'fullstack';
     const password = process.argv[2]
 
+    console.log("username: ", username);
+    console.log("password: ", password);
+    
     const db = createDatabase(username, password)
     db.connect(() => {
         const route = createRoute(db);
