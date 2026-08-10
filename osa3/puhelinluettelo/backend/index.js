@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const dns = require('dns');
 
-dns.setServers(['1.1.1.1', '8.8.8.8'])
+// dns.setServers(['1.1.1.1', '8.8.8.8'])
 
 
 const generateId = require('./utils/generateId.js');
