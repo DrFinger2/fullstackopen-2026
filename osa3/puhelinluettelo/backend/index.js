@@ -9,8 +9,8 @@ const validate = require('./utils/validate.js');
 function main() {
     const app = express();
 
-    const port = process.env.PORT || 3001;
-    const address = process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`;
+    const port = (process.env.PORT || 3001);
+    const address = (process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`);
     const db = createDatabase();
     const route = createRoute(db);
 
