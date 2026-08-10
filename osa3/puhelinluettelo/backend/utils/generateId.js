@@ -1,16 +1,7 @@
-const generateId = (db) => {
-    const MAX_ITERS = 100;
-    let iterations = 0; 
-    let id;
-    do {
-        if (iterations >= MAX_ITERS) {
-            id = null; 
-            break;
-        }
-        id = String(Math.floor(Math.random() * 1000000000));
-        iterations++;         
-    } while (db.idExists(id));
-    return id;
+const generateId = () => {
+    // Got rid of the db dependency, now there is chance of collision but its pretty low
+    // Probably need to come up with something better in the future?
+    return String(Math.floor(Math.random() * 1000000000));
 };
 
 module.exports = generateId;

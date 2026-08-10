@@ -134,7 +134,7 @@ const createRoute = (db) => {
             }
 
             const person = {
-                id: generateId(db), 
+                id: generateId(), 
                 name: name,
                 number: number
             };
@@ -174,5 +174,6 @@ const createRoute = (db) => {
         }
     }
 };
+
 
 main();
