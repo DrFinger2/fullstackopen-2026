@@ -93,9 +93,7 @@ function createDatabase(username, password)
              return mongoose.connection.close();
         },
         getAll: () => {
-            return PersonModel.find({}).then(person => {
-                response.json(person)
-            })
+            return PersonModel.find({})
         },
         getById: (id) => {
             return Promise.resolve(persons.find(person => person.id === id));
