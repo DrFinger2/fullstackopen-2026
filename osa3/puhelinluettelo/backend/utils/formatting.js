@@ -19,4 +19,23 @@ const formatName = (name) => {
     return result.trimEnd();
 };
 
-module.exports = formatName;
+const formatNumber = (number) => {
+    if (!number || typeof number !== 'string') {
+        return number;
+    }
+
+    let result = '';
+    for (const char of number) {
+        if (char === ' ') {
+            if (result && result[result.length - 1] !== ' ') {
+                result += ' ';
+            }
+        } else {
+            result += char;
+        }
+    }
+    return result.trimEnd();
+};
+
+
+module.exports =  {name: formatName, phoneNumber: formatNumber}
