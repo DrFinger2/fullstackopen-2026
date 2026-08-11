@@ -99,7 +99,13 @@ function createDatabase(url)
             return Person.findByIdAndDelete(id);
         },
         update: (id, updatedPerson) => {
-            return Person.findByIdAndUpdate(id, updatedPerson, { new: true });
+            return Person.findById(id).then(person => {
+                if (!person) {
+                    return null;
+                }
+                person.number = updatedPerson.number;
+                return person.save();
+            });
         },
         idExists: (id) => {
             return Person.exists({ _id: id }).then(result => result != null);
@@ -142,6 +148,9 @@ const createRoute = (db) => ({
 
     getPerson: (request, response) => {
         const id = request.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).json({ error: 'Malformatted id.' });
+        }
             
         db.getById(id)
             .then(person => {
@@ -157,7 +166,7 @@ const createRoute = (db) => ({
     deletePerson: (request, response) => {
         const id = request.params.id;
         if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformed id.' });
+            return response.status(400).json({ error: 'Malformatted id.' });
         }
 
          // simplified db calls findByidAndDelete, so there is no need to check if id exists.
@@ -211,7 +220,7 @@ const createRoute = (db) => ({
     putPerson: (request, response) => {
         const id = request.params.id;
         if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformed id.' });
+            return response.status(400).json({ error: 'Malformatted id.' });
         }
 
         const { number } = request.body || {};
