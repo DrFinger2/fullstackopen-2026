@@ -101,5 +101,5 @@ const validatePhoneNumber = (number) => {
 module.exports = {
     validateName: validateName,
     validatePhoneNumber: validatePhoneNumber,
-    createCustomValidator: createCustomValidator
+    createValidator: createValidator
 };
