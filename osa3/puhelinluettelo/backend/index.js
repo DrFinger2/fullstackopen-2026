@@ -126,7 +126,7 @@ function createDatabase(url)
         idExists: (id) => {
             return PersonModel.idExists(id);
         },
-        nameExists: (name, excludeId = null) => {
+        nameExists: (name) => {
             return PersonModel.find({ name: name }).then(results => (results.length > 0));
         }
     };
@@ -251,20 +251,19 @@ const createRoute = (db) => ({
                 name = formatName(name);
                 number = formatNumber(number);
 
-                return db.nameExists(name, id).then(exists => {
+                return db.nameExists(name).then(exists => {
                     if (exists) {
-                        return response.status(400).json({ error: 'Name must be unique.' });
+                        const updatedPerson = {
+                            name: name,
+                            number: number
+                        };
+
+                        return db.update(id, updatedPerson).then(() => {
+                            return response.status(200).json(updatedPerson);
+                        });
                     }
 
-                    const updatedPerson = {
-                        id: id,
-                        name: name,
-                        number: number
-                    };
-
-                    return db.update(id, updatedPerson).then(() => {
-                        return response.status(200).json(updatedPerson);
-                    });
+                    
                 });
             })
             .catch(err => {
