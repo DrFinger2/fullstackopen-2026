@@ -113,7 +113,7 @@ function createDatabase(url)
         },
         add: (person) => {
             const newPerson = new PersonModel({ name: person.name, number: person.number })
-            return newPerson.save().then(person => person.toJSON());
+            return newPerson.save();
         },
         remove: (id) => {
             return PersonModel.findByIdAndDelete(id);
