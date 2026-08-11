@@ -119,7 +119,13 @@ function createDatabase(url)
             return PersonModel.findByIdAndDelete(id);
         },
         update: (id, updatedPerson) => {
-            return PersonModel.findByIdAndUpdate(id, updatedPerson).then(result => ({ name: result.name, number: result.number, id: id}))
+            return PersonModel.findByIdAndUpdate(id, updatedPerson).then(result =>
+            {
+                console.log(result);
+                return {
+                    name: result.name, number: result.number, id: id
+                }
+            })
         },
         idExists: (id) => {
             return PersonModel.idExists(id);
