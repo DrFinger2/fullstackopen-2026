@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = "/api/persons"
+const BASE_URL = "/api/people"
 
 const getAll = () => 
 {
