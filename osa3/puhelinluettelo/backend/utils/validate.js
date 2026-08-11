@@ -22,14 +22,6 @@ const validateName = (name) => {
         return { ok: false, error: 'Name is missing.' };
     }
 
-    if (trimmedName.length < 2) {
-        return { ok: false, error: 'Name must be at least 2 characters long.' };
-    }
-
-    if (trimmedName.length > 50) {
-        return { ok: false, error: 'Name cant be greater than 50 characters long.' };
-    }
-
     const nameRegex = /^[\p{L}\s\-']+$/u;
     if (!nameRegex.test(trimmedName)) {
         return { ok: false, error: 'Name contains invalid characters.' };
@@ -51,10 +43,6 @@ const validatePhoneNumber = (number) => {
     const trimmedNumber = number.trim();
     if (trimmedNumber === '') {
         return { ok: false, error: 'Phone number is missing.' };
-    }
-    
-    if (trimmedNumber.length > 25) {
-        return { ok: false, error: 'Phone number cannot be greater than 25 characters long.' };
     }
 
     if (trimmedNumber.startsWith('+')) {

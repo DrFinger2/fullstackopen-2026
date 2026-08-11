@@ -51,8 +51,13 @@ function main() {
             if (error.name === 'CastError') {
                 return response.status(400).json({ error: 'Malformatted id.' });
             }
-            console.error(error);
-            return response.status(500).json({ error: 'Internal server error' });
+            else if (error.name === 'ValidationError') {
+                return response.status(400).json({ error: error.message })
+            }
+            else {
+                console.error(error);
+                return response.status(500).json({ error: 'Internal server error' });
+            } 
         }
         app.use(errorHandler);
 

@@ -2,8 +2,16 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String, 
+        minLength: 3,
+        maxLength: 50
+    },
+    number: {
+        type: String,
+        minLength: 2,
+        maxLength: 50
+    },
 })
 
 personSchema.set('toJSON', {
