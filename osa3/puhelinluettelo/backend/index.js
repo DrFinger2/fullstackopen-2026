@@ -30,21 +30,13 @@ function main() {
                 return '';
             }
         });
-
         morgan.format(
             'test-format',
             ':method :url :status :response-time ms :test-token'
         );
-
-        const errorHandler = (error, request, response, next) => {
-            console.error(error);
-            return response.status(500).json({ error: 'Internal server error' });
-        }
-
         app.use(express.static('dist'));
         app.use(express.json({ limit: '10kb' })); // I read that this is probably good idea to do
         app.use(morgan('test-format'));
-        app.use(errorHandler);
 
         // 3. Register Routes
         app.get('/info',                route.getInfo);
@@ -52,15 +44,22 @@ function main() {
         app.get('/api/persons/:id',     route.getPerson);
         app.delete('/api/persons/:id',  route.deletePerson);
         app.post('/api/persons',        route.postPerson);
-        app.put('/api/persons/:id',     route.putPerson);
+        app.put('/api/persons/:id', route.putPerson);
+        
+        // 4. Custom error handler
+        const errorHandler = (error, request, response, next) => {
+            console.error(error);
+            return response.status(500).json({ error: 'Internal server error' });
+        }
+        app.use(errorHandler);
 
-        // 4. Start Server
+        // 5. Start Server
         const server = app.listen(port, () => {
             console.log(`Server running on port: ${port}`);
             console.log(`Host Address: ${address}\n`);
         });
     
-        // 5. Shutdown
+        // 6. Shutdown
         process.on('SIGINT', () => {
             console.log('Shutting down...');
             server.close(() => {
