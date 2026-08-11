@@ -2,10 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 
-// I needed to configure the DNS server to start the server locally due to my home computers internet configuration.
-// const dns = require('dns')
-// dns.setServers(['1.1.1.1', '8.8.8.8'])
-
 const { Person, connect, disconnect } = require('./models/person.js')
 const { formatName, formatNumber } = require('./utils/formatting.js')
 
