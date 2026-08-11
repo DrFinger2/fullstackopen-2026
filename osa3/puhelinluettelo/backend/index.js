@@ -124,10 +124,10 @@ function createDatabase(url)
             });
         },
         idExists: (id) => {
-            return Promise.resolve(persons.some(person => person.id === id));
+            return PersonModel.idExists(id);
         },
         nameExists: (name, excludeId = null) => {
-            return Promise.resolve(persons.some(person => person.name === name && person.id !== excludeId));
+            return PersonModel.find({ name: name }).then(result => result != null);
         }
     };
 }
