@@ -21,4 +21,15 @@ const blogSchema = mongoose.Schema({
     },
 })
 
+blogSchema.set('toJSON', {
+    tranform : (document, obj) => {
+        obj.id = obj._id.toString()
+        delete obj._id
+        delete obj.__v
+        return obj
+    }
+})
+
+
+
 module.exports = mongoose.model('Blog', blogSchema)

@@ -11,27 +11,28 @@ function main() {
     const address = config.EXTERNAL_ADDRESS
     const port = config.PORT
 
-    mongoose.connect(url, { family: 4 })
-        .then(() => {
-            const app = express()
+    mongoose.connect(url, { family: 4 }).then(() => {
+        const app = express()
 
-            app.use(express.json())
-            app.use(morgan('dev'))
-            app.use('/api/blog', blogRouter)
+        app.use(express.json())
+        app.use(morgan('dev'))
+        app.use('/api/blog', blogRouter)
 
-            const server = app.listen(port, () => {
-                console.log(`Server running on port ${port}`)
-                console.log(`Server address: ${address}`)
-            })
+        const server = app.listen(port, () => {
+            console.log(`Server running on port ${port}`)
+            console.log(`Server address: ${address}`)
+        })
 
-            process.on('SIGINT', () => {
-                console.log('Shutting down...')
-                server.close(() => {
+        process.on('SIGINT', () => {
+            console.log('Shutting down...')
+            server.close(() => {
+                mongoose.connection.close().then(() => {
                     console.log('MongoDB connection closed')
                     process.exit(0)
                 })
             })
         })
+    })
         .catch((error) => {
             console.error(error)
         })
