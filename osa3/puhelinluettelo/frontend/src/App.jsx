@@ -5,14 +5,12 @@ import Notification from './components/Notification'
 const Button = ({ onClick, text, type = 'button' }) => (
   <button type={type} onClick={onClick}>{text}</button>
 )
-
 const Input = ({ label = ' ', value, onChange }) => (
   <div>
     <label>{label}</label>
     <input value={value} onChange={onChange} />
   </div>
 )
-
 const Person = ({ person, onRemove }) => (
   <li className="person">
     <span className="name">{person.name}</span>
@@ -20,7 +18,6 @@ const Person = ({ person, onRemove }) => (
     <Button onClick={onRemove} text="Remove" />
   </li>
 )
-
 const Persons = ({ persons, onRemove }) => (
   <ul>
     {persons.map(person => (
@@ -79,11 +76,7 @@ const App = () => {
       .then(allPersons => phonebook.set(allPersons))
   }, [])
 
-  const resetForm = () => {
-    setNewName('')
-    setNewPhone('')
-  }
-
+  
   const handleApiError = (error) => {
     if (error.response?.data?.error) {
       notification.error(error.response.data.error)
@@ -99,7 +92,8 @@ const App = () => {
       .then(created => {
         phonebook.add(created)
         notification.success(`Added ${created.name} to phonebook`)
-        resetForm()
+        setNewName('')
+        setNewPhone('')
       })
       .catch(handleApiError)
   }
@@ -115,15 +109,14 @@ const App = () => {
       .then(updated => {
         phonebook.update(updated.id, updated)
         notification.success(`Updated ${updated.name}'s phone number`)
-        resetForm()
+        setNewName('')
+        setNewPhone('')
       })
       .catch(error => {
         if (error.response?.status === 404) {
-          notification.error(`Person '${existingPerson.name}' has already been removed from server`)
-          phonebook.remove(existingPerson.id)
-        } else {
-          handleApiError(error)
+          phonebook.remove(existingPerson.id)  
         }
+        handleApiError(error)
       })
   }
 
@@ -139,11 +132,9 @@ const App = () => {
       })
       .catch(error => {
         if (error.response?.status === 404) {
-          notification.error(`Person '${person.name}' has already been removed from server`)
           phonebook.remove(person.id)
-        } else {
-          handleApiError(error)
-        }
+        } 
+        handleApiError(error)
       })
   }
 
