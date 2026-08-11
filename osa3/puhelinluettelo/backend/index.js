@@ -105,14 +105,15 @@ function createDatabase(url)
             return PersonModel.find({})
         },
         getById: (id) => {
-            return PersonModel.findById(id);
+            const foundPerson = PersonModel.findById(id);
+            return foundPerson.then(person => person.toJSON())
         },
         getCount: () => {
             return PersonModel.countDocuments()
         },
         add: (person) => {
-            const newPerson = new PersonModel({name: person.name, number: person.number})
-            return newPerson.save();
+            const newPerson = new PersonModel({ name: person.name, number: person.number })
+            return newPerson.save().then(person => person.toJSON());
         },
         remove: (id) => {
             return PersonModel.findByIdAndDelete(id);
