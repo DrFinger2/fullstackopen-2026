@@ -18,8 +18,9 @@ function main() {
     const password = process.argv[2]
     const DATABASE = 'phonebook';
     const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
-
-    const db = createDatabase(url)
+    const url2 = process.env.MONGODB_URI
+    console.log(url2)
+    const db = createDatabase(url2)
 
     // 1. Connect to DB
     db.connect().then(() => {
