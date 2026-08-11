@@ -256,8 +256,8 @@ const createRoute = (db) => ({
                             number: number
                         };
 
-                        return db.update(id, updatedPerson).then(() => {
-                            return response.status(200).json(updatedPerson);
+                        return db.update(id, updatedPerson).then((person) => {
+                            return response.status(200).json(person);
                         });
                     }
 
