@@ -17,14 +17,10 @@ function main() {
     const username = 'fullstack';
     const password = process.argv[2]
 
-    console.log("username: ", username);
-    console.log("password: ", password);
-
     const db = createDatabase(username, password)
 
-    // 1. Connect to DB first
+    // 1. Connect to DB
     db.connect().then(() => {
-
         // 2. Setup Express & Middleware
         const app = express();
         const route = createRoute(db);
@@ -40,7 +36,7 @@ function main() {
         );
 
         app.use(express.static('dist'));
-        app.use(express.json());
+        app.use(express.json({ limit: '10kb' })); // I read that this is probably good idea to do
         app.use(morgan('test-format'));
 
         // 3. Register Routes
@@ -80,25 +76,21 @@ function createDatabase(username, password)
 {
     const DATABASE = 'phonebook';
     const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
-    const PersonModel = mongoose.model('person',
-        new mongoose.Schema({
-            name: String,
-            number: String,
-        })
-    );
 
-     let persons = [
-        { "id": "1", "name": "Lena Hartmann", "number": "040-7182934" },
-        { "id": "2", "name": "Noah Bennett", "number": "39-52-1847261" },
-        { "id": "3", "name": "Maya Thompson", "number": "12-63-927415" },
-        { "id": "4", "name": "Elias Novak", "number": "39-27-5813042" },
-        { "id": "5", "name": "Sofia Andersson", "number": "070-3468291" },
-        { "id": "6", "name": "Jonas Miller", "number": "08-715-3926" },
-        { "id": "7", "name": "Amira Collins", "number": "073-481-9265" },
-        { "id": "8", "name": "Theo Martinez", "number": "31-48-2751936" },
-        { "id": "9", "name": "Nora Fischer", "number": "040-5928174" },
-        { "id": "10", "name": "Leo Campbell", "number": "076-238-5149" }
-    ];
+    const personSchema = new mongoose.Schema({
+        name: String,
+        number: String,
+    });
+    personSchema.set("toJSON", {
+        transform: (document, obj) => {
+            obj.id = obj._id.toString();
+            delete obj._id;
+            delete obj.__v;
+        }
+    })
+    const PersonModel = mongoose.model('person',
+        personSchema
+    );
     
     return {
         connect: () => {

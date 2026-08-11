@@ -26,6 +26,10 @@ const validateName = (name) => {
         return { ok: false, error: 'Name must be at least 2 characters long.' };
     }
 
+    if (trimmedName.length > 50) {
+        return { ok: false, error: 'Name cant be greater than 50 characters long.' };
+    }
+
     const nameRegex = /^[\p{L}\s\-']+$/u;
     if (!nameRegex.test(trimmedName)) {
         return { ok: false, error: 'Name contains invalid characters.' };
@@ -48,11 +52,15 @@ const validatePhoneNumber = (number) => {
     if (trimmedNumber === '') {
         return { ok: false, error: 'Phone number is missing.' };
     }
+    
+    if (trimmedNumber.length > 25) {
+        return { ok: false, error: 'Phone number cannot be greater than 25 characters long.' };
+    }
 
     if (trimmedNumber.startsWith('+')) {
         const digitsOnly = trimmedNumber.replace(/\D/g, '');
         const isValidCountry = ALLOWED_COUNTRY_CODES.some(code => digitsOnly.startsWith(code));
-        
+
         if (!isValidCountry) {
             return { ok: false, error: 'Country code is not supported. Only European and US codes are allowed.' };
         }
