@@ -86,6 +86,7 @@ function createDatabase(url)
             obj.id = obj._id.toString();
             delete obj._id;
             delete obj.__v;
+            return obj;
         }
     });
 
@@ -161,6 +162,10 @@ const createRoute = (db) => ({
 
     getPerson: (request, response) => {
         const id = request.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).json({ error: 'Malformed id.' });
+        }
+            
         db.getById(id)
             .then(person => {
                 if (!person) return response.status(404).json({ error: 'Person not found.' });
@@ -174,15 +179,17 @@ const createRoute = (db) => ({
 
     deletePerson: (request, response) => {
         const id = request.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).json({ error: 'Malformed id.' });
+        }
 
-        db.getById(id)
+         // simplified db calls findByidAndDelete, so there is no need to check if id exists.
+        db.remove(id)
             .then(person => {
                 if (!person) {
                     return response.status(404).json({ error: 'Person not found.' });
                 }
-                return db.remove(id).then(() => {
-                    return response.status(204).end();
-                });
+                return response.status(204).end();
             })
             .catch(err => {
                 console.error(err);
@@ -226,6 +233,10 @@ const createRoute = (db) => ({
 
     putPerson: (request, response) => {
         const id = request.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).json({ error: 'Malformed id.' });
+        }
+
         let { name, number } = request.body || {};
 
         db.getById(id)
