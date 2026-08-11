@@ -16,7 +16,7 @@ function main() {
 
     // 1. Connect to DB
     db.connect().then(() => {
-        // 2. Setup Express & Middleware
+    // 2. Setup Express & Middleware
         const app = express()
         const route = createRoute(db)
 
@@ -47,15 +47,20 @@ function main() {
         // 4. Custom error handling
         // eslint-disable-next-line no-unused-vars
         const errorHandler = (error, request, response, next) => {
+            // need to return errors as array because there might be multple errors, cant assume 1
             if (error.name === 'CastError') {
-                return response.status(400).json({ error: 'Malformatted id.' })
+                return response.status(400).json({ errors: [{ field: 'id', message: 'Malformatted id.' }] })
             }
             else if (error.name === 'ValidationError') {
-                return response.status(400).json({ error: error.message })
+                const errors = Object.entries(error.errors).map(([field, err]) => ({
+                    field: field,
+                    message: err.message
+                }))
+                return response.status(400).json({ errors })
             }
             else {
                 console.error(error)
-                return response.status(500).json({ error: 'Internal server error' })
+                return response.status(500).json({ errors: [{ field: null, message: 'Internal server error' }] })
             }
         }
         app.use(errorHandler)

@@ -82,8 +82,9 @@ const App = () => {
 
 
   const handleApiError = (error) => {
-    if (error.response?.data?.error) {
-      notification.error(error.response.data.error)
+    const errors = error.response?.data?.errors;
+    if (errors && errors.length > 0) {
+      notification.error(errors[0].message)
     } else {
       notification.error('Something went wrong, please try again')
     }
