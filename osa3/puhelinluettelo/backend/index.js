@@ -4,11 +4,8 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-
 const { Person, connect, disconnect } = require('./models/person.js')
 const { formatName, formatNumber } = require('./utils/formatting.js');
-const { validateName, validateNumber } = require('./utils/validate.js');
-
 
 function main() {
     const port = process.env.PORT || 3001;
@@ -177,16 +174,6 @@ const createRoute = (db) => ({
     postPerson: (request, response, next) => {
         let { name, number } = request.body || {};
         
-        const nameResult = validateName(name);
-        if (!nameResult.ok) {
-            return response.status(400).json({ error: nameResult.error });
-        }
-
-        const numberResult = validateNumber(number);
-        if (!numberResult.ok) {
-            return response.status(400).json({ error: numberResult.error });
-        }
-
         name = formatName(name);
         number = formatNumber(number);
 
@@ -209,13 +196,7 @@ const createRoute = (db) => ({
         const id = request.params.id;
         const { number } = request.body || {};
 
-        const numberResult = validateNumber(number);
-        if (!numberResult.ok) {
-            return response.status(400).json({ error: numberResult.error });
-        }
-
         const updatedPerson = { number: formatNumber(number) };
-
         db.update(id, updatedPerson)
             .then((person) => {
                 if (!person) {

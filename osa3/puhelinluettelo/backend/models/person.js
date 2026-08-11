@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+
+const { validateName, validatePhoneNumber, createValidator} = require('../utils/validation.js')
+
 mongoose.set('strictQuery', false)
 
 const personSchema = new mongoose.Schema({
@@ -9,8 +12,7 @@ const personSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        minLength: 2,
-        maxLength: 50
+        validate: createValidator(validatePhoneNumber),
     },
 })
 
