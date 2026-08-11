@@ -119,9 +119,7 @@ function createDatabase(url)
             return PersonModel.findByIdAndDelete(id);
         },
         update: (id, updatedPerson) => {
-            return PersonModel.findByIdAndUpdate(id, result => {
-
-            });
+            return PersonModel.findByIdAndUpdate(id, updatedPerson)
         },
         idExists: (id) => {
             return PersonModel.idExists(id);
