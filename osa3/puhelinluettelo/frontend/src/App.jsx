@@ -45,18 +45,17 @@ const useNotification = (seconds = 5) => {
   const [type, setType] = useState(null)
   const timeoutRef = useRef(null)
 
-  const clear = () => {
-    clearTimeout(timeoutRef.current)
-    timeoutRef.current = null
-    setMessage(null)
-    setType(null)
-  }
-
   const show = (msg, msgType) => {
-    clear()
+    clearTimeout(timeoutRef.current)
+
     setMessage(msg)
     setType(msgType)
-    timeoutRef.current = setTimeout(clear, seconds * 1000)
+
+    timeoutRef.current = setTimeout(() => {
+      setMessage(null)
+      setType(null)
+      timeoutRef.current = null
+    }, seconds * 1000)
   }
 
   return {
@@ -65,7 +64,6 @@ const useNotification = (seconds = 5) => {
     success: (msg) => show(msg, 'success'),
     warning: (msg) => show(msg, 'warning'),
     error: (msg) => show(msg, 'error'),
-    clear: clear,
   }
 }
 

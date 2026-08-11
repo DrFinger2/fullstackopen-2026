@@ -20,12 +20,12 @@ const createValidator = (validateFn) => {
 
 const validateName = (name) => {
     if (!name || typeof name !== 'string') {
-        return { ok: false, error: 'Name is missing or invalid.' }
+        return { ok: false, error: 'Name is missing or invalid' }
     }
 
     const trimmedName = name.trim()
     if (trimmedName === '') {
-        return { ok: false, error: 'Name is missing.' }
+        return { ok: false, error: 'Name is missing' }
     }
 
     // because i hate regex..
@@ -36,7 +36,7 @@ const validateName = (name) => {
         const isLetter = (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
         const isAllowedExtra = allowedExtraChars.includes(char)
         if (!isLetter && !isAllowedExtra) {
-            return { ok: false, error: 'Name contains invalid characters.' }
+            return { ok: false, error: 'Name contains invalid characters' }
         }
     }
 
@@ -46,13 +46,13 @@ const validateName = (name) => {
 
 const validatePhoneNumber = (number) => {
     if (!number || typeof number !== 'string') {
-        return { ok: false, error: 'Phone number is missing or invalid format.' }
+        return { ok: false, error: 'Phone number is missing or invalid format' }
     }
 
     const trimmedNumber = number.trim()
 
     if (trimmedNumber.length < 8) {
-        return { ok: false, error: 'Phone number must be at least 8 characters long.' }
+        return { ok: false, error: 'Phone number must be at least 8 characters long' }
     }
 
     let state = 'PART_1'
@@ -68,15 +68,15 @@ const validatePhoneNumber = (number) => {
                 if (isDigit) {
                     part1Digits++
                     if (part1Digits > 3) {
-                        return { ok: false, error: 'First part of the number can have at most 3 digits.' }
+                        return { ok: false, error: 'First part of the number can have at most 3 digits' }
                     }
                 } else if (char === '-') {
                     if (part1Digits < 2) {
-                        return { ok: false, error: 'First part of the number must have at least 2 digits before the hyphen.' }
+                        return { ok: false, error: 'First part of the number must have at least 2 digits before the hyphen' }
                     }
                     state = 'PART_2'
                 } else {
-                    return { ok: false, error: `Invalid character '${char}' found in the first part.` }
+                    return { ok: false, error: `Invalid character '${char}' found in the first part` }
                 }
                 break
 
@@ -84,14 +84,14 @@ const validatePhoneNumber = (number) => {
                 if (isDigit) {
                     part2Digits++
                 } else {
-                    return { ok: false, error: `Invalid character '${char}' found. Only digits are allowed after the hyphen.` }
+                    return { ok: false, error: `Invalid character '${char}' found. Only digits are allowed after the hyphen` }
                 }
                 break
         }
     }
 
     if (state !== 'PART_2' || part2Digits === 0) {
-        return { ok: false, error: 'Phone number must consist of two parts separated by a hyphen.' }
+        return { ok: false, error: 'Phone number must consist of two parts separated by a hyphen' }
     }
 
     return { ok: true }
