@@ -28,7 +28,7 @@ function main() {
         const route = createRoute(db);
         
         morgan.token('test-token', request => {
-            if (request.method === 'POST' || request.method === 'POST') {
+            if (request.method === 'POST' || request.method === 'PUT') {
                 return JSON.stringify(request.body);
             }
             else {
