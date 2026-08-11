@@ -69,14 +69,14 @@ const App = () => {
   const [newSearch, setNewSearch] = useState('')
 
   const phonebook = usePhonebook()
-  const notification = useNotification(3)
+  const notification = useNotification(6)
 
   useEffect(() => {
     phoneService.getAll()
       .then(allPersons => phonebook.set(allPersons))
   }, [])
 
-  
+
   const handleApiError = (error) => {
     if (error.response?.data?.error) {
       notification.error(error.response.data.error)
