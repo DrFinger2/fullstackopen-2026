@@ -5,14 +5,9 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
-const generateId = require('./utils/generateId.js');
+const { Person, connect, disconnect } = require('./models/person.js')
 const { formatName, formatNumber } = require('./utils/formatting.js');
 const { validateName, validateNumber } = require('./utils/validate.js');
-
-
-//const dns = require('dns');
-//dns.setServers(['1.1.1.1', '8.8.8.8'])
-
 
 
 function main() {
@@ -80,56 +75,37 @@ function main() {
 
 function createDatabase(url)
 {
-    const personSchema = new mongoose.Schema({
-        name: String,
-        number: String,
-    });
-
-    personSchema.set("toJSON", {
-        transform: (document, obj) => {
-            obj.id = obj._id.toString();
-            delete obj._id;
-            delete obj.__v;
-            return obj;
-        }
-    });
-
-    const PersonModel = mongoose.model('person',
-        personSchema
-    );
-    
     return {
         connect: () => {
-            mongoose.set('strictQuery',false)
-            return mongoose.connect(url, { family: 4 })
+            return connect(url);
         },
         disconnect: () => {
-            return mongoose.connection.close();
+            return disconnect();
         },
         getAll: () => {
-            return PersonModel.find({})
+            return Person.find({})
         },
         getById: (id) => {
-            return PersonModel.findById(id);
+            return Person.findById(id);
         },
         getCount: () => {
-            return PersonModel.countDocuments()
+            return Person.countDocuments()
         },
         add: (person) => {
-            const newPerson = new PersonModel(person)
+            const newPerson = new Person(person)
             return newPerson.save();
         },
         remove: (id) => {
-            return PersonModel.findByIdAndDelete(id);
+            return Person.findByIdAndDelete(id);
         },
         update: (id, updatedPerson) => {
-            return PersonModel.findByIdAndUpdate(id, updatedPerson, { new: true });
+            return Person.findByIdAndUpdate(id, updatedPerson, { new: true });
         },
         idExists: (id) => {
-            return PersonModel.exists({ _id: id }).then(result => result != null);
+            return Person.exists({ _id: id }).then(result => result != null);
         },
         nameExists: (name) => {
-            return PersonModel.exists({ name: name }).then(result => result != null);
+            return Person.exists({ name: name }).then(result => result != null);
         }
     };
 }
