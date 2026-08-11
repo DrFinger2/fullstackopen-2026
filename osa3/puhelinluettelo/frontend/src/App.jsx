@@ -1,147 +1,169 @@
-// Dependencies
 import { useState, useEffect } from 'react'
 import phoneService from './services/phoneService'
 import Notification from './components/Notification'
 
-const Button = ({ onClick, text, type='' }) => (
+const Button = ({ onClick, text, type = 'button' }) => (
   <button type={type} onClick={onClick}>{text}</button>
 )
+
 const Input = ({ label = ' ', value, onChange }) => (
-  <div> <label>{label}</label> <input value={value} onChange={onChange} /> </div>
+  <div>
+    <label>{label}</label>
+    <input value={value} onChange={onChange} />
+  </div>
 )
+
 const Person = ({ person, onRemove }) => (
-  <li className="person"> 
-    <span className="name">{person.name}</span> 
-    <span className="number">{person.number}</span> 
-    <Button onClick={onRemove} text="Remove" /> 
+  <li className="person">
+    <span className="name">{person.name}</span>
+    <span className="number">{person.number}</span>
+    <Button onClick={onRemove} text="Remove" />
   </li>
 )
+
 const Persons = ({ persons, onRemove }) => (
-  <ul> {persons.map(person => ( <Person key={person.id} person={person} onRemove={() => onRemove(person)} />))} </ul>
+  <ul>
+    {persons.map(person => (
+      <Person key={person.id} person={person} onRemove={() => onRemove(person)} />
+    ))}
+  </ul>
 )
 
 const usePhonebook = () => {
   const [persons, setPersons] = useState([])
-  const phonebook = {
+
+  return {
     persons,
     set:    (data)        => setPersons(data),
     add:    (person)      => setPersons(persons.concat(person)),
-    update: (id, updated) => setPersons(persons.map(person => person.id === id ? updated : person)),
-    remove: (id)          => setPersons(persons.filter(person => person.id !== id)),
+    update: (id, updated) => setPersons(persons.map(p => p.id === id ? updated : p)),
+    remove: (id)          => setPersons(persons.filter(p => p.id !== id)),
     find:   (condition)   => persons.find(condition),
     filter: (condition)   => persons.filter(condition),
   }
-  return phonebook
 }
 
 const useNotification = (seconds = 5) => {
-  const [message, setMessage] = useState(null);
-  const [type, setType] = useState(null);
+  const [message, setMessage] = useState(null)
+  const [type, setType] = useState(null)
 
-  const show = (message, type) => {
-    setMessage(message);
-    setType(type);
-    setTimeout(() => { setMessage(null); setType(null); }, seconds * 1000);
-  };
+  const show = (msg, msgType) => {
+    setMessage(msg)
+    setType(msgType)
+    setTimeout(() => {
+      setMessage(null)
+      setType(null)
+    }, seconds * 1000)
+  }
 
   return {
-    message, type,
-    success: (message) => show(message, "success"),
-    warning: (message) => show(message, "warning"),
-    error: (message) => show(message, "error"),
-    clear: () => { setMessage(null); setType(null); },
-  };
-};
-
+    message,
+    type,
+    success: (msg) => show(msg, 'success'),
+    warning: (msg) => show(msg, 'warning'),
+    error:   (msg) => show(msg, 'error'),
+    clear:   ()    => { setMessage(null); setType(null); },
+  }
+}
 
 const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newSearch, setNewSearch] = useState('')
-  
-  const notification = useNotification(3); 
+
   const phonebook = usePhonebook()
+  const notification = useNotification(3)
 
-  const onValueSubmit = (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    phoneService.getAll()
+      .then(allPersons => phonebook.set(allPersons))
+  }, [])
 
-    if (!newName.length) {
-      return notification.warning('Name field is empty')
+  const resetForm = () => {
+    setNewName('')
+    setNewPhone('')
+  }
+
+  const handleApiError = (error) => {
+    if (error.response?.data?.error) {
+      notification.error(error.response.data.error)
+    } else {
+      notification.error('Something went wrong, please try again')
     }
-    if (!newPhone.length) {
-      return notification.warning('Phone number field is empty')
-    }
+  }
 
-    const foundPerson = phonebook.find(person => person.name === newName)
-    if (foundPerson) {
-      if (window.confirm(`Do you want to replace '${foundPerson.name}' phone number?`)) {
-        phoneService
-        .update(foundPerson.id, { ...foundPerson, number: newPhone })
-        .then(updated => {
-          notification.success(`Updated ${updated.name}'s phone number`)
-          phonebook.update(updated.id, updated)
-          setNewName(''); 
-          setNewPhone('');
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 404) {
-            notification.error(`Person '${foundPerson.name}' has already been removed from server`)
-            phonebook.remove(foundPerson.id)
-          }
-          else if (error.response && error.response.data && error.response.data.error) {
-            notification.error(error.response.data.error)
-          }
-          else {
-            notification.error('Something went wrong, please try again')
-          }
-        })
+  const handleCreatePerson = (name, phone) => {
+    const newPerson = { name, number: phone }
+    
+    phoneService.create(newPerson)
+      .then(created => {
+        phonebook.add(created)
+        notification.success(`Added ${created.name} to phonebook`)
+        resetForm()
+      })
+      .catch(handleApiError)
+  }
 
-      }
+  const handleUpdatePerson = (existingPerson, newPhone) => {
+    if (!window.confirm(`Do you want to replace '${existingPerson.name}' phone number?`)) {
       return
     }
 
-    const person = { name: newName, number: newPhone }
-    phoneService.create(person).then(created => {
-      notification.success(`Added ${created.name} to phonebook`)
-      phonebook.add(created)
-      setNewName('')
-      setNewPhone('')
-    })
-    .catch(error => {
-      if (error.response && error.response.data && error.response.data.error) {
-        notification.error(error.response.data.error)
-      } else {
-        notification.error('Something went wrong, please try again')
-      }
-    })
+    const updatedData = { ...existingPerson, number: newPhone }
+    
+    phoneService.update(existingPerson.id, updatedData)
+      .then(updated => {
+        phonebook.update(updated.id, updated)
+        notification.success(`Updated ${updated.name}'s phone number`)
+        resetForm()
+      })
+      .catch(error => {
+        if (error.response?.status === 404) {
+          notification.error(`Person '${existingPerson.name}' has already been removed from server`)
+          phonebook.remove(existingPerson.id)
+        } else {
+          handleApiError(error)
+        }
+      })
   }
 
-  const removePerson = (person) => {
-    if (window.confirm(`Do you really want to remove '${person.name}' from your phonebook?`)) {
-      phoneService
-        .remove(person.id)
-        .then((removed) => {
+  const handleRemovePerson = (person) => {
+    if (!window.confirm(`Do you really want to remove '${person.name}' from your phonebook?`)) {
+      return
+    }
+
+    phoneService.remove(person.id)
+      .then(() => {
+        phonebook.remove(person.id)
+        notification.success(`Removed ${person.name} from phonebook`)
+      })
+      .catch(error => {
+        if (error.response?.status === 404) {
+          notification.error(`Person '${person.name}' has already been removed from server`)
           phonebook.remove(person.id)
-          notification.success(`Removed ${person.name} from phonebook`)
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 404) {
-            notification.error(`Person '${person.name}' has already been removed from server`)
-            phonebook.remove(person.id) 
-          } else if (error.response && error.response.data && error.response.data.error) {
-            notification.error(error.response.data.error)
-          } else {
-            notification.error('Something went wrong, please try again')
-          }
-        })
+        } else {
+          handleApiError(error)
+        }
+      })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const name = newName.trim()
+    const phone = newPhone.trim()
+
+    if (!name) return notification.warning('Name field is empty')
+    if (!phone) return notification.warning('Phone number field is empty')
+
+    const existingPerson = phonebook.find(person => person.name === name)
+
+    if (existingPerson) {
+      handleUpdatePerson(existingPerson, phone)
+    } else {
+      handleCreatePerson(name, phone)
     }
   }
-
-  useEffect(() => {
-    phoneService
-      .getAll()
-      .then(allPersons => phonebook.set(allPersons))
-  }, [])
 
   const filteredPersons = newSearch.length === 0
     ? phonebook.persons
@@ -149,20 +171,31 @@ const App = () => {
 
   return (
     <div>
-
       <h2>Phonebook</h2>
       <Notification message={notification.message} type={notification.type} />
-      <Input label="Search: "value={newSearch} onChange={e => setNewSearch(e.target.value)} />
-  
+      <Input 
+        label="Search: " 
+        value={newSearch} 
+        onChange={e => setNewSearch(e.target.value)} 
+      />
+
       <h2>Add a new</h2>
-      <form onSubmit={onValueSubmit}>
-        <Input label="Name: "   value={newName}   onChange={e => setNewName(e.target.value)} />
-        <Input label="Number: " value={newPhone}  onChange={e => setNewPhone(e.target.value)} />
+      <form onSubmit={handleSubmit}>
+        <Input 
+          label="Name: "   
+          value={newName}   
+          onChange={e => setNewName(e.target.value)} 
+        />
+        <Input 
+          label="Number: " 
+          value={newPhone}  
+          onChange={e => setNewPhone(e.target.value)} 
+        />
         <Button text="Add" type="submit" />
       </form>
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} onRemove={removePerson} />
+      <Persons persons={filteredPersons} onRemove={handleRemovePerson} />
     </div>
   )
 }
