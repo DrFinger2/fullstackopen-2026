@@ -36,9 +36,15 @@ function main() {
             ':method :url :status :response-time ms :test-token'
         );
 
+        const errorHandler = (error, request, response, next) => {
+            console.error(error);
+            return response.status(500).json({ error: 'Internal server error' });
+        }
+
         app.use(express.static('dist'));
         app.use(express.json({ limit: '10kb' })); // I read that this is probably good idea to do
         app.use(morgan('test-format'));
+        app.use(errorHandler);
 
         // 3. Register Routes
         app.get('/info',                route.getInfo);
@@ -119,7 +125,7 @@ function createDatabase(url)
 
 
 const createRoute = (db) => ({
-    getInfo: (request, response) => {
+    getInfo: (request, response, next) => {
         db.getCount()
         .then(count => {
             const infoText = count === 0 ? 'Phonebook is empty.': `Phonebook has info for ${count} people.`;
@@ -129,24 +135,18 @@ const createRoute = (db) => ({
                 <p><strong>Request time: </strong>${requestTime}</p>`
             );
         })
-        .catch(error => {
-            console.error(error);
-            return response.status(500).json({ error: 'Internal server error' });
-        });
+        .catch(error => next(error))
     },
 
-    getPersons: (request, response) => {
+    getPersons: (request, response, next) => {
         db.getAll()
             .then(results => {
                 return response.status(200).json(results)
             })
-            .catch(error => {
-                console.error(error);
-                return response.status(500).json({ error: 'Internal server error' });
-            });
+            .catch(error => next(error));
     },
 
-    getPerson: (request, response) => {
+    getPerson: (request, response, next) => {
         const id = request.params.id;
         if (!mongoose.isValidObjectId(id)) {
             return response.status(400).json({ error: 'Malformatted id.' });
@@ -157,13 +157,10 @@ const createRoute = (db) => ({
                 if (!person) return response.status(404).json({ error: 'Person not found.' });
                 return response.status(200).json(person);
             })
-            .catch(error => {
-                console.error(error);
-                return response.status(500).json({ error: 'Internal server error' });
-            });
+            .catch(error => next(error));
     },
 
-    deletePerson: (request, response) => {
+    deletePerson: (request, response, next) => {
         const id = request.params.id;
         if (!mongoose.isValidObjectId(id)) {
             return response.status(400).json({ error: 'Malformatted id.' });
@@ -177,13 +174,10 @@ const createRoute = (db) => ({
                 }
                 return response.status(204).end();
             })
-            .catch(error => {
-                console.error(error);
-                return response.status(500).json({ error: 'Internal server error' });
-            });
+            .catch(error => next(error));
     },
 
-    postPerson: (request, response) => {
+    postPerson: (request, response, next) => {
         let { name, number } = request.body || {};
         
         const nameResult = validateName(name);
@@ -211,13 +205,10 @@ const createRoute = (db) => ({
                 return response.status(201).json(result);
             });
         })
-        .catch(error => {
-            console.error(error);
-            return response.status(500).json({ error: 'Internal server error' });
-        });
+        .catch(error => next(error));
     },
 
-    putPerson: (request, response) => {
+    putPerson: (request, response, next) => {
         const id = request.params.id;
         if (!mongoose.isValidObjectId(id)) {
             return response.status(400).json({ error: 'Malformatted id.' });
@@ -239,10 +230,7 @@ const createRoute = (db) => ({
                 }
                 return response.status(200).json(person);
             })
-            .catch(error => {
-                console.error(error);
-                return response.status(500).json({ error: 'Internal server error' });
-            });
+            .catch(error => next(error));
     }
 });
 
