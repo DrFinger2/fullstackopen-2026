@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const blogRouter = require('./controllers/blogRouter')
 const config = require('./utils/config')
+const { errorHandler } = require('./utils/middleware')
+
 
 function main() {
     const url = config.MONGODB_URI
@@ -17,6 +19,7 @@ function main() {
         app.use(express.json())
         app.use(morgan('dev'))
         app.use('/api/blog', blogRouter)
+        app.use(errorHandler)
 
         const server = app.listen(port, () => {
             console.log(`Server running on port ${port}`)
