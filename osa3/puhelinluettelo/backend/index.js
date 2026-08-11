@@ -178,8 +178,11 @@ const createRoute = (db) => ({
     },
 
     postPerson: (request, response, next) => {
-        let { name, number } = request.body || {};
-        
+        if (!request.body) {
+            return response.status(400).json({ error: 'Request body is missing.' })
+        }
+
+        let { name, number } = request.body
         name = formatName(name);
         number = formatNumber(number);
 
@@ -199,8 +202,12 @@ const createRoute = (db) => ({
     },
 
     putPerson: (request, response, next) => {
+        if (!request.body) {
+            return response.status(400).json({ error: 'Request body is missing.' })
+        }
+        
+        const { number } = request.body;
         const id = request.params.id;
-        const { number } = request.body || {};
 
         const updatedPerson = { number: formatNumber(number) };
         db.update(id, updatedPerson)
