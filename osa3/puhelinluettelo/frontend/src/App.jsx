@@ -117,8 +117,8 @@ const App = () => {
   }
 
   const removePerson = (person) => {
-    if (window.confirm(`Do you really want to remove '${person.name}' from your phonebook?`)) {
-      phoneService
+  if (window.confirm(`Do you really want to remove '${person.name}' from your phonebook?`)) {
+    phoneService
       .remove(person.id)
       .then((removed) => {
         phonebook.remove(person.id)
@@ -126,18 +126,14 @@ const App = () => {
       })
       .catch(error => {
         if (error.response && error.response.status === 404) {
-          notification.error(`Person '${foundPerson.name}' has already been removed from server`)
-          phonebook.remove(foundPerson.id)
-        }
-        else if (error.response && error.response.data && error.response.data.error) {
+          notification.error(`Person '${person.name}' has already been removed from server`)
+          phonebook.remove(person.id) 
+        } else if (error.response && error.response.data && error.response.data.error) {
           notification.error(error.response.data.error)
-        }
-        else {
+        } else {
           notification.error('Something went wrong, please try again')
         }
       })
-
-    }
   }
 
   useEffect(() => {
