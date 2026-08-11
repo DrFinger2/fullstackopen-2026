@@ -1,8 +1,8 @@
 # Puhelinluettelo
 
-**Home Page:** https://fullstackopen-2026-okiy.onrender.com
+**Application:** https://fullstackopen-2026-okiy.onrender.com
 
-**Info Page:** https://fullstackopen-2026-okiy.onrender.com/info
+**Info:** https://fullstackopen-2026-okiy.onrender.com/info
 
 **API:** https://fullstackopen-2026-okiy.onrender.com/api/people
 
