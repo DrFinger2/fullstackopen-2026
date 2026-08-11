@@ -16,8 +16,10 @@ function main() {
     const address = (process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`);
     const username = 'fullstack';
     const password = process.argv[2]
+    const DATABASE = 'phonebook';
+    const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
 
-    const db = createDatabase(username, password)
+    const db = createDatabase(url)
 
     // 1. Connect to DB
     db.connect().then(() => {
@@ -72,22 +74,21 @@ function main() {
 }
 
 
-function createDatabase(username, password)
+function createDatabase(url)
 {
-    const DATABASE = 'phonebook';
-    const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
-
     const personSchema = new mongoose.Schema({
         name: String,
         number: String,
     });
+
     personSchema.set("toJSON", {
         transform: (document, obj) => {
             obj.id = obj._id.toString();
             delete obj._id;
             delete obj.__v;
         }
-    })
+    });
+
     const PersonModel = mongoose.model('person',
         personSchema
     );
