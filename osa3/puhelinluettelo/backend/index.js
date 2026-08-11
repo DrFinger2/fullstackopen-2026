@@ -50,7 +50,7 @@ function main() {
         app.put('/api/persons/:id',     route.putPerson);
 
         // 4. Start Server
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             console.log(`Server running on port: ${port}`);
             console.log(`Host Address: ${address}\n`);
         });
@@ -121,10 +121,10 @@ function createDatabase(url)
             return PersonModel.findByIdAndUpdate(id, updatedPerson, { new: true });
         },
         idExists: (id) => {
-            return PersonModel.idExists(id);
+            return PersonModel.exists({ _id: id }).then(result => result != null);
         },
         nameExists: (name) => {
-            return PersonModel.find({ name: name }).then(results => (results.length > 0));
+            return PersonModel.exists({ name: name }).then(result => result != null);
         }
     };
 }
@@ -238,29 +238,24 @@ const createRoute = (db) => ({
                 if (!nameResult.ok) {
                     return response.status(400).json({ error: nameResult.error });
                 }
-                
+
                 const numberResult = validateNumber(number);
                 if (!numberResult.ok) {
                     return response.status(400).json({ error: numberResult.error });
                 }
-                
+
                 name = formatName(name);
                 number = formatNumber(number);
 
-                return db.nameExists(name).then(exists => {
-                    if (exists) {
-                        const updatedPerson = {
-                            name: name,
-                            number: number
-                        };
+                const updatedPerson = { name, number };
 
-                        return db.update(id, updatedPerson).then((person) => {
-                            return response.status(200).json(person);
-                        });
-                    }
-
-                    
-                });
+                return db.update(id, updatedPerson)
+                    .then((person) => {
+                        return response.status(200).json(person);
+                    })
+                    .catch((error) => {
+                        return response.status(500).json({ error: 'Unable to update person.' })
+                    });
             })
             .catch(err => {
                 console.error(err);
