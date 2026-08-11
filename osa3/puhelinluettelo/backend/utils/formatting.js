@@ -2,40 +2,40 @@ const formatName = (name) => {
     if (!name || typeof name !== 'string') {
         return name
     }
-    let result = '';
-    let capitalize = true;
+    let result = ''
+    let capitalize = true
 
     for (const char of name.toLowerCase()) {
         if (char === ' ') {
             if (result && result[result.length - 1] !== ' ') {
-                result += ' ';
-                capitalize = true;
+                result += ' '
+                capitalize = true
             }
         } else {
-            result += capitalize ? char.toUpperCase() : char;
-            capitalize = false;
+            result += capitalize ? char.toUpperCase() : char
+            capitalize = false
         }
     }
-    return result.trimEnd();
-};
+    return result.trimEnd()
+}
 
 const formatNumber = (number) => {
     if (!number || typeof number !== 'string') {
-        return number;
+        return number
     }
 
-    let result = '';
+    let result = ''
     for (const char of number) {
         if (char === ' ') {
             if (result && result[result.length - 1] !== ' ') {
-                result += ' ';
+                result += ' '
             }
         } else {
-            result += char;
+            result += char
         }
     }
-    return result.trimEnd();
-};
+    return result.trimEnd()
+}
 
 
-module.exports =  {formatName: formatName, formatNumber: formatNumber}
+module.exports = { formatName: formatName, formatNumber: formatNumber }
