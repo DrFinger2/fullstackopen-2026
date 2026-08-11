@@ -16,7 +16,7 @@ const { validateName, validateNumber } = require('./utils/validate.js');
 
 
 function main() {
-    const port = process.env.PORT;
+    const port = process.env.PORT || 3001;
     const address = (process.env.RENDER_EXTERNAL_URL || process.env.EXTERNAL_URL);
     const url = process.env.MONGODB_URI
     const db = createDatabase(url)
@@ -28,8 +28,12 @@ function main() {
         const route = createRoute(db);
         
         morgan.token('test-token', request => {
-            if (request.method === 'POST') return JSON.stringify(request.body);
-            else return '';
+            if (request.method === 'POST' || request.method === 'POST') {
+                return JSON.stringify(request.body);
+            }
+            else {
+                return '';
+            }
         });
 
         morgan.format(
@@ -143,8 +147,8 @@ const createRoute = (db) => ({
                 <p><strong>Request time: </strong>${requestTime}</p>`
             );
         })
-        .catch(err => {
-            console.error(err);
+        .catch(error => {
+            console.error(error);
             return response.status(500).json({ error: 'Internal server error' });
         });
     },
@@ -154,8 +158,8 @@ const createRoute = (db) => ({
             .then(results => {
                 return response.status(200).json(results)
             })
-            .catch(err => {
-                console.error(err);
+            .catch(error => {
+                console.error(error);
                 return response.status(500).json({ error: 'Internal server error' });
             });
     },
@@ -171,8 +175,8 @@ const createRoute = (db) => ({
                 if (!person) return response.status(404).json({ error: 'Person not found.' });
                 return response.status(200).json(person);
             })
-            .catch(err => {
-                console.error(err);
+            .catch(error => {
+                console.error(error);
                 return response.status(500).json({ error: 'Internal server error' });
             });
     },
@@ -191,8 +195,8 @@ const createRoute = (db) => ({
                 }
                 return response.status(204).end();
             })
-            .catch(err => {
-                console.error(err);
+            .catch(error => {
+                console.error(error);
                 return response.status(500).json({ error: 'Internal server error' });
             });
     },
@@ -225,8 +229,8 @@ const createRoute = (db) => ({
                 return response.status(201).json(result);
             });
         })
-        .catch(err => {
-            console.error(err);
+        .catch(error => {
+            console.error(error);
             return response.status(500).json({ error: 'Internal server error' });
         });
     },
@@ -237,39 +241,24 @@ const createRoute = (db) => ({
             return response.status(400).json({ error: 'Malformed id.' });
         }
 
-        let { name, number } = request.body || {};
+        const { number } = request.body || {};
 
-        db.getById(id)
-            .then(person => {
+        const numberResult = validateNumber(number);
+        if (!numberResult.ok) {
+            return response.status(400).json({ error: numberResult.error });
+        }
+
+        const updatedPerson = { number: formatNumber(number) };
+
+        db.update(id, updatedPerson)
+            .then((person) => {
                 if (!person) {
                     return response.status(404).json({ error: "Person not found!" });
                 }
-
-                const nameResult = validateName(name);
-                if (!nameResult.ok) {
-                    return response.status(400).json({ error: nameResult.error });
-                }
-
-                const numberResult = validateNumber(number);
-                if (!numberResult.ok) {
-                    return response.status(400).json({ error: numberResult.error });
-                }
-
-                name = formatName(name);
-                number = formatNumber(number);
-
-                const updatedPerson = { name, number };
-
-                return db.update(id, updatedPerson)
-                    .then((person) => {
-                        return response.status(200).json(person);
-                    })
-                    .catch((error) => {
-                        return response.status(500).json({ error: 'Unable to update person.' })
-                    });
+                return response.status(200).json(person);
             })
-            .catch(err => {
-                console.error(err);
+            .catch(error => {
+                console.error(error);
                 return response.status(500).json({ error: 'Internal server error' });
             });
     }
