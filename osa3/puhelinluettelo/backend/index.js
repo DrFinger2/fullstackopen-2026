@@ -45,6 +45,7 @@ function main() {
         app.put('/api/people/:id',     route.putPerson)
 
         // 4. Custom error handling
+        // eslint-disable-next-line no-unused-vars
         const errorHandler = (error, request, response, next) => {
             if (error.name === 'CastError') {
                 return response.status(400).json({ error: 'Malformatted id.' })
