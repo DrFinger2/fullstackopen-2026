@@ -46,8 +46,11 @@ function main() {
         app.post('/api/persons',        route.postPerson);
         app.put('/api/persons/:id', route.putPerson);
         
-        // 4. Custom error handler
+        // 4. Custom error handling
         const errorHandler = (error, request, response, next) => {
+            if (error.name === 'CastError') {
+                return response.status(400).json({ error: 'Malformatted id.' });
+            }
             console.error(error);
             return response.status(500).json({ error: 'Internal server error' });
         }
@@ -147,10 +150,7 @@ const createRoute = (db) => ({
 
     getPerson: (request, response, next) => {
         const id = request.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformatted id.' });
-        }
-            
+        
         db.getById(id)
             .then(person => {
                 if (!person) return response.status(404).json({ error: 'Person not found.' });
@@ -161,16 +161,9 @@ const createRoute = (db) => ({
 
     deletePerson: (request, response, next) => {
         const id = request.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformatted id.' });
-        }
 
-         // simplified db calls findByidAndDelete, so there is no need to check if id exists.
         db.remove(id)
             .then(person => {
-                if (!person) {
-                    return response.status(404).json({ error: 'Person not found.' });
-                }
                 return response.status(204).end();
             })
             .catch(error => next(error));
@@ -209,10 +202,6 @@ const createRoute = (db) => ({
 
     putPerson: (request, response, next) => {
         const id = request.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformatted id.' });
-        }
-
         const { number } = request.body || {};
 
         const numberResult = validateNumber(number);
