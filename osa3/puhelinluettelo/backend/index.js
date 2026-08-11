@@ -38,11 +38,11 @@ function main() {
 
         // 3. Register Routes
         app.get('/info',                route.getInfo)
-        app.get('/api/people',         route.getPeople)
-        app.get('/api/people/:id',     route.getPerson)
-        app.delete('/api/people/:id',  route.deletePerson)
-        app.post('/api/people',        route.postPerson)
-        app.put('/api/people/:id',     route.putPerson)
+        app.get('/api/persons',         route.getPersons)
+        app.get('/api/persons/:id',     route.getPerson)
+        app.delete('/api/persons/:id',  route.deletePerson)
+        app.post('/api/persons',        route.postPerson)
+        app.put('/api/persons/:id',     route.putPerson)
 
         // 4. Custom error handling
         // eslint-disable-next-line no-unused-vars
@@ -151,7 +151,7 @@ const createRoute = (db) => ({
             )
     },
 
-    getPeople: (request, response, next) => {
+    getPersons: (request, response, next) => {
         db.getAll()
             .then(results => {
                 return response.status(200).json(results)
