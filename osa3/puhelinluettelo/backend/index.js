@@ -105,14 +105,13 @@ function createDatabase(url)
             return PersonModel.find({})
         },
         getById: (id) => {
-            const foundPerson = PersonModel.findById(id);
-            return foundPerson.then(person => person.toJSON())
+            return PersonModel.findById(id);
         },
         getCount: () => {
             return PersonModel.countDocuments()
         },
         add: (person) => {
-            const newPerson = new PersonModel({ name: person.name, number: person.number })
+            const newPerson = new PersonModel(person)
             return newPerson.save();
         },
         remove: (id) => {
@@ -212,12 +211,11 @@ const createRoute = (db) => ({
                 return response.status(400).json({ error: 'Name must be unique.' });
             }
             const person = {
-                id: generateId(),
                 name: name,
                 number: number
             };
-            return db.add(person).then(() => {
-                return response.status(201).json(person);
+            return db.add(person).then((result) => {
+                return response.status(201).json(result);
             });
         })
         .catch(err => {
