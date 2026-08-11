@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import phoneService from './services/phoneService'
 import Notification from './components/Notification'
 
@@ -43,14 +43,20 @@ const usePhonebook = () => {
 const useNotification = (seconds = 5) => {
   const [message, setMessage] = useState(null)
   const [type, setType] = useState(null)
+  const timeoutRef = useRef(null)
+
+  const clear = () => {
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = null
+    setMessage(null)
+    setType(null)
+  }
 
   const show = (msg, msgType) => {
+    clear()
     setMessage(msg)
     setType(msgType)
-    setTimeout(() => {
-      setMessage(null)
-      setType(null)
-    }, seconds * 1000)
+    timeoutRef.current = setTimeout(clear, seconds * 1000)
   }
 
   return {
@@ -58,8 +64,8 @@ const useNotification = (seconds = 5) => {
     type,
     success: (msg) => show(msg, 'success'),
     warning: (msg) => show(msg, 'warning'),
-    error:   (msg) => show(msg, 'error'),
-    clear:   ()    => { setMessage(null); setType(null); },
+    error: (msg) => show(msg, 'error'),
+    clear: clear,
   }
 }
 
