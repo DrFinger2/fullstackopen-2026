@@ -1,27 +1,26 @@
 
+require('dotenv').config();
+
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const dns = require('dns');
-
-// dns.setServers(['1.1.1.1', '8.8.8.8'])
-
 
 const generateId = require('./utils/generateId.js');
 const { formatName, formatNumber } = require('./utils/formatting.js');
 const { validateName, validateNumber } = require('./utils/validate.js');
 
-function main() {
-    const port = (process.env.PORT || 3001);
-    const address = (process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`);
-    const username = 'fullstack';
-    const password = process.argv[2]
-    const DATABASE = 'phonebook';
-    const url = `mongodb+srv://${username}:${password}@cluster0.zicuuua.mongodb.net/${DATABASE}?appName=Cluster0`;
-    const url2 = process.env.MONGODB_URI
-    console.log(url2)
-    const db = createDatabase(url2)
 
+//const dns = require('dns');
+//dns.setServers(['1.1.1.1', '8.8.8.8'])
+
+
+
+function main() {
+    const port = process.env.PORT;
+    const address = (process.env.RENDER_EXTERNAL_URL || process.env.EXTERNAL_URL);
+    const url = process.env.MONGODB_URI
+    const db = createDatabase(url)
+    
     // 1. Connect to DB
     db.connect().then(() => {
         // 2. Setup Express & Middleware
