@@ -1,6 +1,9 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
+//const dns = require('dns')
+//dns.setServers(['1.1.1.1', '8.8.8.8'])
+
 
 const { Person, connect, disconnect } = require('./models/person.js')
 const { formatName, formatNumber } = require('./utils/formatting.js')
