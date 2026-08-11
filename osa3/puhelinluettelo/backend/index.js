@@ -127,7 +127,7 @@ function createDatabase(url)
             return PersonModel.idExists(id);
         },
         nameExists: (name, excludeId = null) => {
-            return PersonModel.find({ name: name }).then(result => result != null);
+            return PersonModel.find({ name: name }).then(results => (results.length > 0));
         }
     };
 }
