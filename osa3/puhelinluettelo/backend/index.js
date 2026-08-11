@@ -142,9 +142,6 @@ const createRoute = (db) => ({
 
     getPerson: (request, response) => {
         const id = request.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            return response.status(400).json({ error: 'Malformed id.' });
-        }
             
         db.getById(id)
             .then(person => {
