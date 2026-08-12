@@ -3,7 +3,7 @@ function info(...params){
 }
 
 function error(...params){
-    console.log(...params)
+    console.error(...params)
 }
 
 module.exports = {
