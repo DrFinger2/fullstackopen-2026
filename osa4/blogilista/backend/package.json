@@ -9,9 +9,9 @@
   "scripts": {
     "build:render": "npm install && rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend",
     "build": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\"",
-    "start":  "cross-env NODE_ENV=production node index.js",
-    "dev":    "cross-env NODE_ENV=development node --watch index.js",
-    "test":   "cross-env NODE_ENV=test node --test"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test"
   },
   "dependencies": {
     "cross-env": "^10.1.0",
@@ -24,6 +24,7 @@
     "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "eslint": "^10.8.1",
-    "globals": "^17.9.0"
+    "globals": "^17.9.0",
+    "supertest": "^7.2.2"
   }
 }
