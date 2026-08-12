@@ -1,11 +1,17 @@
 require('dotenv').config()
 
-const EXTERNAL_ADDRESS = process.env.EXTERNAL_ADDRESS
-const PORT = process.env.PORT
-const MONGODB_URI = process.env.MONGODB_URI
+const { NODE_ENV, PORT, EXTERNAL_ADDRESS } = process.env
+
+const MONGODB_URI = {
+    test: process.env.MONGODB_URI_TEST,
+    development: process.env.MONGODB_URI_DEVELOPMENT,
+    production: process.env.MONGODB_URI_PRODUCTION
+}[NODE_ENV] || process.env.MONGODB_URI_PRODUCTION
+
+console.log('TEST: ', NODE_ENV, MONGODB_URI)
 
 module.exports = {
-    MONGODB_URI: MONGODB_URI,
-    PORT: PORT,
-    EXTERNAL_ADDRESS: EXTERNAL_ADDRESS
+    MONGODB_URI,
+    PORT,
+    EXTERNAL_ADDRESS
 }
