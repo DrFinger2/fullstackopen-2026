@@ -82,7 +82,7 @@ describe('Blog API', () => {
             assert.ok(titles.includes(newBlog.title))
         })
 
-        test('defaults likes to 0 when missing', async () => {
+        test('defaults likes to 0 if missing', async () => {
             // task 4.11
             const newBlog = {
                 title: 'Example blog',
@@ -98,7 +98,7 @@ describe('Blog API', () => {
             assert.strictEqual(response.body.likes, 0)
         })
 
-        test('fails with 400 when title is missing', async () => {
+        test('fails with 400 if title is missing', async () => {
             // task 4.12
             const newBlog = {
                 author: 'Example Name',
@@ -109,7 +109,7 @@ describe('Blog API', () => {
             await api.post('/api/blogs').send(newBlog).expect(400)
         })
 
-        test('fails with 400 when url is missing', async () => {
+        test('fails with 400 if url is missing', async () => {
             // task 4.12
             const newBlog = {
                 title: 'Example blog',

@@ -3,6 +3,7 @@ const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
 // 1. Test Data
+
 const singleBlog = [
     {
         _id: '5a422aa71b54a676234d17f8',
@@ -64,15 +65,17 @@ const multipleBlogs = [
     }
 ]
 
-// 2. Test dummy function
+// 2. Test Functions
+
 test('dummy returns one', () => {
+    // task 4.3
     const blogs = []
     const result = listHelper.dummy(blogs)
     assert.strictEqual(result, 1)
 })
 
-// 3. Test total likes
 describe('Total Likes', () => {
+    // task 4.4
     test('when list has only one blog equals the likes of that', () => {
         const result = listHelper.totalLikes(singleBlog)
         assert.strictEqual(result, 5)
@@ -84,8 +87,8 @@ describe('Total Likes', () => {
     })
 })
 
-// 4. Test favorite blog
 describe('Favorite blog', () => {
+    // task 4.5
     const favoriteMultiple = multipleBlogs[2]
     const favoriteSingle = singleBlog[0]
 
@@ -100,8 +103,8 @@ describe('Favorite blog', () => {
     })
 })
 
-// 5. Test most blogs
 describe('Most Blogs', () => {
+    // task 4.6
     const mostBlogsMultiple = { author: 'Robert C. Martin', blogs: 3 }
     const mostBlogsSingle = { author: 'Edsger W. Dijkstra', blogs: 1 }
 
@@ -116,8 +119,8 @@ describe('Most Blogs', () => {
     })
 })
 
-// 6. Test most likes
 describe('Most likes', () => {
+    // task 4.7
     const mostLikesMultiple = { author: 'Edsger W. Dijkstra', likes: 17 }
     const mostLikesSingle = { author: 'Edsger W. Dijkstra', likes: 5 }
 
