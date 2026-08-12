@@ -27,7 +27,11 @@ connectToDatabase()
 
 app.use(express.static('dist'))
 app.use(express.json())
-app.use(morgan('dev'))
+
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('dev'))
+}
+
 app.use('/api/blogs', blogRouter)
 app.use(unknownEndpoint)
 app.use(errorHandler)
