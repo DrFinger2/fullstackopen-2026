@@ -8,6 +8,9 @@ function totalLikes(blogs) {
 }
 
 function favoriteBlog(blogs) {
+    if (blogs.length === 0)
+        return undefined
+
     const blog = blogs.reduce((favorite, blog) => {
         return blog.likes > favorite.likes ? blog : favorite
     }, blogs[0])
@@ -15,6 +18,9 @@ function favoriteBlog(blogs) {
 }
 
 function mostBlogs(blogs) {
+    if (blogs.length === 0)
+        return undefined
+
     const counts = {}
     let max = 0
     for (const blog of blogs) {
@@ -31,6 +37,9 @@ function mostBlogs(blogs) {
 }
 
 function mostLikes(blogs) {
+    if (blogs.length === 0)
+        return undefined
+
     const likes = {}
     let max = 0
     for (const blog of blogs) {

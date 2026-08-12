@@ -8,7 +8,7 @@ const blogRouter = require('./controllers/blogRouter')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 
-const { errorHandler } = require('./utils/middleware')
+const { errorHandler, unknownEndpoint } = require('./utils/middleware')
 const app = express()
 
 logger.info('connecting to', config.MONGODB_URI)
@@ -26,6 +26,7 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(morgan('dev'))
 app.use('/api/blogs', blogRouter)
+app.use(unknownEndpoint)
 app.use(errorHandler)
 
 module.exports = app

@@ -19,7 +19,13 @@ function errorHandler(error, request, response, next) {
     }
 }
 
+function unknownEndpoint(request, response) {
+    const errors = [{ field: null, message: 'Unknown endpoint' }]
+    return response.status(404).json({ errors: errors })
+}
+
 module.exports = {
-    errorHandler: errorHandler
+    errorHandler: errorHandler,
+    unknownEndpoint: unknownEndpoint
 }
 
