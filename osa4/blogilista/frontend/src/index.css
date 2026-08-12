@@ -83,3 +83,30 @@ body {
     padding:15px;
     width: 300px;
 }
+
+
+/* Notification rules */
+.notification {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.notification-info {
+  color: #2f6f2f;
+  background: #eaffea;
+  border: 1px solid #2f6f2f;
+}
+
+.notification-error {
+  color: #9f3a38;
+  background: #fff2f2;
+  border: 1px solid #9f3a38;
+}
+
+.notification-warning {
+  color: #9f7d1f;
+  background: #fffbea;
+  border: 1px solid #9f7d1f;
+}

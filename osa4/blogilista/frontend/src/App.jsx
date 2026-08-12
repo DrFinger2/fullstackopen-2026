@@ -16,6 +16,32 @@ const useForm = () => {
   }
 }
 
+const useNotification = (seconds = 5) => {
+  const [notification, setNotification] = useState(null)
+
+  const notify = (type) => (message) => {
+    setNotification({ type, message })
+    setTimeout(() => setNotification(null), seconds * 1000)
+  }
+
+  return {
+    notification,
+    info: notify('info'),
+    error: notify('error'),
+    warning: notify('warning')
+  }
+}
+
+const Notification = ({ notification }) => {
+  if (!notification) return null
+
+  return (
+    <div className={`notification notification-${notification.type}`}>
+      {notification.message}
+    </div>
+  )
+}
+
 const Blog = ({ blog }) => {
   return (
     <div className="blog-card">
@@ -63,7 +89,8 @@ const BlogForm = ({ form, onSubmit }) => {
 function App() {
   const [blogs, setBlogs] = useState([])
   const form = useForm()
-
+  const { notification, info, error } = useNotification(5)
+  
   useEffect(() => {
     blogService.getAll().then((result) => {
       setBlogs(result)
@@ -72,6 +99,10 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    if (!window.confirm("Do you want to add a new blog to blogs?")) {
+      return;
+    }
+
     const newForm = {
       title: form.title,
       author: form.author,
@@ -82,10 +113,11 @@ function App() {
       .then((result) => {
         const copy = blogs.concat(result);
         setBlogs(copy);
-        console.log('.then result: ', copy);
+        info(`a new blog "${result.title}" was added`)
       })
-      .catch(error => {
-        console.log(error);
+      .catch(errors => {
+        const firstError = errors[0].message;
+        error(firstError)
       })
     
   }
@@ -93,6 +125,8 @@ function App() {
 
   return (
     <div className="page-container">
+      <Notification notification={notification} />
+
       <BlogForm
         form={form}
         onSubmit={handleSubmit}/>
