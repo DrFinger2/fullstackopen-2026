@@ -115,9 +115,8 @@ function App() {
         setBlogs(copy);
         info(`a new blog "${result.title}" was added`)
       })
-      .catch(errors => {
-        const firstError = errors[0].message;
-        error(firstError)
+      .catch(message => {
+        error(message)
       })
     
   }
