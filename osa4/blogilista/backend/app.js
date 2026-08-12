@@ -11,16 +11,19 @@ const logger = require('./utils/logger')
 const { errorHandler, unknownEndpoint } = require('./utils/middleware')
 const app = express()
 
-logger.info('connecting to', config.MONGODB_URI)
-mongoose.connect(config.MONGODB_URI, { family: 4 })
-    .then(() => {
+const connectToDatabase = async () => {
+    try {
+        logger.info('connecting to', config.MONGODB_URI)
+        await mongoose.connect(config.MONGODB_URI, { family: 4 })
         logger.info('\nconnected to MongoDB')
         logger.info(`External address: ${config.EXTERNAL_ADDRESS}\n`)
-    })
-    .catch((error) => {
+    } catch (error) {
         logger.error('error connecting to MongoDB:', error.message)
         process.exit(1)
-    })
+    }
+}
+
+connectToDatabase()
 
 app.use(express.static('dist'))
 app.use(express.json())
