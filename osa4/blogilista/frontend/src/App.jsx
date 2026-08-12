@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogService'
 
 const useForm = () => {
@@ -18,10 +18,14 @@ const useForm = () => {
 
 const useNotification = (seconds = 5) => {
   const [notification, setNotification] = useState(null)
+  const timeoutRef = useRef(null)
 
   const notify = (type) => (message) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
     setNotification({ type, message })
-    setTimeout(() => setNotification(null), seconds * 1000)
+    timeoutRef.current = setTimeout(() => setNotification(null), seconds * 1000)
   }
 
   return {
@@ -61,16 +65,16 @@ const Blog = ({ blog }) => {
 const BlogsTitle = ({ text }) => {
   return (
     <h1 className="blogs-title">
-      <span>{'{'}</span>
+      <span data-text={'{'}>{'{'}</span>
       {text}
-      <span>{'}'}</span>
+      <span data-text={'}'}>{'}'}</span>
     </h1>
   )
 }
 
 const BlogForm = ({ form, onSubmit }) => {
   return (
-    <div className="newblog-container">
+    <>
       <form onSubmit={onSubmit}>
         <label htmlFor="title">Title:</label><br />
         <input type="text" id="title" value={form.title} onChange={(e) => form.setTitle(e.target.value)}/><br />
@@ -82,7 +86,7 @@ const BlogForm = ({ form, onSubmit }) => {
         <input type="url" id="url" value={form.url} onChange={(e) => form.setUrl(e.target.value)}/><br />
         <input type="submit" value="Submit" />
       </form>
-    </div>
+    </>
   )
 }
 
@@ -111,24 +115,24 @@ function App() {
 
     blogService.add(newForm)
       .then((result) => {
-        const copy = blogs.concat(result);
-        setBlogs(copy);
+        setBlogs(blogs.concat(result))
         info(`a new blog "${result.title}" was added`)
       })
-      .catch(message => {
-        error(message)
+      .catch((err) => {
+        error(err.message)
       })
-    
+        
   }
 
 
   return (
     <div className="page-container">
-      <Notification notification={notification} />
-
-      <BlogForm
-        form={form}
-        onSubmit={handleSubmit}/>
+      <div className="blogform-container">
+        <BlogForm
+          form={form}
+          onSubmit={handleSubmit} />
+        <Notification notification={notification} />
+      </div>
 
       <div className="blogs-container">
         <BlogsTitle text="Blogs" />

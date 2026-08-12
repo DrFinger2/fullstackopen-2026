@@ -36,6 +36,10 @@ body {
     display: inline-block;
     margin: 0 20px;
 
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 4px transparent;
+    
     background: linear-gradient(
         0deg,
         #00b7ff,
@@ -43,9 +47,7 @@ body {
         #7b61ff
     );
 
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 4px transparent;
+    
     -webkit-background-clip: text;
     background-clip: text;
 }
@@ -63,6 +65,9 @@ body {
 .author, .likes {
     display: block;
 }
+.author {
+    text-transform: capitalize;
+}
 
 .title-link, .title-text {
     margin: 0px;
@@ -73,13 +78,19 @@ body {
 .title-text {
     margin-bottom: 10px;
 }
+
+.title-text::first-letter {
+    text-transform: uppercase;
+}
+
 .page-container {
     display:flex;
     justify-content: space-between;
 }
-.newblog-container {
+.blogform-container {
     background-color:white;
     display: inline-block;
+    position: relative;
     padding:15px;
     width: 300px;
 }
@@ -87,8 +98,9 @@ body {
 
 /* Notification rules */
 .notification {
+  margin-top:15px;
+  margin-bottom: 15px;
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 4px;
   font-weight: bold;
 }
