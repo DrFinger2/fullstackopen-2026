@@ -10,7 +10,7 @@
   "scripts": {
     "build:render": "npm install && rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend",
     "build": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "node index.js",
     "dev": "node --watch index.js"
   },
