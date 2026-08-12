@@ -3,8 +3,10 @@ require('dns').setServers(['1.1.1.1', '8.8.8.8'])
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+
 const blogRouter = require('./controllers/blogRouter')
 const config = require('./utils/config')
+const logger = require('./utils/logger')
 const { errorHandler } = require('./utils/middleware')
 
 
@@ -22,22 +24,22 @@ function main() {
         app.use(errorHandler)
 
         const server = app.listen(port, () => {
-            console.log(`Server running on port ${port}`)
-            console.log(`Server address: ${address}`)
+            logger.info(`Server running on port ${port}`)
+            logger.info(`Server address: ${address}`)
         })
 
         process.on('SIGINT', () => {
-            console.log('Shutting down...')
+            logger.info('Shutting down...')
             server.close(() => {
                 mongoose.connection.close().then(() => {
-                    console.log('MongoDB connection closed')
-                    process.exit(0)
+                    logger.info('MongoDB connection closed')
+                    logger.info(0)
                 })
             })
         })
     })
         .catch((error) => {
-            console.error(error)
+            logger.error(error)
         })
 }
 
