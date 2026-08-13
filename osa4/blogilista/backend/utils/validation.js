@@ -12,7 +12,8 @@ const USERNAME_MAX = 30
 const PASSWORD_MIN = 8
 const PASSWORD_MAX = 72
 
-const isAlphabetic = (char) => (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z')
+// Works because symbols dont have uppercase, doesnt work with chinese or japanese but thats fine
+const isAlphabetic = (char) => char.toLowerCase() !== char.toUpperCase()
 const isDigit = (char) => char >= '0' && char <= '9'
 const isUsernameSymbol = (char) => allowedUsernameSymbol.includes(char)
 const isPasswordSymbol = (char) => allowedPasswordSymbols.includes(char)
