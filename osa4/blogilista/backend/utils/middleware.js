@@ -2,13 +2,11 @@ const logger = require('./logger')
 
 
 function tokenExtractor(request, response, next) {
-    const authorization = request.get('authorization') // .get() function returns the specified HTTP request header field in the request
-    const rightType = authorization.startsWith('Bearer ')
-    if (!authorization || !rightType) {
-        request.token = null
-    }
-    else {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
         request.token = authorization.replace('Bearer ', '')
+    } else {
+        request.token = null
     }
     next()
 }
