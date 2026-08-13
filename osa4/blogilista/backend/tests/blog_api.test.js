@@ -150,18 +150,75 @@ describe('Blog API', () => {
     })
 
     describe('DELETE /api/blogs/:id', () => {
-        test('removes blog with a valid id', async () => {
-            // task 4.13
-            const blogsAtStart = await api.get('/api/blogs')
-            const blogToDelete = blogsAtStart.body.at(-1)
+        test('removes blog with a valid id when requester is the owner', async () => {
+            // task 4.13 / 4.21
+            const token = await GetToken()
 
-            await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+            const newBlog = {
+                title: 'Blog to be deleted',
+                author: 'Example Name',
+                url: 'https://example.com/delete-me',
+                likes: 0,
+            }
+
+            const created = await api
+                .post('/api/blogs')
+                .set('Authorization', token)
+                .send(newBlog)
+                .expect(201)
+
+            const blogsAtStart = await api.get('/api/blogs')
+
+            await api
+                .delete(`/api/blogs/${created.body.id}`)
+                .set('Authorization', token)
+                .expect(204)
 
             const blogsAtEnd = await api.get('/api/blogs')
             assert.strictEqual(blogsAtEnd.body.length, blogsAtStart.body.length - 1)
 
             const ids = blogsAtEnd.body.map(blog => blog.id)
-            assert.ok(!ids.includes(blogToDelete.id))
+            assert.ok(!ids.includes(created.body.id))
+        })
+
+        test('fails with 401 if no token is provided', async () => {
+            // task 4.21
+            const blogsInDatabase = await api.get('/api/blogs')
+            const blogToDelete = blogsInDatabase.body.at(0)
+            await api.delete(`/api/blogs/${blogToDelete.id}`).expect(401)
+        })
+
+        test('fails with 403 if requester is not the owner', async () => {
+            // task 4.21
+            const token = await GetToken()
+
+            const newBlog = {
+                title: 'Owned by Test user',
+                author: 'Example Name',
+                url: 'https://example.com/owned',
+                likes: 0,
+            }
+
+            const created = await api
+                .post('/api/blogs')
+                .set('Authorization', token)
+                .send(newBlog)
+                .expect(201)
+
+            const otherUser = { name: 'Other', username: 'OtherUser', password: 'AlsoNotMom' }
+            await api
+                .post('/api/users')
+                .send(otherUser)
+
+            const otherLogin = await api
+                .post('/api/login')
+                .send({ username: otherUser.username, password: otherUser.password })
+
+            const otherToken = `Bearer ${otherLogin.body.token}`
+            await api
+                .delete(`/api/blogs/${created.body.id}`)
+                .set('Authorization', otherToken)
+                .expect(403)
         })
     })
 
