@@ -30,6 +30,18 @@ const testData = [
 ]
 
 describe('POST /api/users', async () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+        for (const user of testData) {
+            const passwordHash = await bcrypt.hash(user.password, 10)
+            await new User({
+                name: user.name,
+                username: user.username,
+                passwordHash: passwordHash
+            }).save()
+        }
+    })
+
     test('Creation succeeds with fresh username', async () => {
         const user = { name: 'test', username: 'Matti', password: 'Meikäläinen' }
 
