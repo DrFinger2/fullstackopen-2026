@@ -1,13 +1,12 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
-// 2. Router Definition
+
 blogRouter.get('/', async (request, response) => {
     const included = { username: 1, name: 1 } // 1 or 0 = include or dont include this particular field
     const blogs = await Blog.find({}).populate('user', included )
     return response.json(blogs)
 })
-
 
 blogRouter.get('/:id', async (request, response) => {
     const blog =  await Blog.findById(request.params.id)
@@ -25,7 +24,7 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
         return response.status(404).end()
     }
     const requestId = request.user._id.toString()
-    if (!blog.user || requestId !== blog.user.id.toString()){
+    if (!blog.user || requestId !== blog.user.toString()){
         return response.status(403).json({ error: 'only the creator can delete this blog' })
     }
 

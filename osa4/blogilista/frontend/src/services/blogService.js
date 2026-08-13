@@ -2,7 +2,7 @@ import axios from 'axios'
 const BASE_URL = '/api/blogs'
 
 const extractMessage = (error) => {
-  const message = error.response?.data?.errors?.[0]?.message
+  const message = error.response?.data?.error
   throw new Error(message || 'something went wrong')
 }
 

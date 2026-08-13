@@ -32,14 +32,11 @@ async function userExtractor(request, response, next) {
 // eslint-disable-next-line no-unused-vars
 function errorHandler(error, request, response, next) {
     if (error.name === 'CastError'){
-        const errors = [{ field: 'id', message: 'Malformatted id.' }]
-        logger.info(errors)
-        return response.status(400).json({ errors: errors })
+        return response.status(400).json({ error: 'Malformatted id.' })
     }
     else if (error.name === 'ValidationError'){
-        const errors = Object.entries(error.errors).map(([field, err]) => ({ field: field, message: err.message }))
-        logger.info(errors)
-        return response.status(400).json({ errors: errors })
+        const errors = Object.entries(error.errors).map(([field, err]) => ({  error: err.message }))
+        return response.status(400).json({ error: errors[0] })
     }
     else if ( error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error' )){
         return response.status(400).json({ error: 'expected `username` to be unique' })
