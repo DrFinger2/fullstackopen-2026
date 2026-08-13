@@ -19,19 +19,18 @@ blogRouter.get('/:id', async (request, response) => {
     }
 })
 
-
 blogRouter.delete('/:id', userExtractor, async (request, response) => {
     const blog = await Blog.findById(request.params.id)
     if (!blog) {
-        response.status(404).end()
+        return response.status(404).end()
     }
-    const requestId = request.user._id
-    if (!blog.user || requestId !== blog.user.id){
+    const requestId = request.user._id.toString()
+    if (!blog.user || requestId !== blog.user.id.toString()){
         return response.status(403).json({ error: 'only the creator can delete this blog' })
     }
 
     await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+    return response.status(204).end()
 })
 
 
