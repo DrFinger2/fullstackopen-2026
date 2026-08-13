@@ -1,9 +1,6 @@
 const blogRouter = require('express').Router()
-const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
-const User = require('../models/user')
-
-
+const { userExtractor } = require('../utils/middleware')
 // 2. Router Definition
 blogRouter.get('/', async (request, response) => {
     const included = { username: 1, name: 1 } // 1 or 0 = include or dont include this particular field
@@ -23,7 +20,16 @@ blogRouter.get('/:id', async (request, response) => {
 })
 
 
-blogRouter.delete('/:id', async (request, response) => {
+blogRouter.delete('/:id', userExtractor, async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+        response.status(404).end()
+    }
+    const requestId = request.user._id
+    if (!blog.user || requestId !== blog.user.id){
+        return response.status(403).json({ error: 'only the creator can delete this blog' })
+    }
+
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
 })
@@ -48,17 +54,8 @@ blogRouter.put('/:id', async (request, response) => {
 })
 
 
-blogRouter.post('/', async (request, response) => {
-    // 1. Check if token is valid
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-        return response.status(401).json({ error: 'Invalid token' })
-    }
-    // 2. Check if userid is valid
-    const user = await User.findById(decodedToken.id)
-    if (!user) {
-        return response.status(400).json({ error: 'User id is missing or is invalid' })
-    }
+blogRouter.post('/', userExtractor, async (request, response) => {
+    const user = request.user
     // 3. Create new blog and associate it with userid
     const blog = new Blog({
         title: request.body.title || '',
