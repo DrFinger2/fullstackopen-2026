@@ -22,7 +22,7 @@ async function connectToDatabase () {
         logger.info('connecting to', config.MONGODB_URI)
         await mongoose.connect(config.MONGODB_URI, { family: 4 })
         logger.info('\nconnected to MongoDB')
-        logger.info(`External address: ${config.EXTERNAL_ADDRESS}\n`)
+        logger.info(`External url: ${config.EXTERNAL_URL}\n`)
     } catch (error) {
         logger.error('error connecting to MongoDB:', error.message)
         process.exit(1)
@@ -45,6 +45,7 @@ function configure () {
 
 async function start () {
     await connectToDatabase()
+    // not related to the tasks, i just wanted to reset the data on startup so that i can experiment with fresh data
     await resetUsers()
     await resetBlogs()
 }
