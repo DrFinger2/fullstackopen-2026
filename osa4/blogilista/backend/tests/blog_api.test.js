@@ -27,13 +27,10 @@ const testData = [
 
 async function GetToken() {
     await User.deleteMany({})
-
     const registerUser = { name: 'Test', username: 'Test', password: 'DontTellMom' }
     await api.post('/api/users').send(registerUser)
-
     const loginUser = { username: 'Test', password: 'DontTellMom' }
     const user = await api.post('/api/login').send(loginUser)
-
     return `Bearer ${user.body.token}`
 }
 

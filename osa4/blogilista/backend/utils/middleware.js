@@ -31,28 +31,25 @@ async function userExtractor(request, response, next) {
 
 // eslint-disable-next-line no-unused-vars
 function errorHandler(error, request, response, next) {
-    if (error.name === 'CastError'){
+    if (error.name === 'CastError') {
         return response.status(400).json({ error: 'Malformatted id.' })
     }
-    else if (error.name === 'ValidationError'){
-        const errors = Object.entries(error.errors).map(([field, err]) => ({  error: err.message }))
-        return response.status(400).json({ error: errors[0] })
+    if (error.name === 'ValidationError') {
+        const message = Object.values(error.errors)[0].message
+        return response.status(400).json({ error: message })
     }
-    else if ( error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error' )){
+    if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
         return response.status(400).json({ error: 'expected `username` to be unique' })
     }
-    else if (error.name === 'JsonWebTokenError'){
+    if (error.name === 'JsonWebTokenError') {
         return response.status(401).json({ error: 'token missing or invalid' })
     }
-    else if (error.name === 'TokenExpiredError'){
-        return response.status(401).json({
-            error: 'token expired'
-        })
+    if (error.name === 'TokenExpiredError') {
+        return response.status(401).json({ error: 'token expired' })
     }
 
-    const errors = [{ field: null, message: 'Internal server error' }]
-    logger.error(errors)
-    return response.status(500).json({ errors: errors })
+    logger.error(error)
+    return response.status(500).json({ error: 'Internal server error' })
 }
 
 function unknownEndpoint(request, response) {
