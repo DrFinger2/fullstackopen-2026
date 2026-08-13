@@ -3,10 +3,13 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const { validateUsername, validatePassword } = require('../utils/validation')
 
+
 userRouter.get('/', async (request, response) => {
-    const users = await User.find({})
+    const included = { title: 1, author: 1, url: 1, likes: 1 } // 1 or 0 = include or dont include this particular field
+    const users = await User.find({}).populate('blogs', included)
     return response.status(200).json(users)
 })
+
 userRouter.post('/', async (request, response) => {
     const { name, username, password } = request.body
 

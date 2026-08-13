@@ -63,7 +63,7 @@ describe('User API', async () => {
                 password: password
             }
 
-            const createdUser = await api.post('/api/user')
+            const createdUser = await api.post('/api/users')
                 .send(user)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)

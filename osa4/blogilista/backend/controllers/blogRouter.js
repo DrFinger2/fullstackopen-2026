@@ -3,22 +3,11 @@ const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-// 1. Utility methods
-function getTokenFromRequest(request) {
-    const authorization = request.get('authorization') // .get() function returns the specified HTTP request header field in the request
-    if (!authorization){
-        return null
-    }
-    const rightType = authorization.startsWith('Bearer ')
-    if (!rightType) {
-        return null
-    }
-    return authorization.replace('Bearer ', '')
-}
 
 // 2. Router Definition
 blogRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({})
+    const included = { username: 1, name: 1 } // 1 or 0 = include or dont include this particular field
+    const blogs = await Blog.find({}).populate('user', included )
     return response.json(blogs)
 })
 
@@ -60,10 +49,8 @@ blogRouter.put('/:id', async (request, response) => {
 
 
 blogRouter.post('/', async (request, response) => {
-    const requestToken = getTokenFromRequest(request)
-
     // 1. Check if token is valid
-    const decodedToken = jwt.verify(requestToken, process.env.SECRET)
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!decodedToken.id) {
         return response.status(401).json({ error: 'Invalid token' })
     }

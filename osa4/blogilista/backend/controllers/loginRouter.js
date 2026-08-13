@@ -30,8 +30,7 @@ loginRouter.post('/', async (request, response) => {
         id: userInDatabase._id
     }
 
-    const oneHour = 60 * 60
-    const token = jwt.sign(tokenUser, process.env.SECRET, { expiresIn: oneHour })
+    const token = jwt.sign(tokenUser, process.env.SECRET, { expiresIn: 60*60 /*an hour*/ })
 
     return response
         .status(200)

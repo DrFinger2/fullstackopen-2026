@@ -1,5 +1,18 @@
 const logger = require('./logger')
 
+
+function tokenExtractor(request, response, next) {
+    const authorization = request.get('authorization') // .get() function returns the specified HTTP request header field in the request
+    const rightType = authorization.startsWith('Bearer ')
+    if (!authorization || !rightType) {
+        request.token = null
+    }
+    else {
+        request.token = authorization.replace('Bearer ', '')
+    }
+    next()
+}
+
 // eslint-disable-next-line no-unused-vars
 function errorHandler(error, request, response, next) {
     if (error.name === 'CastError'){
@@ -36,6 +49,7 @@ function unknownEndpoint(request, response) {
 
 module.exports = {
     errorHandler: errorHandler,
-    unknownEndpoint: unknownEndpoint
+    unknownEndpoint: unknownEndpoint,
+    tokenExtractor: tokenExtractor
 }
 

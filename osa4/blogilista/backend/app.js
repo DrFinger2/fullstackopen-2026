@@ -14,7 +14,7 @@ const logger = require('./utils/logger')
 const resetUsers = require('./seeding/resetUsers')
 const resetBlogs = require('./seeding/resetBlogs')
 
-const { errorHandler, unknownEndpoint } = require('./utils/middleware')
+const { errorHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware')
 const app = express()
 
 async function connectToDatabase () {
@@ -35,7 +35,7 @@ function configure () {
     if (process.env.NODE_ENV !== 'test') {
         app.use(morgan('dev'))
     }
-
+    app.use(tokenExtractor)
     app.use('/api/login', loginRouter)
     app.use('/api/users', userRouter)
     app.use('/api/blogs', blogRouter)
