@@ -30,12 +30,12 @@ const defaultUser = {
     username: 'testuser',
     password: 'password123'
 }
+
 const alternateUser = {
     name: 'Other User',
     username: 'otheruser',
     password: 'password123'
 }
-
 
 async function getBlogsInDb() {
     const response = await api.get('/api/blogs')
@@ -244,6 +244,5 @@ describe('Blog API', () => {
 
 after(async () => {
     await Blog.deleteMany({})
-    await Blog.insertMany(initialBlogs)
     await mongoose.connection.close()
 })
