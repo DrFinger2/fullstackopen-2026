@@ -4,6 +4,7 @@ const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const app = require('../app')
 const api = supertest(app)
@@ -22,6 +23,19 @@ const testData = [
         likes: 3,
     },
 ]
+
+
+async function GetToken() {
+    await User.deleteMany({})
+
+    const registerUser = { name: 'Test', username: 'Test', password: 'DontTellMom' }
+    await api.post('/api/users').send(registerUser)
+
+    const loginUser = { username: 'Test', password: 'DontTellMom' }
+    const user = await api.post('/api/login').send(loginUser)
+
+    return `Bearer ${user.body.token}`
+}
 
 describe('Blog API', () => {
     beforeEach(async () => {
@@ -60,6 +74,8 @@ describe('Blog API', () => {
     describe('POST /api/blogs', () => {
         test('creates a new blog', async () => {
             // task 4.10
+            const token = await GetToken()
+
             const newBlog = {
                 title: 'Example blog',
                 author: 'Example Name',
@@ -69,21 +85,24 @@ describe('Blog API', () => {
 
             const response = await api
                 .post('/api/blogs')
+                .set('Authorization', token)
                 .send(newBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
 
             assert.notEqual(response.body.id, undefined)
 
-            const blogsAtEnd = await api.get('/api/blogs')
-            assert.strictEqual(blogsAtEnd.body.length, testData.length + 1)
+            const blogsInDatabase = await api.get('/api/blogs')
+            assert.strictEqual(blogsInDatabase.body.length, testData.length + 1)
 
-            const titles = blogsAtEnd.body.map(blog => blog.title)
+            const titles = blogsInDatabase.body.map(blog => blog.title)
             assert.ok(titles.includes(newBlog.title))
         })
 
         test('defaults likes to 0 if missing', async () => {
             // task 4.11
+            const token = await GetToken()
+
             const newBlog = {
                 title: 'Example blog',
                 author: 'Example Name',
@@ -92,6 +111,7 @@ describe('Blog API', () => {
 
             const response = await api
                 .post('/api/blogs')
+                .set('Authorization', token)
                 .send(newBlog)
                 .expect(201)
 
@@ -100,24 +120,32 @@ describe('Blog API', () => {
 
         test('fails with 400 if title is missing', async () => {
             // task 4.12
+            const token = await GetToken()
+
             const newBlog = {
                 author: 'Example Name',
                 url: 'https://example.com/',
                 likes: 0,
             }
 
-            await api.post('/api/blogs').send(newBlog).expect(400)
+            await api
+                .post('/api/blogs')
+                .set('Authorization', token)
+                .send(newBlog)
+                .expect(400)
         })
 
         test('fails with 400 if url is missing', async () => {
             // task 4.12
+            const token = await GetToken()
+
             const newBlog = {
                 title: 'Example blog',
                 author: 'Example Name',
                 likes: 0,
             }
 
-            await api.post('/api/blogs').send(newBlog).expect(400)
+            await api.post('/api/blogs').set('Authorization', token).send(newBlog).expect(400)
         })
     })
 
@@ -140,8 +168,8 @@ describe('Blog API', () => {
     describe('PUT /api/blogs/:id', () => {
         test('updates existing blog', async () => {
             // task 4.14
-            const blogsAtStart = await api.get('/api/blogs')
-            const blogToUpdate = blogsAtStart.body.at(-1)
+            const allBlogs = await api.get('/api/blogs')
+            const blogToUpdate = allBlogs.body.at(-1)
             blogToUpdate.title = 'UPDATED TITLE'
 
             const response = await api

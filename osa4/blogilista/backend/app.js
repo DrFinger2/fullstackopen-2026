@@ -4,14 +4,20 @@ require('dns').setServers(['1.1.1.1', '8.8.8.8'])
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+
 const blogRouter = require('./controllers/blogRouter')
+const loginRouter = require('./controllers/loginRouter')
+const userRouter = require('./controllers/userRouter')
+
 const config = require('./utils/config')
 const logger = require('./utils/logger')
+const resetUsers = require('./seeding/resetUsers')
+const resetBlogs = require('./seeding/resetBlogs')
 
 const { errorHandler, unknownEndpoint } = require('./utils/middleware')
 const app = express()
 
-const connectToDatabase = async () => {
+async function connectToDatabase () {
     try {
         logger.info('connecting to', config.MONGODB_URI)
         await mongoose.connect(config.MONGODB_URI, { family: 4 })
@@ -23,17 +29,27 @@ const connectToDatabase = async () => {
     }
 }
 
-connectToDatabase()
+function configure () {
+    app.use(express.static('dist'))
+    app.use(express.json())
+    if (process.env.NODE_ENV !== 'test') {
+        app.use(morgan('dev'))
+    }
 
-app.use(express.static('dist'))
-app.use(express.json())
-
-if (process.env.NODE_ENV !== 'test') {
-    app.use(morgan('dev'))
+    app.use('/api/login', loginRouter)
+    app.use('/api/users', userRouter)
+    app.use('/api/blogs', blogRouter)
+    app.use(unknownEndpoint)
+    app.use(errorHandler)
 }
 
-app.use('/api/blogs', blogRouter)
-app.use(unknownEndpoint)
-app.use(errorHandler)
+async function start () {
+    await connectToDatabase()
+    await resetUsers()
+    await resetBlogs()
+}
+
+configure()
+start()
 
 module.exports = app
