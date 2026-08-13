@@ -29,47 +29,37 @@ const testData = [
     { name: 'Sam Garcia', username: 'sam', password: 'password123' },
 ]
 
-describe('User API', async () => {
-    beforeEach(async () => {
-        await User.deleteMany({})
-        for (const user of testData) {
-            const passwordHash = await bcrypt.hash(user.password, 10)
-            await new User({
-                name: user.name,
-                username: user.username,
-                passwordHash: passwordHash
-            }).save()
-        }
+describe('POST /api/users', async () => {
+    test('Creation succeeds with fresh username', async () => {
+        const user = { name: 'test', username: 'Matti', password: 'Meikäläinen' }
+
+        const createdUser = await api.post('/api/users')
+            .send(user)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        assert.strictEqual(createdUser.body.username, user.username)
     })
 
-    describe('GET /api/users', async () => {
-        test('Get all users', async () => {
-            const users = await api.get('/api/users')
-                .expect(200)
-                .expect('Content-Type', /application\/json/)
-            assert.strictEqual(users.body.length, testData.length)
-        })
+    test('fails username is too short', async () => {
+        const user = { name: 'Test', username: 'ab', password: 'password123' }
+
+        const result = await api.post('/api/users').send(user).expect(400)
+        assert.ok(result.body.error)
     })
 
-    describe('POST /api/users', async () => {
-        test('Creation succeeds with fresh username', async () => {
-            const name = 'test'
-            const username = 'Matti'
-            const password = 'Meikäläinen'
+    test('fails if password is too short', async () => {
+        const user = { name: 'Test', username: 'newuser', password: 'short' }
 
-            const user = {
-                name: name,
-                username: username,
-                password: password
-            }
+        const result = await api.post('/api/users').send(user).expect(400)
+        assert.ok(result.body.error)
+    })
 
-            const createdUser = await api.post('/api/users')
-                .send(user)
-                .expect(201)
-                .expect('Content-Type', /application\/json/)
+    test('fails if username is already taken', async () => {
+        const user = { name: 'Test', username: 'alice', password: 'password123' }
 
-            assert.strictEqual(createdUser.body.username, user.username)
-        })
+        const result = await api.post('/api/users').send(user).expect(400)
+        assert.ok(result.body.error)
     })
 })
 

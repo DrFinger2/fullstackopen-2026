@@ -118,7 +118,7 @@ describe('Blog API', () => {
             assert.strictEqual(response.body.likes, 0)
         })
 
-        test('fails with 400 if title is missing', async () => {
+        test('fails if title is missing', async () => {
             // task 4.12
             const token = await GetToken()
 
@@ -135,7 +135,7 @@ describe('Blog API', () => {
                 .expect(400)
         })
 
-        test('fails with 400 if url is missing', async () => {
+        test('fails if url is missing', async () => {
             // task 4.12
             const token = await GetToken()
 
@@ -146,6 +146,18 @@ describe('Blog API', () => {
             }
 
             await api.post('/api/blogs').set('Authorization', token).send(newBlog).expect(400)
+        })
+
+        test('fails if no token is provided', async () => {
+            // task 4.23
+            const newBlog = {
+                title: 'Blog without token',
+                author: 'Example Name',
+                url: 'https://example.com/no-token',
+                likes: 0,
+            }
+
+            await api.post('/api/blogs').send(newBlog).expect(401)
         })
     })
 
@@ -181,14 +193,14 @@ describe('Blog API', () => {
             assert.ok(!ids.includes(created.body.id))
         })
 
-        test('fails with 401 if no token is provided', async () => {
+        test('fails if no token is provided', async () => {
             // task 4.21
             const blogsInDatabase = await api.get('/api/blogs')
             const blogToDelete = blogsInDatabase.body.at(0)
             await api.delete(`/api/blogs/${blogToDelete.id}`).expect(401)
         })
 
-        test('fails with 403 if requester is not the owner', async () => {
+        test('fails if requester is not the owner', async () => {
             // task 4.21
             const token = await GetToken()
 

@@ -54,7 +54,7 @@ blogRouter.put('/:id', async (request, response) => {
 
 blogRouter.post('/', userExtractor, async (request, response) => {
     const user = request.user
-    // 3. Create new blog and associate it with userid
+
     const blog = new Blog({
         title: request.body.title || '',
         author: request.body.author || '',
@@ -64,9 +64,11 @@ blogRouter.post('/', userExtractor, async (request, response) => {
     })
 
     const saved = await blog.save()
+    user.blogs = user.blogs.concat(saved._id)
+    await user.save()
+
     return response.status(201).json(saved)
 })
-
 
 
 module.exports = blogRouter
