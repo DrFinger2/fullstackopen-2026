@@ -36,10 +36,6 @@ body {
     display: inline-block;
     margin: 0 20px;
 
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 4px transparent;
-    
     background: linear-gradient(
         0deg,
         #00b7ff,
@@ -47,7 +43,9 @@ body {
         #7b61ff
     );
 
-    
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 4px transparent;
     -webkit-background-clip: text;
     background-clip: text;
 }

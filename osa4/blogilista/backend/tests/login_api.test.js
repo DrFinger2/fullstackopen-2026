@@ -23,10 +23,7 @@ describe('Login API', async () => {
 
     describe('POST /api/login', async () => {
         test('Able to login as admin', async () => {
-            const user = {
-                username: 'Admin',
-                password: 'Password'
-            }
+            const user = { username: 'Admin', password: 'Password' }
 
             const loggedInUser = await api.post('/api/login')
                 .send(user)

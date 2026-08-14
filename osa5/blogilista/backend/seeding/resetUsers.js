@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const { NODE_ENV } = process.env
 
 const seedData = [
-    { name: 'John Smith', username: 'admin', password: 'DontTellMom' },
+    { name: 'John Smith', username: 'admin', password: 'admin' },
     { name: 'Alice Smith', username: 'alice', password: 'password123' },
     { name: 'Bob Johnson', username: 'bob', password: 'password123' },
     { name: 'Charlie Williams', username: 'charlie', password: 'password123' },

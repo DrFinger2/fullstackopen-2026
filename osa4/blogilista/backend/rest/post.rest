@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-"title": "Learning Express with Node.js",
-"author": "Alex Morgan",
-"url": "https://example.com/learning-express",
-"likes": 12
+    "title": "Learning Express with Node.js",
+    "author": "Alex Morgan",
+    "url": "https://example.com/learning-express",
+    "likes": 12
 }
