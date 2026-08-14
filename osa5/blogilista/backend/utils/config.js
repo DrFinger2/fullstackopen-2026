@@ -8,7 +8,6 @@ const MONGODB_URI = {
     production: process.env.MONGODB_URI_PRODUCTION
 }[NODE_ENV] || process.env.MONGODB_URI_PRODUCTION
 
-
 module.exports = {
     MONGODB_URI: MONGODB_URI,
     PORT: PORT,
