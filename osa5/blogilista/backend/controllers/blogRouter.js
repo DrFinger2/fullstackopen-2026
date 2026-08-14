@@ -2,6 +2,8 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
 
+const isBlank = (field) => (!field || typeof field !== 'string' || field.trim() === '')
+
 blogRouter.get('/', async (request, response) => {
     const included = { username: 1, name: 1 } // 1 or 0 = include or dont include this particular field
     const blogs = await Blog.find({}).populate('user', included )
@@ -60,12 +62,23 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
 
 blogRouter.post('/', userExtractor, async (request, response) => {
     const user = request.user
+    const { title, author, url, likes } = request.body
+
+    if (!isBlank(title)) {
+        return response.status(400).json({ error: 'Title cannot be blank' })
+    }
+    if (!isBlank(author)) {
+        return response.status(400).json({ error: 'Author cannot be blank' })
+    }
+    if (!isBlank(url)) {
+        return response.status(400).json({ error: 'URL cannot be blank' })
+    }
 
     const blog = new Blog({
-        title: request.body.title || '',
-        author: request.body.author || '',
-        url: request.body.url || '',
-        likes: request.body.likes || 0,
+        title: title || '',
+        author: author || '',
+        url: url || '',
+        likes: likes || 0,
         user: user._id
     })
 

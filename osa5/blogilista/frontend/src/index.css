@@ -16,10 +16,9 @@ p {
 }
 
 
-/* 1. Blog section */
 .blog-section {
     background-color: hsl(0, 0%, 90%);
-    width: 600px; /* blog-section decides the width */
+    width: 600px;
     padding: 5px;
     border-radius: 15px;
     box-sizing: border-box;
@@ -79,6 +78,8 @@ p {
     flex-direction: column;
     gap: 10px;
 }
+
+
 
 .dots::after {
     content: '';
@@ -148,4 +149,28 @@ p {
     50%  { content: '..'; }
     75%  { content: '...'; }
     100% { content: ''; }
+}
+
+.login-form-container {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.login-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-toggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-toggle button.active {
+  font-weight: bold;
 }
