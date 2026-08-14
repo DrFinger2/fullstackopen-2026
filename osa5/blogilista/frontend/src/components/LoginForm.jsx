@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Notification from './Notification' // Import the shared component
 
 const LoginForm = ({ onLogin, onRegister }) => {
     const [isLogin, setIsLogin] = useState(true)
@@ -53,7 +54,6 @@ const LoginForm = ({ onLogin, onRegister }) => {
         
         if (result.ok) {
             setIsLogin(true) 
-            setSuccessMsg('Registration successful! Please log in.')
             e.target.reset()
         } else {
             setError(result.error)
@@ -82,8 +82,8 @@ const LoginForm = ({ onLogin, onRegister }) => {
             {isLogin ? (
                 <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <h2>Login</h2>
-                    <input name="username" placeholder="Username" required />
-                    <input name="password" type="password" placeholder="Password" required />
+                    <input name="username" placeholder="Username"  />
+                    <input name="password" type="password" placeholder="Password"  />
                     <button disabled={loading}>
                         {showLoading ? <>Logging<span className="dots"></span></> : 'Login'}
                     </button>
@@ -91,19 +91,15 @@ const LoginForm = ({ onLogin, onRegister }) => {
             ) : (
                 <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <h2>Register</h2>
-                    <input name="name" placeholder="Name" required />
-                    <input name="username" placeholder="Username" required />
-                    <input name="password" type="password" placeholder="Password" required />
+                    <input name="name" placeholder="Name"  />
+                    <input name="username" placeholder="Username"  />
+                    <input name="password" type="password" placeholder="Password"  />
                     <button disabled={loading}>
                         {showLoading ? <>Registering<span className="dots"></span></> : 'Register'}
                     </button>
                 </form>
             )}
-
-            <p className={`error ${error ? 'show' : ''}`}>
-                {error}
-            </p>
-            {successMsg && <p style={{ color: 'green', fontSize: '14px' }}>{successMsg}</p>}
+            <Notification error={error} success={successMsg} />
         </div>
     )
 }

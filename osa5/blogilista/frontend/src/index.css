@@ -101,6 +101,11 @@ p {
     display: block;
     animation: show-error .5s ease;
 }
+.success-msg {
+  color: green;
+  font-size: 14px;
+  margin: 8px 0 0;
+}
 
 @keyframes show-error {
     from {
@@ -121,6 +126,20 @@ p {
 
 .username {
     text-transform: capitalize;
+}
+
+
+.blog-form-container {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 50px;
+}
+
+.blog-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 @keyframes dots {
