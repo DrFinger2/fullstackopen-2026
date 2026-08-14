@@ -224,20 +224,27 @@ describe('Blog API', () => {
     })
 
     describe('PUT /api/blogs/:id', () => {
-        test('updates existing blog', async () => {
+        test('updates own blog', async () => {
             // task 4.14
-            const blogsAtStart = await getBlogsInDb()
-            const blogToUpdate = blogsAtStart[0]
-            const updatedBlogData = { ...blogToUpdate, title: 'UPDATED TITLE' }
+            const token = await registerAndLogin(defaultUser)
+            const newBlog = {
+                title: 'Blog to be updated',
+                author: 'Example Name',
+                url: 'https://example.com/update-me',
+                likes: 0,
+            }
+            const created = await createBlog(newBlog, token).expect(201)
+            const updatedBlogData = { ...created.body, title: 'UPDATED TITLE' }
 
             const response = await api
-                .put(`/api/blogs/${blogToUpdate.id}`)
+                .put(`/api/blogs/${created.body.id}`)
+                .set('Authorization', token)
                 .send(updatedBlogData)
                 .expect(200)
                 .expect('Content-Type', /application\/json/)
 
             assert.strictEqual(response.body.title, updatedBlogData.title)
-            assert.strictEqual(response.body.id, blogToUpdate.id)
+            assert.strictEqual(response.body.id, created.body.id)
         })
     })
 })

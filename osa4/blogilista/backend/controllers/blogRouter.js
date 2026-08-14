@@ -9,7 +9,8 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.get('/:id', async (request, response) => {
-    const blog =  await Blog.findById(request.params.id)
+    const included = { username: 1, name: 1 }
+    const blog = await Blog.findById(request.params.id).populate('user', included)
     if (blog) {
         return response.status(200).json(blog)
     }
@@ -33,13 +34,18 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
 })
 
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', userExtractor, async (request, response) => {
     const { title, author, url, likes } = request.body
     const id = request.params.id
 
     const blog = await Blog.findById(id)
     if (!blog) {
         return response.status(404).end()
+    }
+
+    const requestId = request.user._id.toString()
+    if (!blog.user || requestId !== blog.user.toString()) {
+        return response.status(403).json({ error: 'only the creator can edit this blog' })
     }
 
     if (title !== undefined) blog.title = title
