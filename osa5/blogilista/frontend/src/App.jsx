@@ -60,12 +60,18 @@ const App = () => {
       setBlogs(blogs.concat(createdBlog))
       notify.success(`Added "${createdBlog.title}" successfully!`)
       return true;
-    } catch (error) {
-      const message = error.response?.data?.error || 'Failed to create blog'
-      notify.error(message)
+    }
+    catch (error) {
+      if (error.response?.status === 401) {
+        logout()
+        notify.error('Session expired, please log in again')
+      } else {
+        const message = error.response?.data?.error || 'Failed to create blog'
+        notify.error(message)
+      }
       return false;
     }
-  }
+}
 
   return (
     <>

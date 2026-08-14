@@ -5,7 +5,7 @@ const Navbar = ({ user, onLogout, notification }) => {
         <nav className="navbar">
             <a href="/">Home</a>
             
-             <Notification error={notification.error} success={notification.success} id={notification.id}/>
+             <Notification message={notification.message} type={notification.type} id={notification.id} />
             
             <div className="navbar-user">
                 {user && (
