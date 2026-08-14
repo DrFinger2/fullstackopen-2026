@@ -6,31 +6,12 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
+import useAuth from './hooks/useAuth'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null) // New state to track logged-in user
-
-  const saveUser = (user) => {
-    setUser(user)
-    if (user) {
-      window.localStorage.setItem('user', JSON.stringify(user))
-    } else {
-      window.localStorage.removeItem('user')
-    }
-  }
-
-  const loadUser = () => {
-    const userJson = window.localStorage.getItem('user');
-    if (userJson)
-      return JSON.parse(userJson)
-    else 
-      return null
-  }
-
-  useEffect(() => {
-   setUser(loadUser())
-  }, [])
+  const { user, login, logout } = useAuth()
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -43,12 +24,11 @@ const App = () => {
       setBlogs([])
     }
   }, [user])
-  
+
   const handleLogin = async (credentials) => {
     try {
       const result = await loginService.login(credentials)
-      console.log(result)
-      saveUser(result)
+      login(result)
       return { ok: true, data: result }
     }
     catch (error) {
@@ -68,15 +48,10 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
-    saveUser(null)
-  }
-
   return (
     <>
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={logout}/>
       
-      {/* SPA Logic: Conditionally render based on user state */}
       {!user ? (
         <section className="login-section">
             <LoginForm  onLogin={handleLogin}  onRegister={handleRegister}  />

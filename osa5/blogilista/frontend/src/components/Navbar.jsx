@@ -4,9 +4,12 @@ const Navbar = ({ user, onLogout }) => {
             <a href="/">Home</a>
 
             {user && (
-                <button onClick={onLogout}>
-                    Logout
-                </button>
+                <>
+                    <p>Logged in as: <span className="username">{ user }</span></p>
+                    <button onClick={onLogout}>
+                        Logout
+                    </button>
+                </>
             )}
         </nav>
     )
