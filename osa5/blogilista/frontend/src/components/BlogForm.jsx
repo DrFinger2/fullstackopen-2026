@@ -1,30 +1,21 @@
 import { useState } from 'react'
-import Notification from './Notification'
 
 const BlogForm = ({ onCreateBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [error, setError] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
-    setSuccessMsg('')
     setLoading(true)
 
     const result = await onCreateBlog({ title, author, url })
     setLoading(false)
-
-    if (result.ok) {
+    if (result) {
       setTitle('')
       setAuthor('')
       setUrl('')
-      setSuccessMsg(`Added "${title}" successfully!`)
-    } else {
-      setError(result.error)
     }
   }
 
@@ -39,8 +30,6 @@ const BlogForm = ({ onCreateBlog }) => {
           {loading ? 'Creating...' : 'Create'}
         </button>
       </form>
-
-      <Notification error={error} success={successMsg} />
     </div>
   )
 }

@@ -45,14 +45,31 @@ p {
 }
 
 
+.blog-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Centers both sections on the screen */
+    align-items: flex-start; /* Aligns them at the top */
+    gap: 30px; /* Adds space between the blog list and the form */
+    padding: 20px;
+}
 /* 2. Navigation */
 
 .navbar {
     display: flex;
     justify-content: space-between;
-    padding: 15px 25px;
+    align-items: center; /* Centers navigation items horizontally */
+    padding: 0 25px; /* Adjust padding to rely purely on height */
     background-color: white;
-    margin-bottom:10px;
+    margin-bottom: 10px;
+    height: 60px; /* Give the navigation bar a fixed height */
+}
+
+.notification-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-popup {
@@ -87,25 +104,33 @@ p {
 }
 .error {
     display: none;
-    padding: 10px 12px;
+    padding: 0 50px;
+    
     border: 1px solid #f1b8b8;
     border-radius: 6px;
     background-color: #fff5f5;
     color: darkorange;
     font-size: 14px;
-    line-height: 1.4;
-    margin: 0;
-    margin-top:10px;
+    margin: 0; /* Removed margin-top */
+    height: 70%; /* Give it proportional size inside the parent */
+    align-items: center; /* Center the text inside the box */
 }
 
 .error.show {
-    display: block;
+    display: flex; /* Changed from block to flex to support align-items */
     animation: show-error .5s ease;
 }
 .success-msg {
-  color: green;
-  font-size: 14px;
-  margin: 8px 0 0;
+    display: none; 
+    color: green;
+    font-size: 14px;
+    margin: 0;
+    height: 100%;
+    align-items: center;
+}
+.success-msg.show {
+    display: flex; 
+    animation: show-error .5s ease; /* You can reuse the error animation for a smooth fade-in */
 }
 
 @keyframes show-error {
@@ -134,7 +159,8 @@ p {
   background-color: white;
   border-radius: 15px;
   padding: 20px;
-  margin: 50px;
+  margin: 0px;
+  width: 250px;
 }
 
 .blog-form-container form {

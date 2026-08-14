@@ -1,7 +1,7 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
-
+const formatUrl = require('../utils/format_url')
 const isBlank = (field) => (!field || typeof field !== 'string' || field.trim() === '')
 
 blogRouter.get('/', async (request, response) => {
@@ -35,7 +35,6 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
     return response.status(204).end()
 })
 
-
 blogRouter.put('/:id', userExtractor, async (request, response) => {
     const { title, author, url, likes } = request.body
     const id = request.params.id
@@ -59,25 +58,28 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
     return response.status(200).json(saved)
 })
 
-
 blogRouter.post('/', userExtractor, async (request, response) => {
     const user = request.user
     const { title, author, url, likes } = request.body
-
-    if (!isBlank(title)) {
+    if (isBlank(title)) {
         return response.status(400).json({ error: 'Title cannot be blank' })
     }
-    if (!isBlank(author)) {
+    if (isBlank(author)) {
         return response.status(400).json({ error: 'Author cannot be blank' })
     }
-    if (!isBlank(url)) {
+    if (isBlank(url)) {
         return response.status(400).json({ error: 'URL cannot be blank' })
+    }
+
+    const URL = formatUrl(url)
+    if (!URL.isValid) {
+        return response.status(400).json({ error: 'URL is not in a valid format' })
     }
 
     const blog = new Blog({
         title: title || '',
         author: author || '',
-        url: url || '',
+        url: URL.formattedUrl || '',
         likes: likes || 0,
         user: user._id
     })

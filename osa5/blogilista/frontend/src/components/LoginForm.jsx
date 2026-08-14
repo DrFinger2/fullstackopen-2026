@@ -1,10 +1,7 @@
 import { useState } from 'react'
-import Notification from './Notification'
 
 const LoginForm = ({ onLogin, onRegister }) => {
   const [isLogin, setIsLogin] = useState(true)
-  const [error, setError] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
   const [loading, setLoading] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
 
@@ -21,30 +18,22 @@ const LoginForm = ({ onLogin, onRegister }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    setError('')
-    setSuccessMsg('')
-
     const timer = startLoading()
     const form = new FormData(e.target)
-    const result = await onLogin({
+    
+    await onLogin({
       username: form.get('username'),
       password: form.get('password')
     })
-
     stopLoading(timer)
-    if (!result.ok) {
-      setError(result.error)
-    }
   }
 
   const handleRegister = async (e) => {
     e.preventDefault()
-    setError('')
-    setSuccessMsg('')
-
     const timer = startLoading()
     const form = new FormData(e.target)
-    const result = await onRegister({
+    
+    const success = await onRegister({
       name: form.get('name'),
       username: form.get('username'),
       password: form.get('password')
@@ -52,31 +41,19 @@ const LoginForm = ({ onLogin, onRegister }) => {
 
     stopLoading(timer)
     
-    if (result.ok) {
+    if (success) {
       setIsLogin(true) 
       e.target.reset()
-    } else {
-      setError(result.error)
     }
   }
 
   return (
     <div className="login-form-container">
       <div className="form-toggle">
-        <button
-          type="button"
-          onClick={() => { setIsLogin(true); setError(''); setSuccessMsg(''); }}
-          disabled={loading}
-          className={isLogin ? 'active' : ''}
-        >
+        <button type="button" onClick={() => setIsLogin(true)} disabled={loading} className={isLogin ? 'active' : ''}>
           Login
         </button>
-        <button
-          type="button"
-          onClick={() => { setIsLogin(false); setError(''); setSuccessMsg(''); }}
-          disabled={loading}
-          className={!isLogin ? 'active' : ''}
-        >
+        <button type="button" onClick={() => setIsLogin(false)} disabled={loading} className={!isLogin ? 'active' : ''}>
           Register
         </button>
       </div>
@@ -101,8 +78,6 @@ const LoginForm = ({ onLogin, onRegister }) => {
           </button>
         </form>
       )}
-
-      <Notification error={error} success={successMsg} />
     </div>
   )
 }
