@@ -1,59 +1,66 @@
 import { useState } from 'react'
 
+const TextInput = ({ value, onChange, placeholder }) => (
+  <input type="text" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
+)
+
+const PasswordInput = ({ value, onChange, placeholder = 'Password' }) => (
+  <input type="password" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
+)
+
+const SubmitButton = ({ text, loadingText, showLoading, isLoading }) => (
+  <button disabled={isLoading}>
+    {showLoading ? <>{loadingText}<span className="dots" /></> : text}
+  </button>
+)
+
 const LoginForm = ({ onLogin, onRegister }) => {
   const [isLogin, setIsLogin] = useState(true)
   const [loading, setLoading] = useState(false)
   const [showLoading, setShowLoading] = useState(false)
 
+  const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   const startLoading = () => {
     setLoading(true)
-    return setTimeout(() => { setShowLoading(true) }, 300)
+    return setTimeout(() => setShowLoading(true), 300)
   }
 
-  const stopLoading = (timer) => {
+  const stopLoading = timer => {
     clearTimeout(timer)
     setLoading(false)
     setShowLoading(false)
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = async e => {
     e.preventDefault()
     const timer = startLoading()
-    const form = new FormData(e.target)
-    
-    await onLogin({
-      username: form.get('username'),
-      password: form.get('password')
-    })
+    await onLogin({ username, password })
     stopLoading(timer)
   }
 
-  const handleRegister = async (e) => {
+  const handleRegister = async e => {
     e.preventDefault()
     const timer = startLoading()
-    const form = new FormData(e.target)
-    
-    const success = await onRegister({
-      name: form.get('name'),
-      username: form.get('username'),
-      password: form.get('password')
-    })
-
+    const success = await onRegister({ name, username, password})
     stopLoading(timer)
-    
     if (success) {
-      setIsLogin(true) 
-      e.target.reset()
+      setIsLogin(true)
+      setName('')
+      setUsername('')
+      setPassword('')
     }
   }
 
   return (
     <div className="login-form-container">
       <div className="form-toggle">
-        <button type="button" onClick={() => setIsLogin(true)} disabled={loading} className={isLogin ? 'active' : ''}>
+        <button onClick={() => setIsLogin(true)} disabled={loading} className={isLogin ? 'active' : ''}>
           Login
         </button>
-        <button type="button" onClick={() => setIsLogin(false)} disabled={loading} className={!isLogin ? 'active' : ''}>
+        <button onClick={() => setIsLogin(false)} disabled={loading} className={!isLogin ? 'active' : ''} >
           Register
         </button>
       </div>
@@ -61,25 +68,22 @@ const LoginForm = ({ onLogin, onRegister }) => {
       {isLogin ? (
         <form onSubmit={handleLogin}>
           <h2>Login</h2>
-          <input name="username" placeholder="Username" />
-          <input name="password" type="password" placeholder="Password" />
-          <button disabled={loading}>
-            {showLoading ? <>Logging<span className="dots"></span></> : 'Login'}
-          </button>
+          <TextInput placeholder="Username" value={username} onChange={setUsername}/>
+          <PasswordInput value={password} onChange={setPassword} />
+          <SubmitButton text="Login" loadingText="Logging" showLoading={showLoading} isLoading={loading} />
         </form>
       ) : (
         <form onSubmit={handleRegister}>
           <h2>Register</h2>
-          <input name="name" placeholder="Name" />
-          <input name="username" placeholder="Username" />
-          <input name="password" type="password" placeholder="Password" />
-          <button disabled={loading}>
-            {showLoading ? <>Registering<span className="dots"></span></> : 'Register'}
-          </button>
+          <TextInput placeholder="Name" value={name} onChange={setName} />
+          <TextInput placeholder="Username" value={username} onChange={setUsername}/>
+          <PasswordInput value={password} onChange={setPassword} />
+          <SubmitButton text="Register" loadingText="Registering" showLoading={showLoading} isLoading={loading} />  
         </form>
       )}
     </div>
   )
 }
+
 
 export default LoginForm

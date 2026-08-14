@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react'
 
-const Notification = ({ error, success, displayTime = 5 }) => {
+const Notification = ({ error, success, id, displayTime = 5 }) => {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     if (error || success) {
       setVisible(true)
-      
-      const timer = setTimeout(() => {
-        setVisible(false)
-      }, displayTime * 1000)
-
+      const timer = setTimeout(() => setVisible(false), displayTime * 1000)
       return () => clearTimeout(timer)
     }
-  }, [error, success, displayTime])
+  }, [id])
 
   const message = error || success
   const typeClass = error ? 'error' : 'success-msg'

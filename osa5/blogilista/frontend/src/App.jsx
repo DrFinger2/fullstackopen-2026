@@ -33,11 +33,11 @@ const App = () => {
     try {
       const result = await loginService.login(credentials)
       login(result)
-      notify(`Welcome back, ${result.username}!`, 'success')
+      notify.success(`Welcome back, ${result.username}!`)
       return true;
     } catch (error) {
       const message = error.response?.data?.error || 'Unknown error'
-      notify(message, 'error')
+      notify.error(message, 'error')
       return false;
     }
   }
@@ -45,11 +45,11 @@ const App = () => {
   const handleRegister = async (details) => {
     try {
       await registerService.register(details)
-      notify('Registration successful! Please log in.', 'success')
+      notify.success('Registration successful! Please log in.')
       return true;
     } catch (error) {
       const message = error.response?.data?.error || 'Unknown error'
-      notify(message, 'error')
+      notify.error(message)
       return false;
     }
   }
@@ -58,11 +58,11 @@ const App = () => {
     try {
       const createdBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(createdBlog))
-      notify(`Added "${createdBlog.title}" successfully!`, 'success')
+      notify.success(`Added "${createdBlog.title}" successfully!`)
       return true;
     } catch (error) {
       const message = error.response?.data?.error || 'Failed to create blog'
-      notify(message, 'error')
+      notify.error(message)
       return false;
     }
   }
