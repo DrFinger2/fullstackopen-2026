@@ -103,43 +103,44 @@ p {
     animation: dots 1.2s steps(1) infinite;
 }
 .error {
-    display: none;
+    display: flex;
     padding: 0 50px;
-    
+
     border: 1px solid #f1b8b8;
     border-radius: 6px;
-    background-color: #fff5f5;
-    color: darkorange;
+    background-color: #ffe3e3;
+    color: darkred;
     font-size: 14px;
-    margin: 0; /* Removed margin-top */
-    height: 70%; /* Give it proportional size inside the parent */
-    align-items: center; /* Center the text inside the box */
+    margin: 0;
+    height: 70%;
+    align-items: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
 }
 
 .error.show {
-    display: flex; /* Changed from block to flex to support align-items */
-    animation: show-error .5s ease;
+    opacity: 1;
+    pointer-events: auto;
 }
+
 .success-msg {
-    display: none; 
+    display: flex;
     color: green;
     font-size: 14px;
     margin: 0;
     height: 100%;
     align-items: center;
-}
-.success-msg.show {
-    display: flex; 
-    animation: show-error .5s ease; /* You can reuse the error animation for a smooth fade-in */
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
 }
 
-@keyframes show-error {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.success-msg.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .error::first-letter {

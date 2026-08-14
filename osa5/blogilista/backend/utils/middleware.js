@@ -22,7 +22,7 @@ async function userExtractor(request, response, next) {
     }
     const user = await User.findById(decodedToken.id)
     if (!user) {
-        return response.status(401).json({ error: 'User not found - token invalid' })
+        return response.status(401).json({ error: 'User not found' })
     }
 
     request.user = user
@@ -39,13 +39,13 @@ function errorHandler(error, request, response, next) {
         return response.status(400).json({ error: message })
     }
     if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
-        return response.status(400).json({ error: 'expected `username` to be unique' })
+        return response.status(400).json({ error: 'Expected `username` to be unique' })
     }
     if (error.name === 'JsonWebTokenError') {
-        return response.status(401).json({ error: 'token missing or invalid' })
+        return response.status(401).json({ error: 'Token missing or invalid' })
     }
     if (error.name === 'TokenExpiredError') {
-        return response.status(401).json({ error: 'token expired' })
+        return response.status(401).json({ error: 'Token expired' })
     }
 
     logger.error(error)

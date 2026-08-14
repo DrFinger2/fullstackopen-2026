@@ -16,7 +16,7 @@ userRouter.get('/:id', async (request, response) => {
     if (user) {
         return response.status(200).json(user)
     } else {
-        return response.status(404).json({ error: 'Resource not found' })
+        return response.status(404).json({ error: 'Resource not found.' })
     }
 })
 
@@ -35,7 +35,7 @@ userRouter.post('/', async (request, response) => {
 
     const existingUser = await User.findOne({ username: username })
     if (existingUser) {
-        return response.status(400).json({ error: 'Username is already taken' })
+        return response.status(400).json({ error: 'Username is already taken.' })
     }
 
     const saltRounds = 10
