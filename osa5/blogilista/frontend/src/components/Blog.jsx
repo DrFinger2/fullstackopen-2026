@@ -9,7 +9,7 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
 
   // event handlers
   const handleLikeClick = () => {
-    onLikeClicked(blog.id)
+    onLikeClicked(blog)
   }
   const handleToggleClick = () => {
     setVisible(!visible)
@@ -22,8 +22,7 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
     onBlogRemoved(blog.id)
   }
 
-  console.log('Blog.user.username: ', blog.user.username)
-  console.log('User: ', user)
+
   return (
     <div className='blog-card'>
       <Header text={blog.title} href={blog.url} />

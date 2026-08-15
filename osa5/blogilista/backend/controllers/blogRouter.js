@@ -34,6 +34,7 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
     return response.status(204).end()
 })
 
+// Terrible solution but part of the requirements is to use this specific method to update the likes!
 blogRouter.put('/:id', userExtractor, async (request, response) => {
     const { title, author, url, likes } = request.body
     const id = request.params.id
@@ -43,20 +44,27 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
         return response.status(404).end()
     }
 
-    const requestId = request.user._id.toString()
-    if (!blog.user || requestId !== blog.user.toString()) {
+    const isOwner = (blog.user && request.user._id.toString() === blog.user.toString())
+    const triesToEditContent = (title !== undefined || author !== undefined || url !== undefined)
+
+    if (triesToEditContent && !isOwner) {
         return response.status(403).json({ error: 'Only the creator can edit this blog' })
     }
 
-    if (title !== undefined) blog.title = title
-    if (author !== undefined) blog.author = author
-    if (url !== undefined) blog.url = url
+    if (isOwner) {
+        if (title !== undefined) blog.title = title
+        if (author !== undefined) blog.author = author
+        if (url !== undefined) blog.url = url
+    }
+
     if (likes !== undefined) blog.likes = likes
 
     const saved = await blog.save()
-    return response.status(200).json(saved)
+    const populated = await saved.populate('user', { username: 1, name: 1 })
+    return response.status(200).json(populated)
 })
 
+// I build this but not going to use it.
 blogRouter.post('/:id/like', userExtractor, async (request, response) => {
     const blog = await Blog.findById(request.params.id)
     if (!blog) {

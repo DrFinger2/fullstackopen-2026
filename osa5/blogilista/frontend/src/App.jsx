@@ -89,9 +89,9 @@ const App = () => {
     }
   }
 
-  const handleLikeBlog = async (blogId) => {
+  const handleLikeBlog = async (blog) => {
     try {
-      const updated = await blogService.like(blogId)
+      const updated = await blogService.like(blog)
       blogState.update(updated)
     } catch (error) {
       if (error.response?.status === 401) {

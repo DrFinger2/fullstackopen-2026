@@ -30,12 +30,18 @@ const remove = async (blogId) => {
   return response.data
 }
 
-const like = async (blogId) => {
+const like = async (blog) => {
   const config = {
     headers: { Authorization: token }
   }
-  const url = `${BASE_URL}/${blogId}/like`
-  const response = await axios.post(url, {}, config)
+  const url = `${BASE_URL}/${blog.id}`
+  const updatedBlog = {
+    title: blog.title,
+    author: blog.author,
+    url: blog.url,
+    likes: blog.likes + 1
+  }
+  const response = await axios.put(url, updatedBlog, config)
   return response.data
 }
 
