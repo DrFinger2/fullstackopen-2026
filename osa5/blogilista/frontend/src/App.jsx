@@ -24,7 +24,7 @@ import registerService from './services/register'
 
 const App = () => {
   const blogState = useBlogs()
-  const [loading, setLoading] = useState(false)
+  const [ loading, setLoading ] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
   const createBlogForm = useRef()
@@ -75,6 +75,7 @@ const App = () => {
       const createdBlog = await blogService.create(newBlog)
       blogState.add(createdBlog)
       notify.success(`Added '${createdBlog.title}' successfully!`)
+      createBlogForm.current.close()
       return true
     } catch (error) {
       if (error.response?.status === 401) {

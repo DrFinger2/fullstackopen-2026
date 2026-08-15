@@ -15,6 +15,10 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
     setVisible(!visible)
   }
   const handleRemoveClick = () => {
+    if (!window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+      return
+    }
+
     onBlogRemoved(blog.id)
   }
 
