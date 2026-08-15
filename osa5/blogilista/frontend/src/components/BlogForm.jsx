@@ -1,17 +1,29 @@
 import { useState } from 'react'
+import SubmitButton from './SubmitButton'
 
 const BlogForm = ({ onCreateBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false) 
+
+  const startLoading = () => {
+    setLoading(true)
+    return setTimeout(() => setShowLoading(true), 300)
+  }
+
+  const stopLoading = timer => {
+    clearTimeout(timer)
+    setLoading(false)
+    setShowLoading(false)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
-
+    const timer = startLoading()
     const result = await onCreateBlog({ title, author, url })
-    setLoading(false)
+    stopLoading(timer)
     if (result) {
       setTitle('')
       setAuthor('')
@@ -26,9 +38,7 @@ const BlogForm = ({ onCreateBlog }) => {
         <input name="title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)} />
         <input name="author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)} />
         <input name="url" placeholder="URL" value={url} onChange={({ target }) => setUrl(target.value)}/>
-        <button disabled={loading}>
-          {loading ? 'Creating...' : 'Create'}
-        </button>
+        <SubmitButton text="Create" loadingText="Creating" showLoading={showLoading} isLoading={loading}/>
       </form>
     </div>
   )

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import SubmitButton from './SubmitButton'
 const TextInput = ({ value, onChange, placeholder }) => (
   <input type="text" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
 )
@@ -8,11 +8,6 @@ const PasswordInput = ({ value, onChange, placeholder = 'Password' }) => (
   <input type="password" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
 )
 
-const SubmitButton = ({ text, loadingText, showLoading, isLoading }) => (
-  <button disabled={isLoading}>
-    {showLoading ? <>{loadingText}<span className="dots" /></> : text}
-  </button>
-)
 
 const LoginForm = ({ onLogin, onRegister }) => {
   const [isLogin, setIsLogin] = useState(true)

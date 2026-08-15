@@ -10,21 +10,47 @@ import registerService from './services/register'
 import useAuth from './hooks/useAuth'
 import useNotification from './hooks/useNotification'
 
+const Loader = ({ isLoading }) => {
+  const [showLoading, setShowLoading] = useState(false)
+
+  useEffect(() => {
+    if (!isLoading) {
+      setShowLoading(false)
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setShowLoading(true)
+    }, 300)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [isLoading])
+
+  const className = `loader ${showLoading ? 'show' : ''}`
+  return <div className={className}></div>
+}
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [loading, setLoading] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
 
+
   useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true)
       const blogs = await blogService.getAll()
+      setLoading(false)
       setBlogs(blogs)
     }
     if (user) {
       fetchBlogs()
     } else {
       setBlogs([])
+      setLoading(false)
     }
   }, [user])
 
@@ -55,23 +81,25 @@ const App = () => {
   }
 
   const handleCreateBlog = async (newBlog) => {
-    try {
-      const createdBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(createdBlog))
-      notify.success(`Added "${createdBlog.title}" successfully!`)
-      return true;
-    }
-    catch (error) {
-      if (error.response?.status === 401) {
-        logout()
-        notify.error('Session expired, please log in again')
-      } else {
-        const message = error.response?.data?.error || 'Failed to create blog'
-        notify.error(message)
+      try {
+        const createdBlog = await blogService.create(newBlog)
+        setBlogs(blogs.concat(createdBlog))
+        notify.success(`Added "${createdBlog.title}" successfully!`)
+        return true;
       }
-      return false;
-    }
-}
+      catch (error) {
+        if (error.response?.status === 401) {
+          logout()
+          notify.error('Session expired, please log in again')
+        } else {
+          const message = error.response?.data?.error || 'Failed to create blog'
+          notify.error(message)
+        }
+        return false;
+      }
+  }
+
+
 
   return (
     <>
@@ -85,6 +113,7 @@ const App = () => {
           <div className="blog-page">
           <section className="blog-section">
             <Title text="Blogs" />
+            <Loader isLoading={loading}/>
             <div className="blog-container">
               {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
             </div>
