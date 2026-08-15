@@ -107,6 +107,7 @@ const App = () => {
     try {
       await blogService.remove(blogId)
       blogState.remove(blogId)
+      notify.success('Added blog successfully!')
     }
     catch (error) {
       const message = error.response?.data?.error || 'Failed to remove blog'

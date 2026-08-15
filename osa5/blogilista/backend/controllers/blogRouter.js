@@ -65,7 +65,8 @@ blogRouter.post('/:id/like', userExtractor, async (request, response) => {
 
     blog.likes += 1
     const saved = await blog.save()
-    return response.status(200).json(saved)
+    const populated = await saved.populate('user', { username: 1, name: 1 })
+    return response.status(200).json(populated)
 })
 
 blogRouter.post('/', userExtractor, async (request, response) => {
