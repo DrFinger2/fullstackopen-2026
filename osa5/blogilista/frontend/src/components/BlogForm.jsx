@@ -6,7 +6,7 @@ const BlogForm = ({ onCreateBlog }) => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showLoading, setShowLoading] = useState(false) 
+  const [showLoading, setShowLoading] = useState(false)
 
   const startLoading = () => {
     setLoading(true)
@@ -32,13 +32,13 @@ const BlogForm = ({ onCreateBlog }) => {
   }
 
   return (
-    <div className="blog-form-container">
+    <div className='blog-form-container'>
       <form onSubmit={handleSubmit}>
         <h2>Add new blog</h2>
-        <input name="title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)} />
-        <input name="author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)} />
-        <input name="url" placeholder="URL" value={url} onChange={({ target }) => setUrl(target.value)}/>
-        <SubmitButton text="Create" loadingText="Creating" showLoading={showLoading} isLoading={loading}/>
+        <input name='title' placeholder='Title' value={title} onChange={({ target }) => setTitle(target.value)} />
+        <input name='author' placeholder='Author' value={author} onChange={({ target }) => setAuthor(target.value)} />
+        <input name='url' placeholder='URL' value={url} onChange={({ target }) => setUrl(target.value)}/>
+        <SubmitButton text='Create' loadingText='Creating' showLoading={showLoading} isLoading={loading}/>
       </form>
     </div>
   )

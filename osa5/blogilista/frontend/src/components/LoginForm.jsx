@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import SubmitButton from './SubmitButton'
 const TextInput = ({ value, onChange, placeholder }) => (
-  <input type="text" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
+  <input type='text' placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
 )
 
 const PasswordInput = ({ value, onChange, placeholder = 'Password' }) => (
-  <input type="password" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
+  <input type='password' placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)}/>
 )
 
 
 const LoginForm = ({ onLogin, onRegister }) => {
   const [isLogin, setIsLogin] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [showLoading, setShowLoading] = useState(false)
+
 
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const [loading, setLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
 
   const startLoading = () => {
     setLoading(true)
@@ -39,7 +41,7 @@ const LoginForm = ({ onLogin, onRegister }) => {
   const handleRegister = async e => {
     e.preventDefault()
     const timer = startLoading()
-    const success = await onRegister({ name, username, password})
+    const success = await onRegister({ name, username, password })
     stopLoading(timer)
     if (success) {
       setIsLogin(true)
@@ -50,8 +52,8 @@ const LoginForm = ({ onLogin, onRegister }) => {
   }
 
   return (
-    <div className="login-form-container">
-      <div className="form-toggle">
+    <div className='login-form-container'>
+      <div className='form-toggle'>
         <button onClick={() => setIsLogin(true)} disabled={loading} className={isLogin ? 'active' : ''}>
           Login
         </button>
@@ -63,17 +65,17 @@ const LoginForm = ({ onLogin, onRegister }) => {
       {isLogin ? (
         <form onSubmit={handleLogin}>
           <h2>Login</h2>
-          <TextInput placeholder="Username" value={username} onChange={setUsername}/>
+          <TextInput placeholder='Username' value={username} onChange={setUsername}/>
           <PasswordInput value={password} onChange={setPassword} />
-          <SubmitButton text="Login" loadingText="Logging" showLoading={showLoading} isLoading={loading} />
+          <SubmitButton text='Login' loadingText='Logging' showLoading={showLoading} isLoading={loading} />
         </form>
       ) : (
         <form onSubmit={handleRegister}>
           <h2>Register</h2>
-          <TextInput placeholder="Name" value={name} onChange={setName} />
-          <TextInput placeholder="Username" value={username} onChange={setUsername}/>
+          <TextInput placeholder='Name' value={name} onChange={setName} />
+          <TextInput placeholder='Username' value={username} onChange={setUsername}/>
           <PasswordInput value={password} onChange={setPassword} />
-          <SubmitButton text="Register" loadingText="Registering" showLoading={showLoading} isLoading={loading} />  
+          <SubmitButton text='Register' loadingText='Registering' showLoading={showLoading} isLoading={loading} />
         </form>
       )}
     </div>

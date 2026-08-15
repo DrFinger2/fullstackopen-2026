@@ -9,7 +9,7 @@ const useAuth = () => {
     if (userJson) {
       const parsedUser = JSON.parse(userJson)
       setUser(parsedUser.username)
-      blogService.setToken(parsedUser.token) 
+      blogService.setToken(parsedUser.token)
     }
   }, [])
 

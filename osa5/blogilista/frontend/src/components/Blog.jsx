@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Header from './Header'
 
-const Blog = ({ blog, user, onLikeClicked, onBlogRemoved}) => {
+const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
   const [visible, setVisible] = useState(false)
 
   const buttonText = !visible ? 'View details' : 'Hide details'
@@ -18,10 +18,10 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved}) => {
     onBlogRemoved(blog.id)
   }
 
-  console.log("Blog.user.username: ", blog.user.username)
-  console.log("User: ", user)
+  console.log('Blog.user.username: ', blog.user.username)
+  console.log('User: ', user)
   return (
-    <div className="blog-card">
+    <div className='blog-card'>
       <Header text={blog.title} href={blog.url} />
       <button onClick={handleToggleClick}>
         {buttonText}
@@ -32,7 +32,7 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved}) => {
         <p>
           <strong> Likes: </strong>{blog.likes}
           <button onClick={handleLikeClick}>Like</button>
-        </p> 
+        </p>
         {
           blog.user.username === user &&
           <button onClick={handleRemoveClick}>Remove</button>

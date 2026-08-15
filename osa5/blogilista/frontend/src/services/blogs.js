@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const BASE_URL = '/api/blogs'
-let token = null;
+let token = null
 
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`

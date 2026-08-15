@@ -15,7 +15,7 @@ const Notification = ({ message, type, id, displayTime = 5 }) => {
   const className = `${typeClass} ${visible && message ? 'show' : ''}`.trim()
 
   return (
-    <div className="notification-container">
+    <div className='notification-container'>
       <p className={className}>
         {message}
       </p>
