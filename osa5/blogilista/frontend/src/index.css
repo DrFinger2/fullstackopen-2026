@@ -7,7 +7,9 @@ a {
 p {
     margin: 0px;
 }
-
+h2 {
+    margin:0px;
+}
 
 .header {
     margin:0px;
@@ -42,6 +44,15 @@ p {
     border-radius: 15px;
     width: 100%;
     box-sizing: border-box;
+}
+
+.blog-card-details {
+    display: none
+}
+
+.blog-card-details.show {
+    display: block;
+    margin-top:5px;
 }
 
 
@@ -159,15 +170,28 @@ p {
 .blog-form-container {
   background-color: white;
   border-radius: 15px;
-  padding: 20px;
-  margin: 0px;
+  padding: 25px 10px;
+  margin: 10px;
   width: 250px;
+}
+.blog-form-section  {
+    background-color: lightgray;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.blog-form-section div {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .blog-form-container form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 200px;
 }
 
 @keyframes dots {
@@ -201,6 +225,7 @@ p {
 .form-toggle button.active {
   font-weight: bold;
 }
+
 
 
 /**/

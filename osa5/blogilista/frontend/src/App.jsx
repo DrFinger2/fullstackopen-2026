@@ -1,70 +1,61 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+// Components
 import Blog from './components/Blog'
 import Title from './components/Title'
 import Navbar from './components/Navbar'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
+import Loader from './components/Loader'
+
+// Hooks
+import useAuth from './hooks/useAuth'
+import useBlogs from './hooks/useBlogs'
+import useNotification from './hooks/useNotification'
+
+// Services
 import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
-import useAuth from './hooks/useAuth'
-import useNotification from './hooks/useNotification'
 
-const Loader = ({ isLoading }) => {
-  const [showLoading, setShowLoading] = useState(false)
 
-  useEffect(() => {
-    if (!isLoading) {
-      setShowLoading(false)
-      return
-    }
 
-    const timer = setTimeout(() => {
-      setShowLoading(true)
-    }, 300)
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [isLoading])
-
-  const className = `loader ${showLoading ? 'show' : ''}`
-  return <div className={className}></div>
-}
 
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogState = useBlogs()
   const [loading, setLoading] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
-
+  const createBlogForm = useRef()
 
   useEffect(() => {
     const fetchBlogs = async () => {
       setLoading(true)
       const blogs = await blogService.getAll()
+      blogState.set(blogs)
       setLoading(false)
-      setBlogs(blogs)
     }
+
     if (user) {
       fetchBlogs()
     } else {
-      setBlogs([])
+      blogState.set([])
       setLoading(false)
     }
   }, [user])
-
 
   const handleLogin = async (credentials) => {
     try {
       const result = await loginService.login(credentials)
       login(result)
       notify.success(`Welcome back, ${result.username}!`)
-      return true;
+      return true
     } catch (error) {
       const message = error.response?.data?.error || 'Unknown error'
       notify.error(message, 'error')
-      return false;
+      return false
     }
   }
 
@@ -72,54 +63,88 @@ const App = () => {
     try {
       await registerService.register(details)
       notify.success('Registration successful! Please log in.')
-      return true;
+      return true
     } catch (error) {
       const message = error.response?.data?.error || 'Unknown error'
       notify.error(message)
-      return false;
+      return false
     }
   }
 
   const handleCreateBlog = async (newBlog) => {
-      try {
-        const createdBlog = await blogService.create(newBlog)
-        setBlogs(blogs.concat(createdBlog))
-        notify.success(`Added "${createdBlog.title}" successfully!`)
-        return true;
+    try {
+      const createdBlog = await blogService.create(newBlog)
+      blogState.add(createdBlog)
+      notify.success(`Added "${createdBlog.title}" successfully!`)
+      return true
+    } catch (error) {
+      if (error.response?.status === 401) {
+        logout()
+        notify.error('Session expired, please log in again')
+      } else {
+        const message = error.response?.data?.error || 'Failed to create blog'
+        notify.error(message)
       }
-      catch (error) {
-        if (error.response?.status === 401) {
-          logout()
-          notify.error('Session expired, please log in again')
-        } else {
-          const message = error.response?.data?.error || 'Failed to create blog'
-          notify.error(message)
-        }
-        return false;
-      }
+      return false
+    }
   }
 
+  const handleLikeBlog = async (blogId) => {
+    try {
+      const updated = await blogService.like(blogId)
+      blogState.update(updated)
+    } catch (error) {
+      if (error.response?.status === 401) {
+        logout()
+        notify.error('Session expired, please log in again')
+      } else {
+        const message = error.response?.data?.error || 'Failed to like blog'
+        notify.error(message)
+      }
+    }
+  }
 
+  const handleRemoveBlog = async (blogId) => {
+    try {
+      await blogService.remove(blogId)
+      blogState.remove(blogId)
+    }
+    catch (error) {
+      const message = error.response?.data?.error || 'Failed to remove blog'
+      notify.error(message)
+    }
+  } 
 
   return (
     <>
       <Navbar user={user} onLogout={logout} notification={notification} />
-      
+
       {!user ? (
         <section className="login-section">
-            <LoginForm onLogin={handleLogin} onRegister={handleRegister} notify={notify} />
+          <LoginForm onLogin={handleLogin} onRegister={handleRegister} notify={notify}/>
         </section>
       ) : (
-          <div className="blog-page">
+        <div className="blog-page">
           <section className="blog-section">
             <Title text="Blogs" />
-            <Loader isLoading={loading}/>
+            <Loader isLoading={loading} />
+
             <div className="blog-container">
-              {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+                {blogState.blogs.map(blog =>
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    user={user}
+                    onLikeClicked={handleLikeBlog}
+                    onBlogRemoved={handleRemoveBlog}
+                  />)}
             </div>
           </section>
+
           <section className="blog-form-section">
-              <BlogForm onCreateBlog={handleCreateBlog} notify={notify} />
+            <Togglable ref={createBlogForm} buttonLabel="Add new Blog">
+              <BlogForm onCreateBlog={handleCreateBlog} notify={notify}/>
+            </Togglable>
           </section>
         </div>
       )}
