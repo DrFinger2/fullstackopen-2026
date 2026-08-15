@@ -44,27 +44,38 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
         return response.status(404).end()
     }
 
-    const isOwner = (blog.user && request.user._id.toString() === blog.user.toString())
-    const triesToEditContent = (title !== undefined || author !== undefined || url !== undefined)
-
-    if (triesToEditContent && !isOwner) {
+    // I hate this but part of the requirements, haha!
+    const isOwner = blog.user && request.user._id.toString() === blog.user.toString()
+    if (title !== undefined && title !== blog.title && !isOwner) {
+        return response.status(403).json({ error: 'Only the creator can edit this blog' })
+    }
+    if (author !== undefined && author !== blog.author && !isOwner) {
+        return response.status(403).json({ error: 'Only the creator can edit this blog' })
+    }
+    if (url !== undefined && url !== blog.url && !isOwner) {
         return response.status(403).json({ error: 'Only the creator can edit this blog' })
     }
 
-    if (isOwner) {
-        if (title !== undefined) blog.title = title
-        if (author !== undefined) blog.author = author
-        if (url !== undefined) blog.url = url
+    if (title !== undefined) {
+        blog.title = title
     }
-
-    if (likes !== undefined) blog.likes = likes
+    if (author !== undefined) {
+        blog.author = author
+    }
+    if (url !== undefined) {
+        blog.url = url
+    }
+    if (likes !== undefined) {
+        blog.likes = likes
+    }
 
     const saved = await blog.save()
     const populated = await saved.populate('user', { username: 1, name: 1 })
     return response.status(200).json(populated)
 })
 
-// I build this but not going to use it.
+
+// I build this but not going to use it because that would be too easy
 blogRouter.post('/:id/like', userExtractor, async (request, response) => {
     const blog = await Blog.findById(request.params.id)
     if (!blog) {
