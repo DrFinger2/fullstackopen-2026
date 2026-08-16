@@ -63,15 +63,15 @@ const BlogDetailsPage = ({ user }) => {
     }
   }
 
-  const isUserName = (blog.user?.username === user?.username)
+  const isUserName = (blog?.user?.username === user?.username)
   return (
     <div className='blog-details-container'>
-      <Header text={blog.title} />
+      <Header text={blog.title}/>
       <p><strong>URL: </strong><a href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</a></p>
       <p><strong>Author: </strong>{blog.author}</p>
       <p> <strong>Likes: </strong>{blog.likes} <button onClick={handleLike}>Like</button> </p>
-      <p> <strong>Added by: </strong>{blog.user?.name || blog.user?.username || 'Unknown'}</p>
-      { isUserName && ( <button onClick={handleRemove}>Remove Blog</button> )}
+      <p> <strong>Added by: </strong>{blog.user?.name || blog.user?.username || 'Unknown'} </p>
+      { isUserName && ( <button onClick={handleRemove}>Remove Blog</button> ) }
     </div>
   )
 }
