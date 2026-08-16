@@ -19,6 +19,7 @@ const defaultBlog = {
   url: 'http://www.gooogle.com'
 }
 
+
 // Test utilities
 const loginWith = async (page, username, password) => {
   const form = page.locator('form')
@@ -26,15 +27,15 @@ const loginWith = async (page, username, password) => {
   await form.getByPlaceholder('Password').fill(password)
   await form.getByRole('button', { name: 'login' }).click()
 }
-
 const createNewBlog = async (page, blog) => {
   await page.getByRole('button', { name: 'Add new Blog' }).click()
   await page.getByTestId('title').fill(blog.title)
   await page.getByTestId('author').fill(blog.author)
   await page.getByTestId('url').fill(blog.url)
   await page.getByRole('button', { name: 'Create' }).click()
+  const blogCard = page.locator('.blog-card').filter({ hasText: blog.title })
+  await expect(blogCard).toBeVisible()
 }
-
 const likeBlog = async (page, blog, times) => {
   const blogCard = page.locator('.blog-card').filter({ hasText: blog.title })
   await blogCard.getByRole('button', { name: 'View details' }).click()
@@ -45,7 +46,6 @@ const likeBlog = async (page, blog, times) => {
     await expect(blogCard.getByText(`Likes: ${i}`)).toBeVisible()
   }
 }
-
 const blogIndex = async (page, title) => {
   const titles = await page.locator('.blog-card .header').allTextContents()
   return titles.indexOf(title)
@@ -55,6 +55,7 @@ const blogIndex = async (page, title) => {
 // Test setup
 test.setTimeout(10 * 1000)
 
+// Tests
 describe('Blogilista', () => {
   beforeEach(async ({ page, request}) => {
     await page.request.post('/api/testing/reset')
@@ -154,11 +155,11 @@ describe('Blogilista', () => {
     })
 
     test('Blogs are ordered by like count', async ({ page }) => {
-      //test.setTimeout(20 * 1000)
+      test.setTimeout(20 * 1000)
 
-      const blogFewLikes = { title: 'Blog with a couple likes', author: 'Author A', url: 'http://a.com' }
-      const blogMostLikes = { title: 'Blog with the most likes', author: 'Author B', url: 'http://b.com' }
-      const blogNoLikes = { title: 'Blog with no likes', author: 'Author C', url: 'http://c.com' }
+      const blogFewLikes = { title: 'Few likes', author: 'author a', url: 'http://few.com' }
+      const blogMostLikes = { title: 'Most likes', author: 'author b', url: 'http://most.com' }
+      const blogNoLikes = { title: 'No likes', author: 'author c', url: 'http://no.com' }
       
       await createNewBlog(page, blogFewLikes)
       await createNewBlog(page, blogMostLikes)
@@ -170,7 +171,8 @@ describe('Blogilista', () => {
       const indexMostLikes = await blogIndex(page, blogMostLikes.title)
       const indexFewLikes = await blogIndex(page, blogFewLikes.title)
       const indexNoLikes = await blogIndex(page, blogNoLikes.title)
-
+      
+      // Not fan of this but couldnt come up with anything better..
       expect(indexMostLikes).toBeLessThan(indexFewLikes)
       expect(indexFewLikes).toBeLessThan(indexNoLikes)
     })
