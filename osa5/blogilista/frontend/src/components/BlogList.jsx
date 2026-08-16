@@ -1,16 +1,9 @@
 import Blog from './Blog'
 
-const BlogList = ({ blogs, user, onLikeClicked, onBlogRemoved }) => {
+const BlogList = ({ blogs }) => {
   return (
     <div className='blog-list'>
-      {blogs?.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          onLikeClicked={onLikeClicked}
-          onBlogRemoved={onBlogRemoved}
-        />)}
+      {blogs?.map(blog => <Blog key={blog.id} blog={blog} />)}
     </div>
   )
 }

@@ -16,6 +16,8 @@ const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
     )
   }
 
+  const isCreator = Boolean(user) && blog.user?.username === user
+
   const handleLike = async () => {
     try {
       const updatedBlog = await blogService.like(blog)
@@ -38,7 +40,7 @@ const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
       await blogService.remove(blog.id)
       blogState.remove(blog.id)
       notify.success('Blog removed successfully!')
-      navigate('/blogs')
+      navigate('/')
     } catch (error) {
       if (error.response?.status === 401) {
         logout()
@@ -56,12 +58,12 @@ const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
       <p><strong>Author: </strong>{blog.author}</p>
       <p>
         <strong>Likes: </strong>{blog.likes}
-        <button onClick={handleLike}>Like</button>
+        {user && <button onClick={handleLike}>Like</button>}
       </p>
       <p><strong>Added by: </strong>{blog.user?.name || blog.user?.username || 'Unknown'}</p>
 
-      {blog.user?.username === user?.username && (
-        <button onClick={handleRemove}>Remove Blog</button>
+      {isCreator && (
+        <button onClick={handleRemove}>Remove</button>
       )}
     </div>
   )

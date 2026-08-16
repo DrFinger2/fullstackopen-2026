@@ -1,49 +1,14 @@
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Header from './Header'
 
-const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
-  const [visible, setVisible] = useState(false)
 
-  const buttonText = !visible ? 'View details' : 'Hide details'
-  const className = `blog-card-details ${visible ? 'show' : ''}`
-
-  // event handlers
-  const handleLikeClick = () => {
-    onLikeClicked(blog)
-  }
-  const handleToggleClick = () => {
-    setVisible(!visible)
-  }
-  const handleRemoveClick = () => {
-    if (!window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
-      return
-    }
-
-    onBlogRemoved(blog.id)
-  }
-
-
-  return (
-    <div className='blog-card'>
+const Blog = ({ blog }) => (
+  <div className='blog-card'>
+    <Link to={`/blogs/${blog.id}`}>
       <Header text={blog.title} />
-      <button onClick={handleToggleClick}>
-        {buttonText}
-      </button>
-
-      <div className={className}>
-        <p><strong>URL: </strong><a href={blog.url}>{blog.url}</a></p>
-        <p><strong>Author: </strong>{blog.author}</p>
-        <p>
-          <strong> Likes: </strong>{blog.likes}
-          <button onClick={handleLikeClick}>Like</button>
-        </p>
-        {
-          blog.user.username === user &&
-          <button onClick={handleRemoveClick}>Remove</button>
-        }
-      </div>
-    </div>
-  )
-}
+    </Link>
+    <p><strong>Author: </strong>{blog.author}</p>
+  </div>
+)
 
 export default Blog
