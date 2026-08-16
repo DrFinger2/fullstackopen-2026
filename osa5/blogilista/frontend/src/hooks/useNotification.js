@@ -5,13 +5,13 @@ const useNotification = () => {
 
   const notify = {
     success: message => setNotification(prev => ({
-      message,
+      message: message || 'Operation completed successfully',
       type: 'success',
       id: prev.id + 1
     })),
 
     error: message => setNotification(prev => ({
-      message,
+      message: message || 'Unknown error',
       type: 'error',
       id: prev.id + 1
     }))

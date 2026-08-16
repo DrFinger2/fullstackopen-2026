@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Routes } from 'react-router-dom'
 
 import Navbar from './components/Navbar'
 import Loader from './components/Loader'
@@ -12,6 +13,7 @@ import useBlogs from './hooks/useBlogs'
 import loginService from './services/login'
 import registerService from './services/register'
 import blogService from './services/blogs'
+
 
 const App = () => {
   const [loading, setLoading] = useState(false)
@@ -27,7 +29,7 @@ const App = () => {
           const blogs = await blogService.getAll()
           blogState.set(blogs)
         } catch (error) {
-          notify.error(error.response?.data?.error || 'Unknown error')
+          notify.error(error.response?.data?.error)
         } finally {
           setLoading(false)
         }
@@ -43,7 +45,7 @@ const App = () => {
       notify.success(`Welcome back, ${result.username}!`)
       return true
     } catch (error) {
-      notify.error(error.response?.data?.error || 'Unknown error')
+      notify.error(error.response?.data?.error)
       return false
     }
   }
@@ -54,7 +56,7 @@ const App = () => {
       notify.success('Registration successful! Please log in.')
       return true
     } catch (error) {
-      notify.error(error.response?.data?.error || 'Unknown error')
+      notify.error(error.response?.data?.error)
       return false
     }
   }
@@ -63,7 +65,11 @@ const App = () => {
     <>
       <Navbar user={user} onLogout={logout} notification={notification} />
       <Loader isLoading={loading} />
-
+      <Routes>
+        <Route />
+        <Route />
+        <Route />
+      </Routes>
       {!user ? (
         <LoginPage onLogin={handleLogin} onRegister={handleRegister} notify={notify}/>
       ) : (
