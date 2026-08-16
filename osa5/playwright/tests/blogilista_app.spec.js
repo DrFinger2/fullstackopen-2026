@@ -19,12 +19,12 @@ describe('Blogilista', () => {
   test('front page can be opened', async ({ page, request }) => {
     const locator = await page.getByRole('heading', {name: 'Login'})
     await expect(locator).toBeVisible()
-    loginWith(page, 'admin', 'admin')
+    await loginWith(page, 'admin', 'admin')
   })
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      loginWith(page, 'admin', 'admin')
+      await loginWith(page, 'admin', 'admin')
     })
 
     test('', async ({ page }) => {
