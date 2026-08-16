@@ -9,8 +9,8 @@
   "scripts": {
     "build:render": "npm install && rm -rf dist && cd ../frontend/ && npm install && npm run build && cp -r dist ../backend",
     "build": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\"",
-    "start": "cross-env NODE_ENV=production LOG_LEVEL=info node index.js",
-    "dev":   "cross-env NODE_ENV=development LOG_LEVEL=info node --watch index.js",
+    "start": "cross-env NODE_ENV=prod LOG_LEVEL=info node index.js",
+    "dev":   "cross-env NODE_ENV=dev LOG_LEVEL=info node --watch index.js",
     "test":  "cross-env NODE_ENV=test LOG_LEVEL=silent node --test --test-concurrency=1",
     "start:test": "cross-env NODE_ENV=test LOG_LEVEL=info node --watch index.js"
   },
