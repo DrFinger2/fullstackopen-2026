@@ -1,48 +1,45 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 // Components
-import Blog from './components/Blog'
-import Title from './components/Title'
 import Navbar from './components/Navbar'
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
 import Loader from './components/Loader'
+
+// Pages
+import LoginPage from './pages/LoginPage'
+import BlogsPage from './pages/BlogPage'
+// Note: If using React Router, you would also import BlogDetailsPage and Routes here
 
 // Hooks
 import useAuth from './hooks/useAuth'
-import useBlogs from './hooks/useBlogs'
 import useNotification from './hooks/useNotification'
+import useBlogs from './hooks/useBlogs'
 
 // Services
-import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
-
-
-
+import blogService from './services/blogs'
 
 const App = () => {
-  const blogState = useBlogs()
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
-  const createBlogForm = useRef()
+  const blogState = useBlogs()
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      setLoading(true)
-      const blogs = await blogService.getAll()
-      blogState.set(blogs)
-      setLoading(false)
+      if (user) {
+        setLoading(true)
+        try {
+          const blogs = await blogService.getAll()
+          blogState.set(blogs)
+        } catch (error) {
+          notify.error(error.response?.data?.error || 'Unknown error')
+        } finally {
+          setLoading(false)
+        }
+      }
     }
-
-    if (user) {
-      fetchBlogs()
-    } else {
-      blogState.set([])
-      setLoading(false)
-    }
+    fetchBlogs()
   }, [user])
 
   const handleLogin = async (credentials) => {
@@ -52,8 +49,7 @@ const App = () => {
       notify.success(`Welcome back, ${result.username}!`)
       return true
     } catch (error) {
-      const message = error.response?.data?.error || 'Unknown error'
-      notify.error(message, 'error')
+      notify.error(error.response?.data?.error || 'Unknown error')
       return false
     }
   }
@@ -64,90 +60,20 @@ const App = () => {
       notify.success('Registration successful! Please log in.')
       return true
     } catch (error) {
-      const message = error.response?.data?.error || 'Unknown error'
-      notify.error(message)
+      notify.error(error.response?.data?.error || 'Unknown error')
       return false
-    }
-  }
-
-  const handleCreateBlog = async (newBlog) => {
-    try {
-      const createdBlog = await blogService.create(newBlog)
-      blogState.add(createdBlog)
-      notify.success(`Added '${createdBlog.title}' successfully!`)
-      createBlogForm.current.close()
-      return true
-    } catch (error) {
-      if (error.response?.status === 401) {
-        logout()
-        notify.error('Session expired, please log in again')
-      } else {
-        const message = error.response?.data?.error || 'Failed to create blog'
-        notify.error(message)
-      }
-      return false
-    }
-  }
-
-  const handleLikeBlog = async (blog) => {
-    try {
-      const updated = await blogService.like(blog)
-      blogState.update(updated)
-    } catch (error) {
-      if (error.response?.status === 401) {
-        logout()
-        notify.error('Session expired, please log in again')
-      } else {
-        const message = error.response?.data?.error || 'Failed to like blog'
-        notify.error(message)
-      }
-    }
-  }
-
-  const handleRemoveBlog = async (blogId) => {
-    try {
-      await blogService.remove(blogId)
-      blogState.remove(blogId)
-      notify.success('Added blog successfully!')
-    }
-    catch (error) {
-      const message = error.response?.data?.error || 'Failed to remove blog'
-      notify.error(message)
     }
   }
 
   return (
     <>
       <Navbar user={user} onLogout={logout} notification={notification} />
+      <Loader isLoading={loading} />
 
       {!user ? (
-        <section className='login-section'>
-          <LoginForm onLogin={handleLogin} onRegister={handleRegister} notify={notify}/>
-        </section>
+        <LoginPage onLogin={handleLogin} onRegister={handleRegister} notify={notify}/>
       ) : (
-        <div className='blog-page'>
-          <section className='blog-section'>
-            <Title text='Blogs' />
-            <Loader isLoading={loading} />
-
-            <div className='blog-container'>
-              {blogState.blogs.map(blog =>
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  user={user}
-                  onLikeClicked={handleLikeBlog}
-                  onBlogRemoved={handleRemoveBlog}
-                />)}
-            </div>
-          </section>
-
-          <section className='blog-form-section'>
-            <Togglable ref={createBlogForm} buttonLabel='Add new Blog'>
-              <BlogForm onCreateBlog={handleCreateBlog} notify={notify}/>
-            </Togglable>
-          </section>
-        </div>
+        <BlogsPage user={user} logout={logout} notify={notify} blogState={blogState}/>
       )}
     </>
   )
