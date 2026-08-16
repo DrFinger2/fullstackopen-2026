@@ -49,7 +49,6 @@ const BlogsPage = ({ user, logout, notify, blogState }) => {
     <div className='blog-page'>
       <section className='blog-section'>
         <Title text='Blogs' />
-        {/* Loader was removed from here because App.jsx handles it globally */}
         <BlogList blogs={blogState.blogs} user={user} onLikeClicked={handleLikeBlog} onBlogRemoved={handleRemoveBlog}
         />
       </section>

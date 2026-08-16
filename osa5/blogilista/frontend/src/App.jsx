@@ -1,20 +1,14 @@
 import { useState, useEffect } from 'react'
 
-// Components
 import Navbar from './components/Navbar'
 import Loader from './components/Loader'
-
-// Pages
 import LoginPage from './pages/LoginPage'
-import BlogsPage from './pages/BlogPage'
-// Note: If using React Router, you would also import BlogDetailsPage and Routes here
+import BlogsPage from './pages/BlogsPage'
 
-// Hooks
 import useAuth from './hooks/useAuth'
 import useNotification from './hooks/useNotification'
 import useBlogs from './hooks/useBlogs'
 
-// Services
 import loginService from './services/login'
 import registerService from './services/register'
 import blogService from './services/blogs'

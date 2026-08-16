@@ -36,9 +36,9 @@ const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
     }
     try {
       await blogService.remove(blog.id)
-      blogState.remove(blog.id) // Remove from global state
+      blogState.remove(blog.id)
       notify.success('Blog removed successfully!')
-      navigate('/blogs') // Redirect back to blogs list after deletion
+      navigate('/blogs')
     } catch (error) {
       if (error.response?.status === 401) {
         logout()
@@ -50,7 +50,7 @@ const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
   }
 
   return (
-    <div className='blog-details-container'>
+    <div className='blog-details-page'>
       <Header text={blog.title} />
       <p><strong>URL: </strong><a href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</a></p>
       <p><strong>Author: </strong>{blog.author}</p>
