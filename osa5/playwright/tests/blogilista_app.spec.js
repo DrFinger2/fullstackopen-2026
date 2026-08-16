@@ -3,11 +3,11 @@ const { describe, test, expect, beforeEach } = require('@playwright/test')
 const TIMEOUT_SEC = 10
 test.setTimeout(TIMEOUT_SEC * 1000)
 
-const loginWith = async (page, username, password)  => {
+const loginWith = async (page, username, password) => {
   const form = page.locator('form')
-  await await form.getByPlaceholder('Username').fill({username})
-  await await form.getByPlaceholder('Username').fill({password})
-  await await form.getByRole('button', { text: 'Login' }).click()
+  await form.getByPlaceholder('Username').fill(username)
+  await form.getByPlaceholder('Password').fill(password)
+  await form.getByRole('button', { name: 'login' }).click()
 }
 
 describe('Blogilista', () => {
