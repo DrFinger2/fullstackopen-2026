@@ -8,11 +8,9 @@ const morgan = require('morgan')
 const blogRouter = require('./controllers/blogRouter')
 const loginRouter = require('./controllers/loginRouter')
 const userRouter = require('./controllers/userRouter')
-
+const resetRouter = require('./controllers/resetRouter')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
-const resetUsers = require('./seeding/resetUsers')
-const resetBlogs = require('./seeding/resetBlogs')
 
 const { errorHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware')
 const app = express()
@@ -39,15 +37,15 @@ function configure () {
     app.use('/api/login', loginRouter)
     app.use('/api/users', userRouter)
     app.use('/api/blogs', blogRouter)
+    if (process.env.NODE_ENV === 'test') {
+        app.use('/api/testing', resetRouter)
+    }
     app.use(unknownEndpoint)
     app.use(errorHandler)
 }
 
 async function start () {
     await connectToDatabase()
-    // not related to the tasks, i just wanted to reset the data on startup so that i can experiment with fresh data
-    await resetUsers()
-    await resetBlogs()
 }
 
 configure()

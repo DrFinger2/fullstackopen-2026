@@ -11,7 +11,8 @@
     "build": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../frontend; npm.cmd install; npm.cmd run build; Copy-Item dist ../backend -Recurse -Force; Set-Location ../backend\"",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1"
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
+    "start:test": "cross-env MODE_ENV=test node --watch index.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
