@@ -1,27 +1,24 @@
 import { useState, useEffect } from 'react'
 
-const Loader = ({ isLoading }) => {
-  const [showLoading, setShowLoading] = useState(false)
+function Loader({ isLoading }) {
+  const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
     if (!isLoading) {
-      setShowLoading(false)
+      setShouldShow(false)
       return
     }
 
     const timer = setTimeout(() => {
-      setShowLoading(true)
+      setShouldShow(true)
     }, 300)
 
-    return () => {
-      clearTimeout(timer)
-    }
+    return () => clearTimeout(timer)
   }, [isLoading])
 
-  const className = `loader ${showLoading ? 'show' : ''}`
+  const loaderClass = `loader ${shouldShow ? 'show' : ''}`
 
-  return <div className={className}></div>
+  return <div className={loaderClass}></div>
 }
-
 
 export default Loader

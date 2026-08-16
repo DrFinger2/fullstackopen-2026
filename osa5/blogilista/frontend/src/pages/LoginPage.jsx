@@ -1,13 +1,9 @@
 import LoginForm from '../components/LoginForm'
 
-const LoginPage = ({ onLogin, onRegister, notify }) => {
+function LoginPage({ onLogin, onRegister }) {
   return (
-    <section className='login-section'>
-      <LoginForm
-        onLogin={onLogin}
-        onRegister={onRegister}
-        notify={notify}
-      />
+    <section className="login-section">
+      <LoginForm onLogin={onLogin} onRegister={onRegister} />
     </section>
   )
 }

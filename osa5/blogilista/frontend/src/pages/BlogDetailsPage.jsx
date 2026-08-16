@@ -1,70 +1,76 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../components/Header'
 import blogService from '../services/blogs'
 
-const BlogDetailsPage = ({ user, logout, notify, blogState }) => {
+function BlogDetailsPage({ user, logout, notify, blogState }) {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const blog = blogState?.blogs.find((b) => b.id === id)
+  const current = blogState?.blogs.find((b) => b.id === id)
 
-  if (!blog) {
+  if (!current) {
     return (
-      <div className='blog-details-container'>
-        <p>Blog not found or still loading...</p>
+      <div className="blog-details-container">
+        <p>Blog not found or still loading…</p>
       </div>
     )
   }
 
-  const isCreator = Boolean(user) && blog.user?.username === user
+  const isOwner = Boolean(user) && current.user?.username === user
 
-  const handleLike = async () => {
+  const onLike = async () => {
     try {
-      const updatedBlog = await blogService.like(blog)
-      blogState.update(updatedBlog) // Keep global state in sync
-    } catch (error) {
-      if (error.response?.status === 401) {
+      const updated = await blogService.like(current)
+      blogState.update(updated)
+    } catch (err) {
+      if (err.response?.status === 401) {
         logout()
         notify.error('Session expired, please log in again')
       } else {
-        notify.error(error.response?.data?.error || 'Failed to like blog')
+        notify.error(err.response?.data?.error || 'Failed to like blog')
       }
     }
   }
 
-  const handleRemove = async () => {
-    if (!window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+  const onRemove = async () => {
+    if (!window.confirm(`Remove blog "${current.title}" by ${current.author}?`)) {
       return
     }
     try {
-      await blogService.remove(blog.id)
-      blogState.remove(blog.id)
+      await blogService.remove(current.id)
+      blogState.remove(current.id)
       notify.success('Blog removed successfully!')
       navigate('/')
-    } catch (error) {
-      if (error.response?.status === 401) {
+    } catch (err) {
+      if (err.response?.status === 401) {
         logout()
         notify.error('Session expired, please log in again')
       } else {
-        notify.error(error.response?.data?.error || 'Failed to remove blog')
+        notify.error(err.response?.data?.error || 'Failed to remove blog')
       }
     }
   }
 
   return (
-    <div className='blog-details-page'>
-      <Header text={blog.title} />
-      <p><strong>URL: </strong><a href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</a></p>
-      <p><strong>Author: </strong>{blog.author}</p>
+    <div className="blog-details-page">
+      <Header text={current.title} />
       <p>
-        <strong>Likes: </strong>{blog.likes}
-        {user && <button onClick={handleLike}>Like</button>}
+        <strong>URL: </strong>
+        <a href={current.url} target="_blank" rel="noreferrer"> {current.url}</a>
       </p>
-      <p><strong>Added by: </strong>{blog.user?.name || blog.user?.username || 'Unknown'}</p>
+      <p>
+        <strong>Author: </strong> {current.author}
+      </p>
+      <p>
+        <strong>Likes: </strong> {current.likes}
+        {user && <button onClick={onLike}>Like</button>}
+      </p>
+      <p>
+        <strong>Added by: </strong>
+        {current.user?.name || current.user?.username || 'Unknown'}
+      </p>
 
-      {isCreator && (
-        <button onClick={handleRemove}>Remove</button>
-      )}
+      {isOwner && <button onClick={onRemove}>Remove</button>}
     </div>
   )
 }

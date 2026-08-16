@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react'
 
-const Notification = ({ message, type, id, displayTime = 5 }) => {
-  const [visible, setVisible] = useState(false)
+function Notification({ message, type, id, displayTime = 5 }) {
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     if (message) {
-      setVisible(true)
-      const timer = setTimeout(() => setVisible(false), displayTime * 1000)
+      setIsVisible(true)
+      const timer = setTimeout(() => setIsVisible(false), displayTime * 1000)
       return () => clearTimeout(timer)
     }
-  }, [id])
+  }, [id, message, displayTime])
 
   const typeClass = type === 'error' ? 'error' : 'success-msg'
-  const className = `${typeClass} ${visible && message ? 'show' : ''}`.trim()
+  const className = `${typeClass} ${isVisible && message ? 'show' : ''}`.trim()
 
   return (
-    <div className='notification-container'>
-      <p className={className}>
-        {message}
-      </p>
+    <div className="notification-container">
+      <p className={className}>{message}</p>
     </div>
   )
 }

@@ -1,54 +1,50 @@
-import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-
-import Navbar from './components/Navbar'
-import Loader from './components/Loader'
-import LoginPage from './pages/LoginPage'
-import BlogsPage from './pages/BlogsPage'
-import BlogDetailsPage from './pages/BlogDetailsPage'
-import NewBlogPage from './pages/NewBlogPage'
+import { useEffect, useState } from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import useAuth from './hooks/useAuth'
-import useNotification from './hooks/useNotification'
 import useBlogs from './hooks/useBlogs'
-
+import useNotification from './hooks/useNotification'
+import Loader from './components/Loader'
+import Navbar from './components/Navbar'
+import BlogDetailsPage from './pages/BlogDetailsPage'
+import BlogsPage from './pages/BlogsPage'
+import LoginPage from './pages/LoginPage'
+import NewBlogPage from './pages/NewBlogPage'
+import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
-import blogService from './services/blogs'
 
-
-const App = () => {
-  const [loading, setLoading] = useState(false)
+export default function App() {
+  const [busy, setBusy] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
   const blogState = useBlogs()
   const navigate = useNavigate()
 
-
   useEffect(() => {
-    const fetchBlogs = async () => {
-      setLoading(true)
+    const fetchAll = async () => {
+      setBusy(true)
       try {
-        const blogs = await blogService.getAll()
-        blogState.set(blogs)
-      } catch (error) {
-        notify.error(error.response?.data?.error)
+        const data = await blogService.getAll()
+        blogState.set(data)
+      } catch (err) {
+        notify.error(err.response?.data?.error)
       } finally {
-        setLoading(false)
+        setBusy(false)
       }
     }
-    fetchBlogs()
+    fetchAll()
   }, [])
 
-  const handleLogin = async (credentials) => {
+  const handleLogin = async (creds) => {
     try {
-      const result = await loginService.login(credentials)
+      const result = await loginService.login(creds)
       login(result)
       notify.success(`Welcome back, ${result.username}!`)
       navigate('/')
       return true
-    } catch (error) {
-      notify.error(error.response?.data?.error)
+    } catch (err) {
+      notify.error(err.response?.data?.error)
       return false
     }
   }
@@ -64,8 +60,8 @@ const App = () => {
       await registerService.register(details)
       notify.success('Registration successful! Please log in.')
       return true
-    } catch (error) {
-      notify.error(error.response?.data?.error)
+    } catch (err) {
+      notify.error(err.response?.data?.error)
       return false
     }
   }
@@ -73,15 +69,25 @@ const App = () => {
   return (
     <>
       <Navbar user={user} onLogout={handleLogout} notification={notification} />
-      <Loader isLoading={loading} />
+      <Loader isLoading={busy} />
       <Routes>
-        <Route path='/' element={<BlogsPage user={user} blogState={blogState} />} />
-        <Route path='/login' element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} notify={notify} />} />
-        <Route path='/blogs/new' element={<NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
-        <Route path='/blogs/:id' element={<BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
+        <Route path="/"
+          element={<BlogsPage blogState={blogState} />}
+        />
+        <Route path="/login"
+          element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} />}
+        />
+        <Route path="/blogs/new"
+          element={
+            <NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState}/>
+          }
+        />
+        <Route path="/blogs/:id"
+          element={
+            <BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState}/>
+          }
+        />
       </Routes>
     </>
   )
 }
-
-export default App

@@ -1,12 +1,12 @@
 import Title from '../components/Title'
 import BlogList from '../components/BlogList'
 
-const BlogsPage = ({ user, blogState }) => {
+function BlogsPage({ blogState }) {
   return (
-    <div className='blog-page'>
-      <section className='blog-section'>
-        <Title text='Blogs' />
-        <BlogList blogs={blogState.blogs} user={user} />
+    <div className="blog-page">
+      <section className="blog-section">
+        <Title text="Blogs" />
+        <BlogList blogs={blogState.blogs} />
       </section>
     </div>
   )
