@@ -35,9 +35,9 @@ const BlogForm = ({ onCreateBlog }) => {
     <div className='blog-form-container'>
       <form onSubmit={handleSubmit}>
         <h2>Add new blog</h2>
-        <input name='title' placeholder='Title' value={title} onChange={({ target }) => setTitle(target.value)} />
-        <input name='author' placeholder='Author' value={author} onChange={({ target }) => setAuthor(target.value)} />
-        <input name='url' placeholder='URL' value={url} onChange={({ target }) => setUrl(target.value)}/>
+        <input name='title'   data-testid='title' placeholder='Title' value={title} onChange={({ target }) => setTitle(target.value)} />
+        <input name='author'  data-testid='author' placeholder='Author' value={author} onChange={({ target }) => setAuthor(target.value)} />
+        <input name='url'     data-testid='url' placeholder='URL' value={url} onChange={({ target }) => setUrl(target.value)}/>
         <SubmitButton text='Create' loadingText='Creating' showLoading={showLoading} isLoading={loading}/>
       </form>
     </div>

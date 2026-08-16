@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test --project=chromium",
-    "test:report": "playwright show-report"
+    "test:ui": "playwright test --project=chromium --ui",
+    "test:trace": "playwright test --project=chromium --trace on",
+    "test:report": "playwright show-report",
+    "test:codegen": "npx playwright codegen http://localhost:5173/"
   },
   "keywords": [],
   "author": "",
