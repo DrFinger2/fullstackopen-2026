@@ -25,12 +25,13 @@ const Blog = ({ blog, user, onLikeClicked, onBlogRemoved }) => {
 
   return (
     <div className='blog-card'>
-      <Header text={blog.title} href={blog.url} />
+      <Header text={blog.title} />
       <button onClick={handleToggleClick}>
         {buttonText}
       </button>
 
       <div className={className}>
+        <p><strong>URL: </strong><a href={blog.url}>{blog.url}</a></p>
         <p><strong>Author: </strong>{blog.author}</p>
         <p>
           <strong> Likes: </strong>{blog.likes}
