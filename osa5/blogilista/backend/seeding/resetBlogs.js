@@ -1,6 +1,5 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const { NODE_ENV } = process.env
 
 const seedData = [
     {
@@ -41,10 +40,6 @@ const seedData = [
 ]
 
 async function resetBlogs() {
-    if (NODE_ENV === 'test') {
-        return
-    }
-
     await Blog.deleteMany({})
     for (const seedBlog of seedData) {
         const user = await User.findOne({ username: seedBlog.user })

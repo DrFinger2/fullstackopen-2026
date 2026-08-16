@@ -1,6 +1,5 @@
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
-const { NODE_ENV } = process.env
 
 const seedData = [
     { name: 'John Smith', username: 'admin', password: 'admin' },
@@ -25,16 +24,14 @@ const seedData = [
 ]
 
 async function resetUsers() {
-    if (NODE_ENV !== 'test') {
-        await User.deleteMany({})
-        for (const user of seedData) {
-            const passwordHash = await bcrypt.hash(user.password, 10)
-            await new User({
-                name: user.name,
-                username: user.username,
-                passwordHash: passwordHash
-            }).save()
-        }
+    await User.deleteMany({})
+    for (const user of seedData) {
+        const passwordHash = await bcrypt.hash(user.password, 10)
+        await new User({
+            name: user.name,
+            username: user.username,
+            passwordHash: passwordHash
+        }).save()
     }
 }
 
