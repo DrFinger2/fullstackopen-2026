@@ -1,35 +1,30 @@
 const { describe, test, expect, beforeEach } = require('@playwright/test')
 
+const TIMEOUT_SEC = 10
+test.setTimeout(TIMEOUT_SEC * 1000)
+
+const loginWith = async (page, username, password)  => {
+  const form = page.locator('form')
+  await await form.getByPlaceholder('Username').fill({username})
+  await await form.getByPlaceholder('Username').fill({password})
+  await await form.getByRole('button', { text: 'Login' }).click()
+}
+
 describe('Blogilista', () => {
-  beforeEach(() => {
-    await request.post('http://localhost:3001/api/testing/reset')
-    await page.goto('http://localhost:3001')
+  beforeEach(async ({ page }) => {
+    await page.request.post('/api/testing/reset')
+    await page.goto('/')
   })
 
-  test('front page can be opened', async ({ page }) => {
+  test('front page can be opened', async ({ page, request }) => {
     const locator = await page.getByRole('heading', {name: 'Login'})
     await expect(locator).toBeVisible()
-    const form = page.locator('form')
-
-    const username = await form.getByPlaceholder('Username')
-    await expect(username).toBeVisible()
-    const password = await form.getByPlaceholder('Username')
-    await expect(password).toBeVisible()
-
-    await username.fill('admin')
-    await password.fill('admin')
-    
-    const button = await form.getByRole('button', { text: 'Login' })
-    await expect(button).toBeVisible()
-    await button.click()
+    loginWith(page, 'admin', 'admin')
   })
 
   describe('When logged in', () => {
-    beforeEach(() => {
-      const form = page.locator('form')
-      await await form.getByPlaceholder('Username').fill('admin')
-      await await form.getByPlaceholder('Username').fill('admin')
-      await await form.getByRole('button', { text: 'Login' }).click()
+    beforeEach(async ({ page }) => {
+      loginWith(page, 'admin', 'admin')
     })
 
     test('', async ({ page }) => {
