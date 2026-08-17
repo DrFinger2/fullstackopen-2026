@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import Title from '../components/Title'
+import { Section } from '../styles/Page.styles'
 import BlogForm from '../components/BlogForm'
 import blogService from '../services/blogs'
 
@@ -29,10 +29,9 @@ function NewBlogPage({ user, logout, notify, blogState }) {
   }
 
   return (
-    <section className="blog-form-section">
-      <Title text="Create a new blog" />
+    <Section>
       <BlogForm onCreateBlog={handleCreate} />
-    </section>
+    </Section>
   )
 }
 

@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import SubmitButton from './SubmitButton'
+import { Input, Form } from '../styles/Form.styles'
+import { Title, Container } from '../styles/Page.styles'
+import { ToggleGroup, ToggleOption } from '../styles/Button.styles';
 
 function TextInput({ value, onChange, placeholder }) {
   return (
-    <input
+    <Input
       type="text"
       placeholder={placeholder}
       value={value}
@@ -14,7 +17,7 @@ function TextInput({ value, onChange, placeholder }) {
 
 function PasswordInput({ value, onChange, placeholder = 'Password' }) {
   return (
-    <input
+    <Input
       type="password"
       placeholder={placeholder}
       value={value}
@@ -63,27 +66,19 @@ function LoginForm({ onLogin, onRegister }) {
   }
 
   return (
-    <div className="login-form-container">
-      <div className="form-toggle">
-        <button
-          onClick={() => setIsLogin(true)}
-          disabled={loading}
-          className={isLogin ? 'active' : ''}
-        >
+    <Container>
+      <ToggleGroup>
+        <ToggleOption $active={isLogin} onClick={() => setIsLogin(true)} disabled={loading}>
           Login
-        </button>
-        <button
-          onClick={() => setIsLogin(false)}
-          disabled={loading}
-          className={!isLogin ? 'active' : ''}
-        >
+        </ToggleOption>
+        <ToggleOption $active={!isLogin} onClick={() => setIsLogin(false)} disabled={loading}>
           Register
-        </button>
-      </div>
+        </ToggleOption>
+      </ToggleGroup>
 
       {isLogin ? (
-        <form onSubmit={handleLogin}>
-          <h2>Login</h2>
+        <Form onSubmit={handleLogin}>
+          <Title>Login</Title>
           <TextInput placeholder="Username" value={username} onChange={setUsername} />
           <PasswordInput value={password} onChange={setPassword} />
           <SubmitButton
@@ -92,10 +87,10 @@ function LoginForm({ onLogin, onRegister }) {
             showLoading={showLoader}
             isLoading={loading}
           />
-        </form>
+        </Form>
       ) : (
-        <form onSubmit={handleRegister}>
-          <h2>Register</h2>
+        <Form onSubmit={handleRegister}>
+          <Title>Register</Title>
           <TextInput placeholder="Name" value={name} onChange={setName} />
           <TextInput placeholder="Username" value={username} onChange={setUsername} />
           <PasswordInput value={password} onChange={setPassword} />
@@ -105,9 +100,9 @@ function LoginForm({ onLogin, onRegister }) {
             showLoading={showLoader}
             isLoading={loading}
           />
-        </form>
+        </Form>
       )}
-    </div>
+    </Container>
   )
 }
 

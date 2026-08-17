@@ -6,9 +6,6 @@ const useBlogs = () => {
   const sortByLikes = (blogs) => {
     return blogs.sort((a, b) => b.likes - a.likes)
   }
-  const sortByName = (blogs) => {
-    return blogs.sort((a, b) => a.title.localeCompare(b.title))
-  }
   const add = (blog) => {
     setBlogs(sortStrategy(blogs.concat(blog)))
   }

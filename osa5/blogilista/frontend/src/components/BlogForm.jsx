@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Container, Title, Section } from '../styles/Page.styles'
+import { Input, Form } from '../styles/Form.styles'
+
 import SubmitButton from './SubmitButton'
 
 function BlogForm({ onCreateBlog }) {
@@ -32,15 +35,15 @@ function BlogForm({ onCreateBlog }) {
   }
 
   return (
-    <div className="blog-form-container">
-      <form onSubmit={handleSubmit}>
-        <h2>Add new blog</h2>
-        <input name="title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)}/>
-        <input name="author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)}/>
-        <input name="url" placeholder="URL" value={url} onChange={({ target }) => setUrl(target.value)}/>
+    <Container>
+      <Title> Create a new blog </Title>
+      <Form onSubmit={handleSubmit}>
+        <Input name="title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)}/>
+        <Input name="author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)}/>
+        <Input name="url" placeholder="URL" value={url} onChange={({ target }) => setUrl(target.value)}/>
         <SubmitButton text="Create" loadingText="Creating" showLoading={showLoader} isLoading={loading}/>
-      </form>
-    </div>
+      </Form>
+    </Container>
   )
 }
 

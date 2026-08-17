@@ -1,16 +1,17 @@
-import Header from './Header'
+import { Card, Title, Paragraph } from '../styles/Page.styles'
+import { ActionButton } from '../styles/Button.styles'
 
 function BlogDetails({ blog, user, onLike, onRemove }) {
   const isOwner = user && blog.user?.username === user
   return (
-    <div className="blog-details-page">
-      <Header text={blog.title} />
-      <p><strong>URL: </strong> <a href={blog.url}> {blog.url} </a> </p>
-      <p><strong>Author: </strong> {blog.author} </p>
-      <p><strong>Likes: </strong> {blog.likes} {user && <button onClick={onLike}>Like</button> }</p>
-      <p><strong>Added by: </strong> {blog.user?.name || 'Unknown' } </p>
-      {isOwner && <button onClick={onRemove}>Remove</button>}
-    </div>
+    <Card>
+      <Title>{blog.title}</Title>
+      <Paragraph><strong>URL: </strong> <a href={blog.url}> {blog.url} </a> </Paragraph>
+      <Paragraph><strong>Author: </strong> {blog.author} </Paragraph>
+      <Paragraph><strong>Likes: </strong> {blog.likes} {user && <ActionButton onClick={onLike}>Like</ActionButton> }</Paragraph>
+      <Paragraph><strong>Added by: </strong> {blog.user?.name || 'Unknown' } </Paragraph>
+      {isOwner && <ActionButton onClick={onRemove}>Remove</ActionButton>}
+    </Card>
   )
 }
 

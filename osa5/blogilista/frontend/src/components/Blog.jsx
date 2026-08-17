@@ -1,17 +1,16 @@
 import { Link } from 'react-router-dom'
-import Header from './Header'
+import { Card, H3, Paragraph } from '../styles/Page.styles'
 
 function Blog({ blog }) {
   return (
-    <div className="blog-card">
+    <Card data-testid="blog-card">
       <Link to={`/blogs/${blog.id}`}>
-        <Header text={blog.title} />
+        <H3>{blog.title}</H3>
       </Link>
-      <p>
-        <strong>Author: </strong>
-        {blog.author}
-      </p>
-    </div>
+      <Paragraph>
+        <strong>Author: </strong>{blog.author}
+      </Paragraph>
+    </Card>
   )
 }
 

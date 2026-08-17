@@ -1,28 +1,42 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation  } from 'react-router-dom'
 import Notification from './Notification'
-
-
+import { Nav, NavLinks, UserSection } from '../styles/Navbar.styles'
+import { Paragraph } from '../styles/Page.styles'
+import { Button } from '../styles/Button.styles'
+import { ToggleGroup, ToggleOption } from '../styles/Button.styles'
 function Navbar({ user, onLogout, notification }) {
   const userExists = Boolean(user)
+  const location = useLocation()
+  const isHome = location.pathname === '/'
+  const isNew = location.pathname === '/blogs/new'
 
   return (
-    <nav className="navbar">
-      <div className="navbar-links">
-        <Link to="/">Home</Link>
-        { userExists && <Link to="/blogs/new">New blog</Link> }
-      </div>
+    <Nav>
+      <ToggleGroup>
+        <ToggleOption as={Link} to="/" $active={isHome}>
+          Home
+        </ToggleOption>
+        {userExists && (
+          <ToggleOption as={Link} to="/blogs/new" $active={isNew}>
+            New Blog
+          </ToggleOption>
+        )}
+      </ToggleGroup>
 
-      <Notification message={notification.message} type={notification.type} id={notification.id}/>
 
-      <div className="navbar-user">
-        { userExists ? (
-          <> <p>Logged in as: <span className="username">{user}</span></p>
-            <button onClick={onLogout}>Logout</button> </>
+      <Notification message={notification.message} type={notification.type} id={notification.id} />
+
+      <UserSection>
+        {userExists ? (
+          <>
+            <Paragraph>Logged in as: <span className="username">{user}</span></Paragraph>
+            <Button onClick={onLogout}>Logout</Button>
+          </>
         ) : (
           <Link to="/login">Login</Link>
-        ) }
-      </div>
-    </nav>
+        )}
+      </UserSection>
+    </Nav>
   )
 }
 

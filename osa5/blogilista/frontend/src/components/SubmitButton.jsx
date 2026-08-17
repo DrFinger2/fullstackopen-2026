@@ -1,12 +1,14 @@
+import { Button } from '../styles/Button.styles'
+
 function SubmitButton({ text, loadingText, showLoading, isLoading }) {
   return (
-    <button disabled={isLoading}>
+    <Button disabled={isLoading}>
       {showLoading ? (
         <>{loadingText}<span className="dots"/></>
       )
         : text
       }
-    </button>
+    </Button>
   )
 }
 

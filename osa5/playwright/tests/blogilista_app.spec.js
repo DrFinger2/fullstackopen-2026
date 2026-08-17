@@ -52,13 +52,12 @@ const likeBlog = async (page, blog, times) => {
 
 const blogIndex = async (page, title) => {
   const titles = await page
-    .locator('.blog-card')
+    .locator('[data-testid="blog-card"]')
     .getByRole('link')
     .allTextContents()
 
   return titles.indexOf(title)
 }
-
 
 // Test setup
 test.setTimeout(10 * 1000)

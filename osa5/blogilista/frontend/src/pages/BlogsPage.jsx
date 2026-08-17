@@ -1,14 +1,14 @@
-import Title from '../components/Title'
 import BlogList from '../components/BlogList'
+import { Section, Container, Title } from '../styles/Page.styles'
 
 function BlogsPage({ blogState }) {
   return (
-    <div className="blog-page">
-      <section className="blog-section">
-        <Title text="Blogs" />
+    <Section>
+      <Container >
+        <Title>Blogs</Title>
         <BlogList blogs={blogState.blogs} />
-      </section>
-    </div>
+      </Container>
+    </Section>
   )
 }
 
