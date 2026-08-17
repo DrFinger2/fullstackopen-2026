@@ -33,7 +33,9 @@ export const Message = styled.p`
   ${({ $type }) =>
     $type === 'success' &&
     css`
-      color: green;
+      border: 1px solid #a8d5a8;
+      background-color: #e3f5e3;
+      color: #287a28;
     `}
 
   ${({ $visible }) =>
