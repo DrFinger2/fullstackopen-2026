@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../components/Header'
+import BlogDetails from '../components/BlogDetails'
 import blogService from '../services/blogs'
+
 
 function BlogDetailsPage({ user, logout, notify, blogState }) {
   const navigate = useNavigate()
@@ -49,29 +51,8 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
     }
   }
 
-  const isOwner = (user && current.user?.username === user)
-
   return (
-    <div className="blog-details-page">
-      <Header text={current.title} />
-      <p>
-        <strong>URL: </strong>
-        <a href={current.url} target="_blank" rel="noreferrer"> {current.url}</a>
-      </p>
-      <p>
-        <strong>Author: </strong> {current.author}
-      </p>
-      <p>
-        <strong>Likes: </strong> {current.likes}
-        {user && <button onClick={onLike}>Like</button>}
-      </p>
-      <p>
-        <strong>Added by: </strong>
-        {current.user?.name || current.user?.username || 'Unknown'}
-      </p>
-
-      {isOwner && <button onClick={onRemove}>Remove</button>}
-    </div>
+    <BlogDetails blog={current} user={user} onLike={onLike} onRemove={onRemove}/>
   )
 }
 
