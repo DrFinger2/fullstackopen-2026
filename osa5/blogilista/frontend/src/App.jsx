@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
+import { GlobalStyle } from './styles/Global.styles'
 
 import useAuth from './hooks/useAuth'
 import useBlogs from './hooks/useBlogs'
 import useNotification from './hooks/useNotification'
+
 import Loader from './components/Loader'
 import Navbar from './components/Navbar'
+
 import BlogDetailsPage from './pages/BlogDetailsPage'
 import BlogsPage from './pages/BlogsPage'
 import LoginPage from './pages/LoginPage'
 import NewBlogPage from './pages/NewBlogPage'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
-import { GlobalStyle } from './styles/Global.styles'
+
 
 export default function App() {
   const [busy, setBusy] = useState(false)

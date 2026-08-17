@@ -14,7 +14,7 @@ function Notification({ message, type, id, displayTime = 5 }) {
 
   return (
     <Container>
-      <Message $type={type} $visible={isVisible && !!message}>
+      <Message $type={type} $visible={isVisible && Boolean(message)}>
         {message}
       </Message>
     </Container>
