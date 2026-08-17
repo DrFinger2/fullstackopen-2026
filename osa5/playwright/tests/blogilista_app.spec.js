@@ -91,7 +91,7 @@ describe('Blogilista', () => {
   
       await expect(locator).toBeVisible()
       await loginWith(page, defaultUser.username, defaultUser.password)
-      await page.getByText(valid)
+      await expect(page.getByText(valid)).toBeVisible()
       await expect(page.getByText(`Logged in as: ${defaultUser.username}`)).toBeVisible()
       
     })
@@ -102,7 +102,7 @@ describe('Blogilista', () => {
 
       await expect(locator).toBeVisible()
       await loginWith(page, defaultUser.username, '123')
-      await page.getByText(invalid)
+      await expect(page.getByText(invalid)).toBeVisible()
       await expect(page.getByText(`Logged in as: ${defaultUser.username}`)).not.toBeVisible()
     })
   })
