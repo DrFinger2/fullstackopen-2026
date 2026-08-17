@@ -4,16 +4,16 @@ export const Button = styled.button`
   padding: 12px 24px;
   border: none;
   border-radius: 10px;
-  background: #7c7cf8;               /* solid color */
+  background: #7c7cf8;
   color: #0d0d0d;
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease;  /* only background changes */
+  transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #6a6af0;             /* slightly darker on hover */
+    background: #6a6af0;
   }
 
   &:disabled {
