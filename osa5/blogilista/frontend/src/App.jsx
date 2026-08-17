@@ -71,10 +71,10 @@ export default function App() {
       <Navbar user={user} onLogout={handleLogout} notification={notification} />
       <Loader isLoading={busy} />
       <Routes>
-        <Route path="/" element={<BlogsPage blogState={blogState} />}  />
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} />}  />
-        <Route path="/blogs/new" element={ <NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState}/>}/>
-        <Route path="/blogs/:id" element={  <BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState}/> } />
+        <Route path="/" element={<BlogsPage BlogsPage={blogState} />} />
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} />} />
+        <Route path="/blogs/new" element={<NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
+        <Route path="/blogs/:id" element={<BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState}/>} />
       </Routes>
     </>
   )

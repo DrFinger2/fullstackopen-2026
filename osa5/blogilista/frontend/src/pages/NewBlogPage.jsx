@@ -22,7 +22,7 @@ function NewBlogPage({ user, logout, notify, blogState }) {
         logout()
         notify.error('Session expired, please log in again')
       } else {
-        notify.error(err.response?.data?.error || 'Failed to create blog')
+        notify.error(err.response?.data?.error)
       }
       return false
     }

@@ -3,20 +3,17 @@ import Header from '../components/Header'
 import blogService from '../services/blogs'
 
 function BlogDetailsPage({ user, logout, notify, blogState }) {
-  const { id } = useParams()
   const navigate = useNavigate()
+  const { id } = useParams()
 
-  const current = blogState?.blogs.find((b) => b.id === id)
-
+  const current = (blogState?.blogs.find((b) => b.id === id))
   if (!current) {
     return (
       <div className="blog-details-container">
-        <p>Blog not found or still loading…</p>
+        <p>Blog not found</p>
       </div>
     )
   }
-
-  const isOwner = Boolean(user) && current.user?.username === user
 
   const onLike = async () => {
     try {
@@ -27,7 +24,7 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
         logout()
         notify.error('Session expired, please log in again')
       } else {
-        notify.error(err.response?.data?.error || 'Failed to like blog')
+        notify.error(err.response?.data?.error)
       }
     }
   }
@@ -36,6 +33,7 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
     if (!window.confirm(`Remove blog "${current.title}" by ${current.author}?`)) {
       return
     }
+
     try {
       await blogService.remove(current.id)
       blogState.remove(current.id)
@@ -46,10 +44,12 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
         logout()
         notify.error('Session expired, please log in again')
       } else {
-        notify.error(err.response?.data?.error || 'Failed to remove blog')
+        notify.error(err.response?.data?.error)
       }
     }
   }
+
+  const isOwner = (user && current.user?.username === user)
 
   return (
     <div className="blog-details-page">
