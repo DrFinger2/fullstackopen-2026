@@ -13,6 +13,21 @@ export const Container = styled.div`
   align-items: center;
   border: 1px solid #2c2c2e;
 `
+export const Wrapper = styled.div`
+  margin: 20px auto;
+  width: ${({ $width = '100%' }) => $width};
+  max-width: 500px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ $align = 'center' }) => {
+    switch ($align) {
+      case 'left':   return 'flex-start';
+      case 'right':  return 'flex-end';
+      default:       return 'center';
+    }
+  }};
+`;
 
 export const Section = styled.div`
   background: #0d0d0d;
@@ -82,7 +97,7 @@ export const Paragraph = styled.p`
 
 export const Card = styled.div`
   background: #242426;
-  padding: 20px 24px;
+  padding: 25px 30px;
   margin: 12px 0;
   border: 1px solid #323234;
   border-radius: 14px;

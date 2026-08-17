@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import BlogDetails from '../components/BlogDetails'
 import blogService from '../services/blogs'
-import { Container } from '../styles/Page.styles'
+import { Wrapper } from '../styles/Page.styles'
 
 function BlogDetailsPage({ user, logout, notify, blogState }) {
   const navigate = useNavigate()
@@ -53,9 +53,9 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
   }
 
   return (
-    <Container>
+    <Wrapper>
       <BlogDetails blog={current} user={user} onLike={onLike} onRemove={onRemove} />
-    </Container>
+    </Wrapper>
   )
 }
 
