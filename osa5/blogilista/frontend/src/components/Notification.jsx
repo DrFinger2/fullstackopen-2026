@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Container, Message } from '../styles/Notification.styles'
 
 function Notification({ message, type, id, displayTime = 5 }) {
   const [isVisible, setIsVisible] = useState(false)
@@ -11,13 +12,12 @@ function Notification({ message, type, id, displayTime = 5 }) {
     }
   }, [id, message, displayTime])
 
-  const typeClass = type === 'error' ? 'error' : 'success-msg'
-  const className = `${typeClass} ${isVisible && message ? 'show' : ''}`
-
   return (
-    <div className="notification-container">
-      <p className={className}>{message}</p>
-    </div>
+    <Container>
+      <Message $type={type} $visible={isVisible && !!message}>
+        {message}
+      </Message>
+    </Container>
   )
 }
 
