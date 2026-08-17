@@ -3,6 +3,7 @@ import { test, expect, describe } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import Blog from '../src/components/Blog'
 
+
 const blog = {
   id: '123',
   title: 'Test blog',
@@ -11,9 +12,9 @@ const blog = {
   likes: 1,
   user: { username: 'admin' }
 }
-
+// tests were split between blog and blog details, check both files
 describe('Blog', () => {
-  test('1. renders title by default', () => {
+  test('renders title by default', () => {
     render(
       <BrowserRouter>
         <Blog blog={blog} />

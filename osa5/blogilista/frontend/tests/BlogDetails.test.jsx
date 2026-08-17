@@ -13,7 +13,7 @@ const blog = {
 }
 
 describe('BlogDetails', () => {
-  test('2. shows url, likes, author and user name', () => {
+  test('shows url, likes, author and user name', () => {
     render(<BlogDetails blog={blog} user="admin" onLike={() => {}} onRemove={() => {}} />)
 
     const urlLink = screen.getByRole('link', { name: 'https://example.com' })
@@ -23,7 +23,7 @@ describe('BlogDetails', () => {
     expect(screen.getByText('Admin User')).toBeDefined()
   })
 
-  test('3. clicking like button twice calls handler twice', async () => {
+  test('clicking like button twice calls handler twice', async () => {
     const mockHandler = vi.fn()
     const user = userEvent.setup()
 
