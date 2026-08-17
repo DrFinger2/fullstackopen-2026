@@ -6,20 +6,25 @@ const useBlogs = () => {
   const sortByLikes = (blogs) => {
     return blogs.sort((a, b) => b.likes - a.likes)
   }
+  const sortByName = (blogs) => {
+    return blogs.sort((a, b) => a.title.localeCompare(b.title))
+  }
   const add = (blog) => {
-    setBlogs(sortByLikes(blogs.concat(blog)))
+    setBlogs(sortStrategy(blogs.concat(blog)))
   }
   const update = (updatedBlog) => {
-    setBlogs(sortByLikes(
+    setBlogs(sortStrategy(
       blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
     ))
   }
   const set = (newBlogs) => {
-    setBlogs(sortByLikes(newBlogs))
+    setBlogs(sortStrategy(newBlogs))
   }
   const remove = (id) => {
-    setBlogs(blogs.filter(blog => blog.id !== id))
+    set(blogs.filter(blog => blog.id !== id))
   }
+
+  const sortStrategy = sortByLikes
 
   return {
     blogs,

@@ -12,7 +12,7 @@ function Notification({ message, type, id, displayTime = 5 }) {
   }, [id, message, displayTime])
 
   const typeClass = type === 'error' ? 'error' : 'success-msg'
-  const className = `${typeClass} ${isVisible && message ? 'show' : ''}`.trim()
+  const className = `${typeClass} ${isVisible && message ? 'show' : ''}`
 
   return (
     <div className="notification-container">

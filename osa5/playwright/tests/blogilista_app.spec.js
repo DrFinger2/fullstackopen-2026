@@ -27,15 +27,18 @@ const loginWith = async (page, username, password) => {
   await form.getByPlaceholder('Password').fill(password)
   await form.getByRole('button', { name: 'login' }).click()
 }
+
 const createNewBlog = async (page, blog) => {
-  await page.getByRole('button', { name: 'Add new Blog' }).click()
-  await page.getByTestId('title').fill(blog.title)
-  await page.getByTestId('author').fill(blog.author)
-  await page.getByTestId('url').fill(blog.url)
-  await page.getByRole('button', { name: 'Create' }).click()
-  const blogCard = page.locator('.blog-card').filter({ hasText: blog.title })
+  await page.getByRole('link', { name: 'New blog' }).click();
+  await page.getByRole('textbox', { name: 'Title' }).click();
+  await page.getByRole('textbox', { name: 'Title' }).fill(blog.title);
+  await page.getByRole('textbox', { name: 'Author' }).fill(blog.author);
+  await page.getByRole('textbox', { name: 'URL' }).fill(blog.url);
+  await page.getByRole('button', { name: 'Create' }).click();
+  const blogCard = await page.locator('.blog-card .header').filter({ hasText: blog.title })
   await expect(blogCard).toBeVisible()
 }
+
 const likeBlog = async (page, blog, times) => {
   const blogCard = page.locator('.blog-card').filter({ hasText: blog.title })
   await blogCard.getByRole('button', { name: 'View details' }).click()
@@ -60,7 +63,7 @@ describe('Blogilista', () => {
   beforeEach(async ({ page, request}) => {
     await page.request.post('/api/testing/reset')
     await request.post('/api/users', { data: defaultUser})
-    await page.goto('/')
+    await page.goto('/login')
   })
 
   test('Login form is shown', async ({ page }) => {
@@ -98,21 +101,21 @@ describe('Blogilista', () => {
   })
 
   describe('When logged in', () => {
-      beforeEach(async ({ page, request }) => {
-        await loginWith(page, defaultUser.username, defaultUser.password)
-      })
-      test('Can create new blog', async ({ page }) => {
-        await createNewBlog(page, defaultBlog)
-        const blogCard = page.locator('.blog-card').filter({ hasText: defaultBlog.title })
-        await expect(blogCard).toBeVisible()
+    beforeEach(async ({ page, request }) => {
+      await loginWith(page, defaultUser.username, defaultUser.password)
+    })
+    test('Can create new blog', async ({ page }) => {
+      await createNewBlog(page, defaultBlog)
+      const blogCard = page.locator('.blog-card').filter({ hasText: defaultBlog.title })
+      await expect(blogCard).toBeVisible()
 
-        await blogCard.getByRole('button', { name: 'View details' }).click()
-        await expect(blogCard.getByText(`URL: ${defaultBlog.url}`)).toBeVisible()
-        await expect(blogCard.getByText(`Author: ${defaultBlog.author}`)).toBeVisible()
-        await expect(blogCard.getByText('Likes: 0')).toBeVisible()
-      })
+      await blogCard.getByRole('button', { name: 'View details' }).click()
+      await expect(blogCard.getByText(`URL: ${defaultBlog.url}`)).toBeVisible()
+      await expect(blogCard.getByText(`Author: ${defaultBlog.author}`)).toBeVisible()
+      await expect(blogCard.getByText('Likes: 0')).toBeVisible()
+    })
     
-      test('Can like created blog', async ({ page }) => {
+    test('Can like created blog', async ({ page }) => {
         await createNewBlog(page, defaultBlog)
         const blogCard = page.locator('.blog-card').filter({ hasText: defaultBlog.title })
         await expect(blogCard).toBeVisible()
