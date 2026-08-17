@@ -88,10 +88,12 @@ describe('Blogilista', () => {
     test('Logging in with valid credentials', async ({ page, request }) => {
       const locator = await page.getByRole('heading', { name: 'Login' })
       const valid = `Welcome back, ${defaultUser.username}!`
-
+  
       await expect(locator).toBeVisible()
       await loginWith(page, defaultUser.username, defaultUser.password)
       await page.getByText(valid)
+      await expect(page.getByText(`Logged in as: ${defaultUser.username}`)).toBeVisible()
+      
     })
 
     test('Logging in with invalid credentials', async ({ page, request }) => {
@@ -101,6 +103,7 @@ describe('Blogilista', () => {
       await expect(locator).toBeVisible()
       await loginWith(page, defaultUser.username, '123')
       await page.getByText(invalid)
+      await expect(page.getByText(`Logged in as: ${defaultUser.username}`)).not.toBeVisible()
     })
   })
 
@@ -121,7 +124,8 @@ describe('Blogilista', () => {
         const title = await page.getByRole('link', { name: defaultBlog.title }).click()
         const like = await page.getByRole('button', {name: 'Like'})
         await like.click()
-      })
+        await expect(page.getByText('Likes: 1')).toBeVisible()
+    })
     
     test('Can remove created blog', async ({ page }) => {
         await createNewBlog(page, defaultBlog)

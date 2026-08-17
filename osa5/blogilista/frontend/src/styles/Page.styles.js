@@ -22,12 +22,15 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: ${({ $align = 'center' }) => {
     switch ($align) {
-      case 'left':   return 'flex-start';
-      case 'right':  return 'flex-end';
-      default:       return 'center';
+    case 'left':
+      return 'flex-start'
+    case 'right':
+      return 'flex-end'
+    default:
+      return 'center'
     }
   }};
-`;
+`
 
 export const Section = styled.div`
   background: #0d0d0d;

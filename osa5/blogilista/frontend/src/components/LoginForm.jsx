@@ -2,7 +2,7 @@ import { useState } from 'react'
 import SubmitButton from './SubmitButton'
 import { Input, Form } from '../styles/Form.styles'
 import { Title, Container } from '../styles/Page.styles'
-import { ToggleGroup, ToggleOption } from '../styles/Button.styles';
+import { ToggleGroup, ToggleOption } from '../styles/Button.styles'
 
 function TextInput({ value, onChange, placeholder }) {
   return (
