@@ -13,6 +13,7 @@ export const useAnecdoteStore = create(set => ({
   actions: {
     init: async () => {
       const data = await anecdoteService.getAll();
+      data.sort((a, b) => (b.votes - a.votes))
       return set(() => ({ anecdotes: data }))
     },
 
