@@ -9,7 +9,7 @@ export const AnecdoteList = () => {
     <div>
       {anecdotes.map(anecdote => (
         <div key={anecdote.id} data-testid="anecdote-item" data-votes={anecdote.votes}>
-          <div>{anecdote.content}</div>
+          <div data-testid="anecdote-content">{anecdote.content}</div>
           <div>
             has {anecdote.votes}
             <button onClick={() => vote(anecdote.id)}>
