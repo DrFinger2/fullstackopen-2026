@@ -5,6 +5,7 @@ const updateFeedback = (feedback, changes) => {
   const total = feedback.good + feedback.neutral + feedback.bad;
   const average = total === 0 ? 0 : ((feedback.good - feedback.bad) / total).toFixed(1);
   const positive = total === 0 ? 0 : ((feedback.good / total) * 100).toFixed(1);
+  
   return { feedback: { ...updated, all: total, average, positive }} ;
 };
 
