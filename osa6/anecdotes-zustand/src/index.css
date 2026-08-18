@@ -1,0 +1,6 @@
+@keyframes fadeInAndOut {
+  0% { opacity: 0; }
+  12.5% { opacity: 1; }  /* Fades in over the first 1 second */
+  87.5% { opacity: 1; }  /* Stays fully visible for 6 seconds */
+  100% { opacity: 0; }   /* Fades out over the last 1 second */
+}
