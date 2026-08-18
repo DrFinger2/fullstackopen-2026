@@ -5,7 +5,7 @@ const App = () => {
   return (
     <>
       <h1>Unicafe</h1>
-      <Buttons />
+      <Buttons/>
       <Statistics />
     </>
   )
