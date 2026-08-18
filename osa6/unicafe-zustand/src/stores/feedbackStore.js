@@ -1,11 +1,16 @@
 import { create } from 'zustand'
 
+// just to keep it as a number
+const toFixedNumber = (num, decimals) => {
+  const factor = 10 ** decimals;
+  return Math.round((num + Number.EPSILON) * factor) / factor;
+};
+
 const updateFeedback = (feedback, changes) => {
   const updated = { ...feedback, ...changes };
-  updated.all = feedback.good + feedback.neutral + feedback.bad;
-  updated.average = updated.all === 0 ? 0 : ((feedback.good - feedback.bad) / updated.all).toFixed(1);
-  updated.positive = updated.all === 0 ? 0 : ((feedback.good / updated.all) * 100).toFixed(1);
-
+  updated.all = updated.good + updated.neutral + updated.bad;
+  updated.average = updated.all === 0 ? 0 : toFixedNumber((updated.good - updated.bad) / updated.all, 1)
+  updated.positive = updated.all === 0 ? 0 : toFixedNumber((updated.good / updated.all) * 100, 1);
   return { feedback: updated };
 };
 
@@ -25,7 +30,6 @@ export const useFeedbackStore = create(set => ({
     incrementBad:     () => set(state => updateFeedback(state.feedback, { bad: state.feedback.bad + 1 })),
   }
 }));
-
 
 export const useFeedback = () => useFeedbackStore(state => (
   state.feedback
