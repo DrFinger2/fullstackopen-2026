@@ -2,11 +2,11 @@ import { create } from 'zustand'
 
 const updateFeedback = (feedback, changes) => {
   const updated = { ...feedback, ...changes };
-  const total = feedback.good + feedback.neutral + feedback.bad;
-  const average = total === 0 ? 0 : ((feedback.good - feedback.bad) / total).toFixed(1);
-  const positive = total === 0 ? 0 : ((feedback.good / total) * 100).toFixed(1);
-  
-  return { feedback: { ...updated, all: total, average, positive }} ;
+  updated.all = feedback.good + feedback.neutral + feedback.bad;
+  updated.average = updated.all === 0 ? 0 : ((feedback.good - feedback.bad) / updated.all).toFixed(1);
+  updated.positive = updated.all === 0 ? 0 : ((feedback.good / updated.all) * 100).toFixed(1);
+
+  return { feedback: updated };
 };
 
 export const useFeedbackStore = create(set => ({
