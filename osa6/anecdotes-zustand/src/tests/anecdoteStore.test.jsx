@@ -78,6 +78,22 @@ describe('useAnecdotes', () => {
     render(<AnecdoteList />)
     const content = screen.getAllByTestId('anecdote-content').map(item => item.textContent)
     expect(content).toEqual(['content b'])
-    
+  })
+
+  test('voting increases the number of votes for an anecdote', async () => {
+    anecdoteService.getAll.mockResolvedValue([
+      { content: 'content a', id: '1', votes: 1 },
+    ]);
+
+    const { result: actions } = renderHook(() => useAnecdoteActions());
+    await act(async () => {
+      await actions.current.init();
+      await actions.current.vote('1')
+    });
+
+    render(<AnecdoteList />)
+    const items = screen.getAllByTestId('anecdote-item');
+    const votes = items.map(item => Number(item.dataset.votes));
+    expect(votes).toEqual([2])
   })
 })
