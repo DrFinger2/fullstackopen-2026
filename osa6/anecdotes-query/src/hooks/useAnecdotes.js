@@ -21,7 +21,7 @@ export const useAnecdotes = () => {
             setNotification(`anecdote '${newAnecdote.content}' created`)
         },
         onError: (error) => {
-            setNotification(error.response.data.error, 'error')
+            setNotification(error.message, 'error')
         }
     })
 
@@ -32,7 +32,7 @@ export const useAnecdotes = () => {
             setNotification(`anecdote '${updatedAnecdote.content}' voted`)
         },
         onError: (error) => {
-            setNotification(error.response.data.error, 'error')
+            setNotification(error.message, 'error')
         }
     })
 
@@ -43,7 +43,7 @@ export const useAnecdotes = () => {
             setNotification(`anecdote was removed`)
         },
         onError: (error) => {
-            setNotification(error.response.data.error, 'error')
+            setNotification(error.message, 'error')
         }
     })
 
