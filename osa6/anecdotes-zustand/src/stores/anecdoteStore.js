@@ -1,4 +1,3 @@
-
 import { create } from 'zustand'
 
 import anecdoteService from '../services/anecdoteService'
@@ -84,16 +83,17 @@ export const useAnecdoteStore = create(set => ({
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes)
   const filter = useAnecdoteStore((state) => state.filter)
-
   return anecdotes.filter(anecdote => {
     return anecdote.content.toLowerCase().includes(filter.toLowerCase())
   })
 }
 
-export const useAnecdoteActions = () => useAnecdoteStore(state => (
-  state.actions
-))
+export const useAnecdoteActions = () => {
+  const actions = useAnecdoteStore(state => (state.actions))
+  return actions
+}
 
-export const useNotification = () => useAnecdoteStore(state => (
-  state.notification
-))
+export const useNotification = () => {
+  const notification = useAnecdoteStore(state => (state.notification))
+  return notification
+}
