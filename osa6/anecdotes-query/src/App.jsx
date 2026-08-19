@@ -3,8 +3,11 @@ import Notification from './components/Notification'
 import { useAnecdotes } from './hooks/useAnecdotes'
 
 const App = () => {
-  const { anecdotes, isPending, vote } = useAnecdotes()
-  
+  const { anecdotes, isPending, isError, vote } = useAnecdotes()
+
+  if (isError) {
+    return <div>anecdote service not available due to problems in server</div>
+  }
   if (isPending) {
     return <div>Loading anecdotes…</div>
   }

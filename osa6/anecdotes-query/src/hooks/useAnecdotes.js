@@ -8,7 +8,8 @@ export const useAnecdotes = () => {
     const getQuery = useQuery({
         queryKey: ['anecdotes'],
         queryFn: service.getAll,
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        retry: 1
     })
 
     const addMutation = useMutation({
@@ -60,6 +61,7 @@ export const useAnecdotes = () => {
     return {
         anecdotes: getQuery.data,
         isPending: getQuery.isPending,
+        isError: getQuery.isError,
 
         add: addFunction,
         remove: removeFunction,
