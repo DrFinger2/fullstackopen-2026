@@ -6,7 +6,6 @@ export const AnecdoteForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     const form = e.target
     const input = form.elements.anecdote
     add(input.value)

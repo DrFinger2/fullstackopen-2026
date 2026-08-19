@@ -3,6 +3,7 @@ import { useFeedback } from "../stores/feedbackStore"
 
 const Statistics = () => {
   const feedback = useFeedback()
+  
   if (feedback.all === 0) {
     return (
       <div>
@@ -11,7 +12,7 @@ const Statistics = () => {
       </div>
     )
   }
-  
+
   return (
     <div>
       <h2>statistics</h2>
