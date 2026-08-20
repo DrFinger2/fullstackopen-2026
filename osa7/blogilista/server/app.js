@@ -1,6 +1,6 @@
 
 require('dns').setServers(['1.1.1.1', '8.8.8.8'])
-
+const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
@@ -27,8 +27,7 @@ async function connectToDatabase () {
     }
 }
 
-function configure () {
-    app.use(express.static('dist'))
+async function configure () {
     app.use(express.json())
     if (process.env.NODE_ENV !== 'test') {
         app.use(morgan('dev'))
@@ -37,18 +36,25 @@ function configure () {
     app.use('/api/login', loginRouter)
     app.use('/api/users', userRouter)
     app.use('/api/blogs', blogRouter)
+
     if (process.env.NODE_ENV === 'test') {
         app.use('/api/testing', resetRouter)
+    }
+    if (process.env.NODE_ENV === 'prod') {
+        app.use(express.static(path.join(__dirname, '../client/dist')))
+        app.get('/*splat', (req, res) => {
+            res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+        })
     }
     app.use(unknownEndpoint)
     app.use(errorHandler)
 }
 
-async function start () {
+async function start() {
+    await configure()
     await connectToDatabase()
 }
 
-configure()
 start()
 
 module.exports = app
