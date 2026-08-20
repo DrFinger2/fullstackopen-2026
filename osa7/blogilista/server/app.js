@@ -13,7 +13,6 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 
 const { errorHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware')
-
 const app = express()
 
 async function connect () {
@@ -39,23 +38,24 @@ function configureBase () {
 async function configure() {
     const filePath = path.join(__dirname, '../client/dist/index.html')
     const dirPath = path.join(__dirname, '../client/dist')
+    const NODE_ENV = process.env.NODE_ENV
 
     try {
-        if (process.env.NODE_ENV === 'test'){
+        if (NODE_ENV === 'test'){
             app.use('/api/testing', resetRouter)
             configureBase()
         }
-        else if (process.env.NODE_ENV === 'dev') {
+        else if (NODE_ENV === 'dev') {
             app.use(morgan('dev'))
             configureBase()
         }
-        else if (process.env.NODE_ENV === 'prod') {
+        else if (NODE_ENV === 'prod') {
             configureBase()
             app.use(express.static(dirPath))
             app.get('/*splat', (request, response) => {response.sendFile(filePath)} )
         }
         else {
-            throw new Error(`Invalid configuration mode: ${process.env.NODE_ENV}`)
+            throw new Error(`Invalid NODE_ENV: ${NODE_ENV}`)
         }
 
         app.use(unknownEndpoint)
