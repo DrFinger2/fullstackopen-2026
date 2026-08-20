@@ -38,7 +38,7 @@ function configureBase () {
 
 async function configure() {
     const filePath = path.join(__dirname, '../client/dist/index.html')
-    const ditPath = path.join(__dirname, '../client/dist')
+    const dirPath = path.join(__dirname, '../client/dist')
 
     try {
         if (process.env.NODE_ENV === 'test'){
@@ -51,7 +51,7 @@ async function configure() {
         }
         else if (process.env.NODE_ENV === 'prod') {
             configureBase()
-            app.use(express.static(ditPath))
+            app.use(express.static(dirPath))
             app.get('/*splat', (request, response) => {response.sendFile(filePath)} )
         }
         else {
