@@ -13,6 +13,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 
 const { errorHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware')
+
 const app = express()
 
 async function connect () {
@@ -27,27 +28,36 @@ async function connect () {
     }
 }
 
+function configureBase () {
+    app.use(express.json())
+    app.use(tokenExtractor)
+    app.use('/api/login', loginRouter)
+    app.use('/api/users', userRouter)
+    app.use('/api/blogs', blogRouter)
+}
+
 async function configure() {
+    const filePath = path.join(__dirname, '../client/dist/index.html')
+    const ditPath = path.join(__dirname, '../client/dist')
+
     try {
-        app.use(express.json())
-        if (process.env.NODE_ENV !== 'test') {
-            app.use(morgan('dev'))
-        }
-
-        app.use(tokenExtractor)
-        app.use('/api/login', loginRouter)
-        app.use('/api/users', userRouter)
-        app.use('/api/blogs', blogRouter)
-
-        if (process.env.NODE_ENV === 'test') {
+        if (process.env.NODE_ENV === 'test'){
             app.use('/api/testing', resetRouter)
+            configureBase()
         }
-        if (process.env.NODE_ENV === 'prod') {
-            app.use(express.static(path.join(__dirname, '../client/dist')))
-            app.get('/*splat', (req, res) => {
-                res.sendFile(path.join(__dirname, '../client/dist/index.html'))
-            })
+        else if (process.env.NODE_ENV === 'dev') {
+            app.use(morgan('dev'))
+            configureBase()
         }
+        else if (process.env.NODE_ENV === 'prod') {
+            configureBase()
+            app.use(express.static(ditPath))
+            app.get('/*splat', (request, response) => {response.sendFile(filePath)} )
+        }
+        else {
+            throw Error(`Invalid configuration mode: ${process.env.NODE_ENV}`)
+        }
+
         app.use(unknownEndpoint)
         app.use(errorHandler)
     }
