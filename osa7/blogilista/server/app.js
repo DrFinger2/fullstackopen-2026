@@ -55,7 +55,7 @@ async function configure() {
             app.get('/*splat', (request, response) => {response.sendFile(filePath)} )
         }
         else {
-            throw Error(`Invalid configuration mode: ${process.env.NODE_ENV}`)
+            throw new Error(`Invalid configuration mode: ${process.env.NODE_ENV}`)
         }
 
         app.use(unknownEndpoint)
