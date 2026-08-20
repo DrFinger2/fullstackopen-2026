@@ -31,8 +31,9 @@ async function configure() {
     try {
         if (process.env.NODE_ENV === 'prod') {
             app.use(express.static(path.join(__dirname, '../client/dist')))
-            const response = await app.get('/*splat')
-            response.sendFile(path.join(__dirname, '../client/dist/index.html'))
+            app.get('/*splat', (req, res) => {
+                res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+            })
         }
 
         app.use(express.json())
