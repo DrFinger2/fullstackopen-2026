@@ -10,6 +10,19 @@ const getAll = async () => {
   return await response.json()
 }
 
+const remove = async (id) => {
+  const options = {
+    method: 'DELETE'
+  }
+  const url = `${baseUrl}/${id}`
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error('Failed to remove note')
+  }
+
+  return response.status
+}
+
 const createNew = async (object) => {
   const response = await fetch(baseUrl, {
     method: 'POST',
@@ -24,4 +37,4 @@ const createNew = async (object) => {
   return await response.json()
 }
 
-export default { getAll, createNew }
+export default { getAll, createNew, remove }
