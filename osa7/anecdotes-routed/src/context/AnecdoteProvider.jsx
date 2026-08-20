@@ -15,12 +15,12 @@ export const AnecdoteProvider = ({ children }) => {
 
   const addAnecdote = async (anecdote) => {
     const newAnecdote = await anecdoteService.createNew(anecdote)
-    setAnecdotes(prev => prev.concat(newAnecdote))
+    setAnecdotes(anecdotes.concat(newAnecdote))
   }
 
   const deleteAnecdote = async (id) => {
     await anecdoteService.remove(id)
-    setAnecdotes(prev => prev.filter(a => a.id !== id))
+    setAnecdotes(anecdotes.filter(anecdote => anecdote.id !== id))
   }
 
   const value = { anecdotes, addAnecdote, deleteAnecdote }

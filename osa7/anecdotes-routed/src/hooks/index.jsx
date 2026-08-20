@@ -12,7 +12,7 @@ export const useField = (type) => {
 export const useAnecdotes = () => {
   const context = useContext(AnecdoteContext)
   if (!context) {
-    throw new Error('useAnecdotes must be used within an AnecdoteProvider')
+    throw new Error('useAnecdotes must be used within AnecdoteProvider')
   }
   return context
 }
