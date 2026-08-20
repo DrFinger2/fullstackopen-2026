@@ -29,13 +29,6 @@ async function connect () {
 
 async function configure() {
     try {
-        if (process.env.NODE_ENV === 'prod') {
-            app.use(express.static(path.join(__dirname, '../client/dist')))
-            app.get('/*splat', (req, res) => {
-                res.sendFile(path.join(__dirname, '../client/dist/index.html'))
-            })
-        }
-
         app.use(express.json())
         if (process.env.NODE_ENV !== 'test') {
             app.use(morgan('dev'))
@@ -48,6 +41,12 @@ async function configure() {
 
         if (process.env.NODE_ENV === 'test') {
             app.use('/api/testing', resetRouter)
+        }
+        if (process.env.NODE_ENV === 'prod') {
+            app.use(express.static(path.join(__dirname, '../client/dist')))
+            app.get('/*splat', (req, res) => {
+                res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+            })
         }
         app.use(unknownEndpoint)
         app.use(errorHandler)
