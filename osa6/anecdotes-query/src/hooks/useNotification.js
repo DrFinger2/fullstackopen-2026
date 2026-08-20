@@ -9,7 +9,6 @@ const useNotification = () => {
       clearTimeout(timeout.current)
     }
     setNotification({ message, type })
-
     timeout.current = setTimeout(() => {
       setNotification(null)
     }, timeoutSeconds * 1000)
