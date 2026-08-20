@@ -15,7 +15,7 @@ const logger = require('./utils/logger')
 const { errorHandler, unknownEndpoint, tokenExtractor } = require('./utils/middleware')
 const app = express()
 
-async function connectToDatabase () {
+async function connect () {
     try {
         logger.info('connecting to', config.MONGODB_URI)
         await mongoose.connect(config.MONGODB_URI, { family: 4 })
@@ -27,32 +27,39 @@ async function connectToDatabase () {
     }
 }
 
-async function configure () {
-    app.use(express.json())
-    if (process.env.NODE_ENV !== 'test') {
-        app.use(morgan('dev'))
-    }
-    app.use(tokenExtractor)
-    app.use('/api/login', loginRouter)
-    app.use('/api/users', userRouter)
-    app.use('/api/blogs', blogRouter)
+async function configure() {
+    try {
+        if (process.env.NODE_ENV === 'prod') {
+            app.use(express.static(path.join(__dirname, '../client/dist')))
+            const response = await app.get('/*splat')
+            response.sendFile(path.join(__dirname, '../client/dist/index.html'))
+        }
 
-    if (process.env.NODE_ENV === 'test') {
-        app.use('/api/testing', resetRouter)
+        app.use(express.json())
+        if (process.env.NODE_ENV !== 'test') {
+            app.use(morgan('dev'))
+        }
+
+        app.use(tokenExtractor)
+        app.use('/api/login', loginRouter)
+        app.use('/api/users', userRouter)
+        app.use('/api/blogs', blogRouter)
+
+        if (process.env.NODE_ENV === 'test') {
+            app.use('/api/testing', resetRouter)
+        }
+        app.use(unknownEndpoint)
+        app.use(errorHandler)
     }
-    if (process.env.NODE_ENV === 'prod') {
-        app.use(express.static(path.join(__dirname, '../client/dist')))
-        app.get('/*splat', (req, res) => {
-            res.sendFile(path.join(__dirname, '../client/dist/index.html'))
-        })
+    catch (error) {
+        logger.error('error configuring to server:', error.message)
+        process.exit(1)
     }
-    app.use(unknownEndpoint)
-    app.use(errorHandler)
 }
 
 async function start() {
     await configure()
-    await connectToDatabase()
+    await connect()
 }
 
 start()

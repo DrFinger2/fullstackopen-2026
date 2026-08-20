@@ -2,9 +2,9 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client",
-    "start": "cross-env NODE_ENV=prod npm start --prefix server"
+    "start": "npm start --prefix server"
   },
-  
+
   "devDependencies": {
     "concurrently": "^10.0.5"
   }

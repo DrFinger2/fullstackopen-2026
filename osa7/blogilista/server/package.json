@@ -7,8 +7,6 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "build:render": "npm install && rm -rf dist && cd ../client/ && npm install && npm run build && cp -r dist ../server",
-    "build": "powershell -NoProfile -Command \"npm.cmd install; if (Test-Path dist) { Remove-Item -Recurse -Force dist }; Set-Location ../client; npm.cmd install; npm.cmd run build; Copy-Item dist ../server -Recurse -Force; Set-Location ../server\"",
     "start": "cross-env NODE_ENV=prod LOG_LEVEL=info node index.js",
     "dev":   "cross-env NODE_ENV=dev LOG_LEVEL=info node --watch index.js",
     "test":  "cross-env NODE_ENV=test LOG_LEVEL=silent node --test --test-concurrency=1",
