@@ -10,10 +10,11 @@ import { useAnecdotes } from '../hooks'
   }
  */
 const CreateNew = () => {
+  const { addAnecdote } = useAnecdotes();
   const content = useField('text')
   const author = useField('text')
   const info = useField('text')
-  const { addAnecdote } = useAnecdotes();
+  
 
   const navigate = useNavigate()
   const handleSubmit = (e) => {
