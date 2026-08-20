@@ -18,6 +18,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import registerService from './services/register'
 
+import ErrorBoundary from './components/ErrorBoundary'
+
 
 export default function App() {
   const [busy, setBusy] = useState(false)
@@ -77,13 +79,15 @@ export default function App() {
       <GlobalStyle />
 
       <Navbar user={user} onLogout={handleLogout} notification={notification} />
-      <Loader isLoading={busy} />
-      <Routes>
-        <Route path="/" element={<BlogsPage blogState={blogState} />} />
-        <Route path="/login" element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} user={user} />} />
-        <Route path="/blogs/new" element={<NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
-        <Route path="/blogs/:id" element={<BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
-      </Routes>
+      <ErrorBoundary>
+        <Loader isLoading={busy} />
+        <Routes>
+          <Route path="/" element={<BlogsPage blogState={blogState} />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} user={user} />} />
+          <Route path="/blogs/new" element={<NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
+          <Route path="/blogs/:id" element={<BlogDetailsPage user={user} logout={logout} notify={notify} blogState={blogState} />} />
+        </Routes>
+      </ErrorBoundary>
     </>
   )
 }
