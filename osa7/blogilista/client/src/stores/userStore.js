@@ -10,8 +10,10 @@ const success = (message) =>
 const failure = (message) =>
   useNotificationStore.getState().actions.error(message)
 
-const useUserStore = create((set) => ({
+const useUserStore = create((set, get) => ({
+  usersLoading: false,
   username: null,
+  users: [],
 
   actions: {
     init: async () => {
@@ -21,6 +23,27 @@ const useUserStore = create((set) => ({
         blogService.setToken(user.token)
       }
     },
+
+    fetchAll: async () => {
+      set({ usersLoading: true })
+      try {
+        const users = await userService.getAll()
+        set({ users })
+      } catch (error) {
+        failure(error.response?.data?.error)
+      } finally {
+        set({ usersLoading: false })
+      }
+    },
+
+    getDetailsById: (userid) => {
+      return get().users.find((user) => user.id === userid)
+    },
+
+    getDetails: (username) => {
+      return get().users.find((user) => user.username === username)
+    },
+
     login: async (userObj) => {
       try {
         const result = await userService.login(userObj)

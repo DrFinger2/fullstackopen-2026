@@ -13,6 +13,7 @@ import NewBlogPage from './pages/NewBlogPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './components/ErrorBoundary'
 import UsersPage from './pages/UsersPage'
+import UserDetailsPage from './pages/UserDetailsPage'
 export default function App() {
   const userActions = useUserActions()
   const blogActions = useBlogActions()
@@ -20,11 +21,13 @@ export default function App() {
 
   useEffect(() => {
     userActions.init()
+    userActions.fetchAll()
     blogActions.fetchAll()
   }, [])
 
   const handleReset = async () => {
     navigate('/')
+    userActions.fetchAll()
     blogActions.fetchAll()
   }
 
@@ -41,6 +44,7 @@ export default function App() {
           <Route path="/blogs/new" element={<NewBlogPage />} />
           <Route path="/blogs/:id" element={<BlogDetailsPage />} />
           <Route path="/users" element={<UsersPage />} />
+          <Route path="/users/:username" element={<UserDetailsPage />} />
         </Routes>
       </ErrorBoundary>
     </>

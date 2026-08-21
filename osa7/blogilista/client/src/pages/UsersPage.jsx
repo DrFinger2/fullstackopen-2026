@@ -9,12 +9,11 @@ import {
 } from '../styles/Table.styles'
 
 import { Wrapper } from '../styles/Page.styles'
+import { useUsers } from '../hooks/useUser'
 
 function UsersPage() {
-  const users = [
-    { id: 1, name: 'Alice', username: 'alice', blogs: 2873 },
-    { id: 2, name: 'Bob', username: 'bob', blogs: 12382 },
-  ]
+  const users = useUsers()
+  const sortedUsers = [...users].sort((a, b) => b.blogs.length - a.blogs.length)
 
   return (
     <Wrapper>
@@ -28,11 +27,11 @@ function UsersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {sortedUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableData>{user.name}</TableData>
                 <TableData>{user.username}</TableData>
-                <TableData>{user.blogs}</TableData>
+                <TableData>{user.blogs.length}</TableData>
               </TableRow>
             ))}
           </TableBody>
