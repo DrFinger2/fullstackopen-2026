@@ -1,9 +1,14 @@
-const Books = (props) => {
-  if (!props.show) {
-    return null
-  }
+import useBooks from "../hooks/useBooks";
 
-  const books = []
+const Books = (props) => {
+  const { books, loading } = useBooks();
+
+  if (!props.show) {
+    return null;
+  }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -26,7 +31,7 @@ const Books = (props) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Books
+export default Books;
