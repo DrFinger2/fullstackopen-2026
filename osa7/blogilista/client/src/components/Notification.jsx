@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Container, Message } from '../styles/Notification.styles'
-
-function Notification({ message, type, id, displayTime = 5 }) {
+import { useNotification } from '../hooks/useNotification'
+function Notification({ displayTime = 5 }) {
+  const { message, type, id } = useNotification()
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {

@@ -4,8 +4,10 @@ import blogService from '../services/blogs'
 import { Wrapper } from '../styles/Page.styles'
 import { useBlogs, useBlogActions } from '../hooks/useBlogs'
 import { useUser, useUserActions } from '../hooks/useUser'
+import { useNotificationActions } from '../hooks/useNotification'
 
-function BlogDetailsPage({ notify }) {
+function BlogDetailsPage() {
+  const notify = useNotificationActions()
   const user = useUser()
   const userActions = useUserActions()
 

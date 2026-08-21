@@ -1,29 +1,7 @@
-import { useState } from 'react'
+import { useNotificationStore } from '../stores/notificationStore'
 
-const useNotification = () => {
-  const [notification, setNotification] = useState({
-    message: '',
-    type: '',
-    id: 0,
-  })
+export const useNotification = () =>
+  useNotificationStore((state) => state.notification)
 
-  const notify = {
-    success: (message) =>
-      setNotification((prev) => ({
-        message: message || 'Operation completed successfully',
-        type: 'success',
-        id: prev.id + 1,
-      })),
-
-    error: (message) =>
-      setNotification((prev) => ({
-        message: message || 'Unknown error',
-        type: 'error',
-        id: prev.id + 1,
-      })),
-  }
-
-  return { notification, notify }
-}
-
-export default useNotification
+export const useNotificationActions = () =>
+  useNotificationStore((state) => state.actions)

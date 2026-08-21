@@ -4,8 +4,10 @@ import BlogForm from '../components/BlogForm'
 import blogService from '../services/blogs'
 import { useBlogActions } from '../hooks/useBlogs'
 import { useUserActions, useUser } from '../hooks/useUser'
+import { useNotificationActions } from '../hooks/useNotification'
 
-function NewBlogPage({ notify }) {
+function NewBlogPage() {
+  const notify = useNotificationActions()
   const user = useUser()
   const userActions = useUserActions()
 

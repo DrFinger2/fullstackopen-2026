@@ -6,7 +6,7 @@ import { Button } from '../styles/Button.styles'
 import { ToggleGroup, ToggleOption } from '../styles/Button.styles'
 import { useUser, useUserActions } from '../hooks/useUser'
 
-function Navbar({ notification }) {
+function Navbar() {
   const user = useUser()
   const actions = useUserActions()
 
@@ -27,13 +27,7 @@ function Navbar({ notification }) {
           </ToggleOption>
         )}
       </ToggleGroup>
-
-      <Notification
-        message={notification.message}
-        type={notification.type}
-        id={notification.id}
-      />
-
+      <Notification />
       <UserSection>
         {userExists ? (
           <>
