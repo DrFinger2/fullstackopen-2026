@@ -3,6 +3,7 @@ import blogService from '../services/blogs'
 import loginService from '../services/login'
 import registerService from '../services/register'
 import { useNotificationStore } from './notificationStore'
+import persistance from '../services/persistentUser'
 
 const success = (message) =>
   useNotificationStore.getState().actions.success(message)
@@ -14,11 +15,10 @@ const useUserStore = create((set) => ({
 
   actions: {
     init: async () => {
-      const userJson = window.localStorage.getItem('user')
-      if (userJson) {
-        const parsedUser = JSON.parse(userJson)
-        set({ username: parsedUser.username })
-        blogService.setToken(parsedUser.token)
+      const user = persistance.getUser()
+      if (user) {
+        set({ username: user.username })
+        blogService.setToken(user.token)
       }
     },
     login: async (userObj) => {
@@ -26,7 +26,7 @@ const useUserStore = create((set) => ({
         const result = await loginService.login(userObj)
         set({ username: result.username })
         blogService.setToken(result.token)
-        window.localStorage.setItem('user', JSON.stringify(result))
+        persistance.saveUser(result)
         success(`Welcome back, ${result.username}!`)
         return true
       } catch (error) {
@@ -48,7 +48,7 @@ const useUserStore = create((set) => ({
     logout: async () => {
       set({ username: null })
       blogService.setToken(null)
-      window.localStorage.removeItem('user')
+      persistance.removeUser()
       success('Logged out successfully!')
     },
   },
