@@ -12,7 +12,7 @@ import LoginPage from './pages/LoginPage'
 import NewBlogPage from './pages/NewBlogPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ErrorBoundary from './components/ErrorBoundary'
-
+import UsersPage from './pages/UsersPage'
 export default function App() {
   const userActions = useUserActions()
   const blogActions = useBlogActions()
@@ -40,6 +40,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/blogs/new" element={<NewBlogPage />} />
           <Route path="/blogs/:id" element={<BlogDetailsPage />} />
+          <Route path="/users" element={<UsersPage />} />
         </Routes>
       </ErrorBoundary>
     </>

@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 import blogService from '../services/blogs'
-import loginService from '../services/login'
-import registerService from '../services/register'
-import { useNotificationStore } from './notificationStore'
+import userService from '../services/user'
 import persistance from '../services/persistentUser'
+import { useNotificationStore } from './notificationStore'
 
 const success = (message) =>
   useNotificationStore.getState().actions.success(message)
+
 const failure = (message) =>
   useNotificationStore.getState().actions.error(message)
 
@@ -23,7 +23,7 @@ const useUserStore = create((set) => ({
     },
     login: async (userObj) => {
       try {
-        const result = await loginService.login(userObj)
+        const result = await userService.login(userObj)
         set({ username: result.username })
         blogService.setToken(result.token)
         persistance.saveUser(result)
@@ -36,7 +36,7 @@ const useUserStore = create((set) => ({
     },
     register: async (details) => {
       try {
-        await registerService.register(details)
+        await userService.register(details)
         success('Registration successful! Please log in.')
         return true
       } catch (error) {
