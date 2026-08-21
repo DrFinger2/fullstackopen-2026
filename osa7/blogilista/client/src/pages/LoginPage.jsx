@@ -1,7 +1,10 @@
 import LoginForm from '../components/LoginForm'
 import { useNavigate } from 'react-router-dom'
 import { Section } from '../styles/Page.styles'
-function LoginPage({ onLogin, onRegister, user }) {
+import { useUserActions } from '../hooks/useUser'
+
+function LoginPage({ onRegister, user }) {
+  const actions = useUserActions()
   const navigate = useNavigate()
 
   const isLoggedIn = Boolean(user)
@@ -11,7 +14,7 @@ function LoginPage({ onLogin, onRegister, user }) {
 
   return (
     <Section>
-      <LoginForm onLogin={onLogin} onRegister={onRegister} />
+      <LoginForm onLogin={actions.login} onRegister={onRegister} />
     </Section>
   )
 }

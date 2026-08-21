@@ -3,8 +3,12 @@ import BlogDetails from '../components/BlogDetails'
 import blogService from '../services/blogs'
 import { Wrapper } from '../styles/Page.styles'
 import { useBlogs, useBlogActions } from '../hooks/useBlogs'
+import { useUser, useUserActions } from '../hooks/useUser'
 
-function BlogDetailsPage({ user, logout, notify }) {
+function BlogDetailsPage({ notify }) {
+  const user = useUser()
+  const userActions = useUserActions()
+
   const navigate = useNavigate()
   const actions = useBlogActions()
   const blogs = useBlogs()
@@ -27,7 +31,7 @@ function BlogDetailsPage({ user, logout, notify }) {
       actions.update(updated)
     } catch (error) {
       if (error.response?.status === 401) {
-        logout()
+        userActions.logout()
         notify.error('Session expired, please log in again')
       } else {
         notify.error(error.response?.data?.error)
@@ -49,7 +53,7 @@ function BlogDetailsPage({ user, logout, notify }) {
       navigate('/')
     } catch (error) {
       if (error.response?.status === 401) {
-        logout()
+        userActions.logout()
         notify.error('Session expired, please log in again')
       } else {
         notify.error(error.response?.data?.error)

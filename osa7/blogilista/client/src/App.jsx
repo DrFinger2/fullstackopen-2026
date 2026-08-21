@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/Global.styles'
 
-import useAuth from './hooks/useAuth'
 import useNotification from './hooks/useNotification'
 
 import Loader from './components/Loader'
@@ -15,7 +14,6 @@ import NewBlogPage from './pages/NewBlogPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
 import registerService from './services/register'
 
 import ErrorBoundary from './components/ErrorBoundary'
@@ -23,7 +21,6 @@ import { useBlogActions } from './hooks/useBlogs'
 
 export default function App() {
   const [busy, setBusy] = useState(false)
-  const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
   const actions = useBlogActions()
   const navigate = useNavigate()
@@ -43,25 +40,6 @@ export default function App() {
   useEffect(() => {
     fetchAll()
   }, [])
-
-  const handleLogin = async (creds) => {
-    try {
-      const result = await loginService.login(creds)
-      login(result)
-      notify.success(`Welcome back, ${result.username}!`)
-      navigate('/')
-      return true
-    } catch (err) {
-      notify.error(err.response?.data?.error)
-      return false
-    }
-  }
-
-  const handleLogout = () => {
-    logout()
-    notify.success('Logged out successfully')
-    navigate('/')
-  }
 
   const handleRegister = async (details) => {
     try {
@@ -83,7 +61,7 @@ export default function App() {
   return (
     <>
       <GlobalStyle />
-      <Navbar user={user} onLogout={handleLogout} notification={notification} />
+      <Navbar notification={notification} />
 
       <ErrorBoundary onReset={handleReset}>
         <Loader isLoading={busy} />
@@ -92,25 +70,12 @@ export default function App() {
           <Route path="/" element={<BlogsPage />} />
           <Route
             path="/login"
-            element={
-              <LoginPage
-                onLogin={handleLogin}
-                onRegister={handleRegister}
-                user={user}
-              />
-            }
+            element={<LoginPage onRegister={handleRegister} />}
           />
-          <Route
-            path="/blogs/new"
-            element={
-              <NewBlogPage user={user} logout={logout} notify={notify} />
-            }
-          />
+          <Route path="/blogs/new" element={<NewBlogPage notify={notify} />} />
           <Route
             path="/blogs/:id"
-            element={
-              <BlogDetailsPage user={user} logout={logout} notify={notify} />
-            }
+            element={<BlogDetailsPage notify={notify} />}
           />
         </Routes>
       </ErrorBoundary>

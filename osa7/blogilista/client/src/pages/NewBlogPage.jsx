@@ -3,8 +3,12 @@ import { Section } from '../styles/Page.styles'
 import BlogForm from '../components/BlogForm'
 import blogService from '../services/blogs'
 import { useBlogActions } from '../hooks/useBlogs'
+import { useUserActions, useUser } from '../hooks/useUser'
 
-function NewBlogPage({ user, logout, notify }) {
+function NewBlogPage({ notify }) {
+  const user = useUser()
+  const userActions = useUserActions()
+
   const navigate = useNavigate()
   const actions = useBlogActions()
 
@@ -21,7 +25,7 @@ function NewBlogPage({ user, logout, notify }) {
       return true
     } catch (err) {
       if (err.response?.status === 401) {
-        logout()
+        userActions.logout()
         notify.error('Session expired, please log in again')
       } else {
         notify.error(err.response?.data?.error)

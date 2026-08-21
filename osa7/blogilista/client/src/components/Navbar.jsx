@@ -4,7 +4,12 @@ import { Nav, NavLinks, UserSection } from '../styles/Navbar.styles'
 import { Paragraph } from '../styles/Page.styles'
 import { Button } from '../styles/Button.styles'
 import { ToggleGroup, ToggleOption } from '../styles/Button.styles'
-function Navbar({ user, onLogout, notification }) {
+import { useUser, useUserActions } from '../hooks/useUser'
+
+function Navbar({ notification }) {
+  const user = useUser()
+  const actions = useUserActions()
+
   const userExists = Boolean(user)
   const location = useLocation()
   const isHome = location.pathname === '/'
@@ -35,7 +40,7 @@ function Navbar({ user, onLogout, notification }) {
             <Paragraph>
               Logged in as: <span className="username">{user}</span>
             </Paragraph>
-            <Button onClick={onLogout}>Logout</Button>
+            <Button onClick={actions.logout}>Logout</Button>
           </>
         ) : (
           <Link to="/login">Login</Link>

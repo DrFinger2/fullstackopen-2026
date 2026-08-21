@@ -23,7 +23,7 @@ const useBlogStore = create((set) => ({
       }))
     },
 
-    setAll: (newBlogs) => {
+    set: (newBlogs) => {
       return set({
         blogs: sortByLikes(newBlogs),
       })
