@@ -98,6 +98,10 @@ let books = [
 */
 
 const typeDefs = /* GraphQL */ `
+  type Author {
+    name: String!
+    bookCount: Int!
+  }
   type Book {
     title: String!
     author: String!
@@ -108,14 +112,33 @@ const typeDefs = /* GraphQL */ `
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `;
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: () => books,
+    bookCount: () => {
+      return books.length;
+    },
+    authorCount: () => {
+      return authors.length;
+    },
+    allBooks: () => {
+      return books;
+    },
+    allAuthors: () => {
+      const authorToCount = {};
+      books.forEach((book) => {
+        authorToCount[book.author] = authorToCount[book.author]
+          ? authorToCount[book.author] + 1
+          : 1;
+      });
+      return authors.map((author) => ({
+        name: author.name,
+        bookCount: authorToCount[author.name] || 0,
+      }));
+    },
   },
 };
 
