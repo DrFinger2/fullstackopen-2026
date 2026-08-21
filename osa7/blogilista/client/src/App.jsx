@@ -74,12 +74,16 @@ export default function App() {
     }
   }
 
+  const handleReset = async () => {
+    console.log('Reset ran!')
+  }
+
   return (
     <>
       <GlobalStyle />
 
       <Navbar user={user} onLogout={handleLogout} notification={notification} />
-      <ErrorBoundary>
+      <ErrorBoundary onReset={handleReset}>
         <Loader isLoading={busy} />
         <Routes>
           <Route path="/" element={<BlogsPage blogState={blogState} />} />
