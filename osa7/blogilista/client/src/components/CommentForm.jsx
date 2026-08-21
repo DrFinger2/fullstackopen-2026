@@ -10,8 +10,15 @@ const CommentForm = ({ blogId, user, onSubmit }) => {
     return <Paragraph>Log in to leave a comment</Paragraph>
   }
 
+  const handleSubmit = () => {
+    const succeeded = onSubmit(blogId, comment.field.value)
+    if (succeeded) {
+      comment.reset()
+    }
+  }
+
   return (
-    <Form onSubmit={() => onSubmit(blogId, comment.field.value)}>
+    <Form onSubmit={handleSubmit}>
       <Wrapper $direction="row" $gap="5px">
         <Input placeholder="Write a comment" {...comment.field} />
         <Button type="submit">Add comment</Button>
