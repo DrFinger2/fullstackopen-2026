@@ -6,9 +6,11 @@ import useUserStore from './userStore'
 const sortByLikes = (blogs) => {
   return blogs.sort((a, b) => b.likes - a.likes)
 }
+
 const success = (message) => {
   return useNotificationStore.getState().actions.success(message)
 }
+
 const failure = (message) => {
   return useNotificationStore.getState().actions.error(message)
 }
