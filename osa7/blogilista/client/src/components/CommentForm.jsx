@@ -2,6 +2,7 @@ import { useField } from '../hooks/useField'
 import { Form, Input } from '../styles/Form.styles'
 import { ActionButton, Button } from '../styles/Button.styles'
 import { Wrapper } from '../styles/Page.styles'
+import { Paragraph } from '../styles/Page.styles'
 const CommentForm = ({ blogId, user, onSubmit }) => {
   const comment = useField('text')
 
