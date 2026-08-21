@@ -75,7 +75,7 @@ function LoginForm({ onLogin, onRegister }) {
         <Form onSubmit={handleLogin}>
           <Title>Login</Title>
           <Input placeholder="Username" {...username.field} />
-          <Input placeholder="Username" {...password.field} />
+          <Input placeholder="Password" {...password.field} />
           <SubmitButton
             text="Login"
             loadingText="Logging"

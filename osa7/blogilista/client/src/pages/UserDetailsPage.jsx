@@ -33,7 +33,7 @@ const UserDetailsPage = () => {
           <OrderedList>
             {user.blogs.map((blog) => {
               return (
-                <ListItem id={blog.id}>
+                <ListItem key={blog.id}>
                   <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
                 </ListItem>
               )
