@@ -4,10 +4,13 @@ function SubmitButton({ text, loadingText, showLoading, isLoading }) {
   return (
     <Button disabled={isLoading}>
       {showLoading ? (
-        <>{loadingText}<span className="dots"/></>
-      )
-        : text
-      }
+        <>
+          {loadingText}
+          <span className="dots" />
+        </>
+      ) : (
+        text
+      )}
     </Button>
   )
 }

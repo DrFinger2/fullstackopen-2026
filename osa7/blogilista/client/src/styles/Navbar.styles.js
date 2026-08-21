@@ -27,7 +27,9 @@ export const NavLinks = styled.div`
     font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     font-weight: 500;
-    transition: color 0.2s, border-bottom 0.2s;
+    transition:
+      color 0.2s,
+      border-bottom 0.2s;
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
 

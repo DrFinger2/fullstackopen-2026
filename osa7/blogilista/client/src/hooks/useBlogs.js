@@ -10,15 +10,17 @@ const useBlogs = () => {
     setBlogs(sortStrategy(blogs.concat(blog)))
   }
   const update = (updatedBlog) => {
-    setBlogs(sortStrategy(
-      blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog)
-    ))
+    setBlogs(
+      sortStrategy(
+        blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
+      )
+    )
   }
   const set = (newBlogs) => {
     setBlogs(sortStrategy(newBlogs))
   }
   const remove = (id) => {
-    set(blogs.filter(blog => blog.id !== id))
+    set(blogs.filter((blog) => blog.id !== id))
   }
 
   const sortStrategy = sortByLikes
@@ -28,7 +30,7 @@ const useBlogs = () => {
     set,
     add,
     remove,
-    update
+    update,
   }
 }
 

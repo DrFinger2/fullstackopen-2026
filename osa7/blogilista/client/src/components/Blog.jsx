@@ -8,7 +8,8 @@ function Blog({ blog }) {
         <H3>{blog.title}</H3>
       </Link>
       <Paragraph>
-        <strong>Author: </strong>{blog.author}
+        <strong>Author: </strong>
+        {blog.author}
       </Paragraph>
     </Card>
   )

@@ -10,7 +10,7 @@ function TextInput({ value, onChange, placeholder }) {
       type="text"
       placeholder={placeholder}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
     />
   )
 }
@@ -21,7 +21,7 @@ function PasswordInput({ value, onChange, placeholder = 'Password' }) {
       type="password"
       placeholder={placeholder}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
     />
   )
 }
@@ -39,20 +39,20 @@ function LoginForm({ onLogin, onRegister }) {
     return setTimeout(() => setShowLoader(true), 300)
   }
 
-  const stopLoading = timer => {
+  const stopLoading = (timer) => {
     clearTimeout(timer)
     setLoading(false)
     setShowLoader(false)
   }
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     const timer = startLoading()
     await onLogin({ username, password })
     stopLoading(timer)
   }
 
-  const handleRegister = async e => {
+  const handleRegister = async (e) => {
     e.preventDefault()
     const timer = startLoading()
     const success = await onRegister({ name, username, password })
@@ -68,10 +68,18 @@ function LoginForm({ onLogin, onRegister }) {
   return (
     <Container>
       <ToggleGroup>
-        <ToggleOption $active={isLogin} onClick={() => setIsLogin(true)} disabled={loading}>
+        <ToggleOption
+          $active={isLogin}
+          onClick={() => setIsLogin(true)}
+          disabled={loading}
+        >
           Login
         </ToggleOption>
-        <ToggleOption $active={!isLogin} onClick={() => setIsLogin(false)} disabled={loading}>
+        <ToggleOption
+          $active={!isLogin}
+          onClick={() => setIsLogin(false)}
+          disabled={loading}
+        >
           Register
         </ToggleOption>
       </ToggleGroup>
@@ -79,7 +87,11 @@ function LoginForm({ onLogin, onRegister }) {
       {isLogin ? (
         <Form onSubmit={handleLogin}>
           <Title>Login</Title>
-          <TextInput placeholder="Username" value={username} onChange={setUsername} />
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChange={setUsername}
+          />
           <PasswordInput value={password} onChange={setPassword} />
           <SubmitButton
             text="Login"
@@ -92,7 +104,11 @@ function LoginForm({ onLogin, onRegister }) {
         <Form onSubmit={handleRegister}>
           <Title>Register</Title>
           <TextInput placeholder="Name" value={name} onChange={setName} />
-          <TextInput placeholder="Username" value={username} onChange={setUsername} />
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChange={setUsername}
+          />
           <PasswordInput value={password} onChange={setPassword} />
           <SubmitButton
             text="Register"

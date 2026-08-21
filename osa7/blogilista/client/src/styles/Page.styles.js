@@ -12,24 +12,24 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: ${({ $alignX = 'center' }) => {
     switch ($alignX) {
-    case 'left':
-      return 'flex-start'
-    case 'right':
-      return 'flex-end'
-    default:
-      return 'center'
+      case 'left':
+        return 'flex-start'
+      case 'right':
+        return 'flex-end'
+      default:
+        return 'center'
     }
   }};
   justify-content: ${({ $alignY = 'start' }) => {
     switch ($alignY) {
-    case 'top':
-      return 'flex-start'
-    case 'center':
-      return 'center'
-    case 'bottom':
-      return 'flex-end'
-    default:
-      return 'flex-start'
+      case 'top':
+        return 'flex-start'
+      case 'center':
+        return 'center'
+      case 'bottom':
+        return 'flex-end'
+      default:
+        return 'flex-start'
     }
   }};
   border: 1px solid #2c2c2e;
@@ -44,24 +44,24 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: ${({ $alignX = 'center' }) => {
     switch ($alignX) {
-    case 'left':
-      return 'flex-start'
-    case 'right':
-      return 'flex-end'
-    default:
-      return 'center'
+      case 'left':
+        return 'flex-start'
+      case 'right':
+        return 'flex-end'
+      default:
+        return 'center'
     }
   }};
   justify-content: ${({ $alignY = 'start' }) => {
     switch ($alignY) {
-    case 'top':
-      return 'flex-start'
-    case 'center':
-      return 'center'
-    case 'bottom':
-      return 'flex-end'
-    default:
-      return 'flex-start'
+      case 'top':
+        return 'flex-start'
+      case 'center':
+        return 'center'
+      case 'bottom':
+        return 'flex-end'
+      default:
+        return 'flex-start'
     }
   }};
 `

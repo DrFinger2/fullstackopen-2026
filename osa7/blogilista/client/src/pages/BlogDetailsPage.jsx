@@ -7,8 +7,7 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
   const navigate = useNavigate()
   const { id } = useParams()
 
-
-  const current = (blogState?.blogs.find((b) => b.id === id))
+  const current = blogState?.blogs.find((b) => b.id === id)
 
   if (!current) {
     return (
@@ -33,7 +32,9 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
   }
 
   const onRemove = async () => {
-    if (!window.confirm(`Remove blog "${current.title}" by ${current.author}?`)) {
+    if (
+      !window.confirm(`Remove blog "${current.title}" by ${current.author}?`)
+    ) {
       return
     }
 
@@ -54,7 +55,12 @@ function BlogDetailsPage({ user, logout, notify, blogState }) {
 
   return (
     <Wrapper>
-      <BlogDetails blog={current} user={user} onLike={onLike} onRemove={onRemove} />
+      <BlogDetails
+        blog={current}
+        user={user}
+        onLike={onLike}
+        onRemove={onRemove}
+      />
     </Wrapper>
   )
 }

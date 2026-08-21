@@ -1,20 +1,26 @@
 import { useState } from 'react'
 
 const useNotification = () => {
-  const [notification, setNotification] = useState({ message: '', type: '', id: 0 })
+  const [notification, setNotification] = useState({
+    message: '',
+    type: '',
+    id: 0,
+  })
 
   const notify = {
-    success: message => setNotification(prev => ({
-      message: message || 'Operation completed successfully',
-      type: 'success',
-      id: prev.id + 1
-    })),
+    success: (message) =>
+      setNotification((prev) => ({
+        message: message || 'Operation completed successfully',
+        type: 'success',
+        id: prev.id + 1,
+      })),
 
-    error: message => setNotification(prev => ({
-      message: message || 'Unknown error',
-      type: 'error',
-      id: prev.id + 1
-    }))
+    error: (message) =>
+      setNotification((prev) => ({
+        message: message || 'Unknown error',
+        type: 'error',
+        id: prev.id + 1,
+      })),
   }
 
   return { notification, notify }

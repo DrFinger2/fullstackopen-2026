@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 
 import BlogForm from '../src/components/BlogForm'
 
-
 describe('BlogForm', () => {
   test('1. Creating a blog calls onCreateBlog with correct data', async () => {
     const handleBlogCreated = vi.fn()
@@ -27,7 +26,7 @@ describe('BlogForm', () => {
     expect(handleBlogCreated).toHaveBeenCalledWith({
       title: 'Example title',
       author: 'Example author',
-      url: 'www.example.com'
+      url: 'www.example.com',
     })
   })
 })

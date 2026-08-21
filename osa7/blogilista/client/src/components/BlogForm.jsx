@@ -16,13 +16,13 @@ function BlogForm({ onCreateBlog }) {
     return setTimeout(() => setShowLoader(true), 300)
   }
 
-  const stopLoading = timer => {
+  const stopLoading = (timer) => {
     clearTimeout(timer)
     setLoading(false)
     setShowLoader(false)
   }
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const timer = startLoading()
     const result = await onCreateBlog({ title, author, url })
@@ -38,10 +38,30 @@ function BlogForm({ onCreateBlog }) {
     <Container>
       <Title> Create a new blog </Title>
       <Form onSubmit={handleSubmit}>
-        <Input name="title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)}/>
-        <Input name="author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)}/>
-        <Input name="url" placeholder="URL" value={url} onChange={({ target }) => setUrl(target.value)}/>
-        <SubmitButton text="Create" loadingText="Creating" showLoading={showLoader} isLoading={loading}/>
+        <Input
+          name="title"
+          placeholder="Title"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        <Input
+          name="author"
+          placeholder="Author"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+        <Input
+          name="url"
+          placeholder="URL"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+        />
+        <SubmitButton
+          text="Create"
+          loadingText="Creating"
+          showLoading={showLoader}
+          isLoading={loading}
+        />
       </Form>
     </Container>
   )

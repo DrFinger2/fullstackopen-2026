@@ -28,19 +28,19 @@ export const ActionButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 4px 12px; 
+  padding: 4px 12px;
   border: none;
-  border-radius: 5px; 
+  border-radius: 5px;
   background: #7c7cf8;
-  color: #0d0d0d; 
+  color: #0d0d0d;
   font-family: 'Inter', sans-serif;
-  font-size: 0.85rem; 
-  font-weight: 500;  
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #6a6af0;      /* same hover */
+    background: #6a6af0; /* same hover */
   }
 
   &:disabled {

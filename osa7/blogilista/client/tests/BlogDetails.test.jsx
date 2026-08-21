@@ -9,12 +9,19 @@ const blog = {
   author: 'Test author',
   url: 'https://example.com',
   likes: 1,
-  user: { username: 'admin', name: 'Admin User' }
+  user: { username: 'admin', name: 'Admin User' },
 }
 
 describe('BlogDetails', () => {
   test('when logged in, url, likes, author and username are shown', () => {
-    render(<BlogDetails blog={blog} user="admin" onLike={() => {}} onRemove={() => {}} />)
+    render(
+      <BlogDetails
+        blog={blog}
+        user="admin"
+        onLike={() => {}}
+        onRemove={() => {}}
+      />
+    )
 
     const urlLink = screen.getByRole('link', { name: 'https://example.com' })
     expect(urlLink).toHaveAttribute('href', 'https://example.com')
@@ -27,7 +34,14 @@ describe('BlogDetails', () => {
     const mockHandler = vi.fn()
     const user = userEvent.setup()
 
-    render(<BlogDetails blog={blog} user="admin" onLike={mockHandler} onRemove={() => {}} />)
+    render(
+      <BlogDetails
+        blog={blog}
+        user="admin"
+        onLike={mockHandler}
+        onRemove={() => {}}
+      />
+    )
     const likeButton = screen.getByText('Like')
     await user.click(likeButton)
     await user.click(likeButton)
@@ -36,21 +50,41 @@ describe('BlogDetails', () => {
   })
 
   test('when not logged in, like and remove button are not shown', async () => {
-    render(<BlogDetails blog={blog} user={null} onLike={() => { }} onRemove={() => { }} />)
+    render(
+      <BlogDetails
+        blog={blog}
+        user={null}
+        onLike={() => {}}
+        onRemove={() => {}}
+      />
+    )
     expect(screen.queryByText('Like')).toBeNull()
     expect(screen.queryByText('Remove')).toBeNull()
   })
 
   test('when logged in as someone else than creator, only like button is shown', async () => {
-    render(<BlogDetails blog={blog} user="someone" onLike={() => { }} onRemove={() => { }} />)
+    render(
+      <BlogDetails
+        blog={blog}
+        user="someone"
+        onLike={() => {}}
+        onRemove={() => {}}
+      />
+    )
     expect(screen.queryByText('Like')).toBeDefined()
     expect(screen.queryByText('Remove')).toBeNull()
   })
 
   test('when logged in as creator, both like button and remove button are shown', async () => {
-    render(<BlogDetails blog={blog} user="admin" onLike={() => { }} onRemove={() => { }} />)
+    render(
+      <BlogDetails
+        blog={blog}
+        user="admin"
+        onLike={() => {}}
+        onRemove={() => {}}
+      />
+    )
     expect(screen.queryByText('Like')).toBeDefined()
     expect(screen.queryByText('Remove')).toBeDefined()
   })
-
 })

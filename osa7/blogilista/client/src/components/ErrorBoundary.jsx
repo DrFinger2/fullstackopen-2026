@@ -30,9 +30,7 @@ class ErrorBoundary extends React.Component {
           <Wrapper>
             <Paragraph>{this.state.error.message}</Paragraph>
           </Wrapper>
-          <Button onClick={this.handleReset.bind(this)}>
-            Try Again
-          </Button>
+          <Button onClick={this.handleReset.bind(this)}>Try Again</Button>
         </Container>
       )
     }

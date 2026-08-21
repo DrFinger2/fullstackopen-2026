@@ -3,14 +3,13 @@ import { test, expect, describe } from 'vitest'
 import { BrowserRouter } from 'react-router-dom'
 import Blog from '../src/components/Blog'
 
-
 const blog = {
   id: '123',
   title: 'Test blog',
   author: 'Test author',
   url: 'https://example.com',
   likes: 1,
-  user: { username: 'admin' }
+  user: { username: 'admin' },
 }
 // tests were split between blog and blog details, check both files
 describe('Blog', () => {

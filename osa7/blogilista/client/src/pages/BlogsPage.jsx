@@ -4,7 +4,7 @@ import { Section, Container, Title } from '../styles/Page.styles'
 function BlogsPage({ blogState }) {
   return (
     <Section>
-      <Container >
+      <Container>
         <Title>Blogs</Title>
         <BlogList blogs={blogState.blogs} />
       </Container>
