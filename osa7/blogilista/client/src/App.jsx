@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/Global.styles'
 
 import useAuth from './hooks/useAuth'
-import useBlogs from './hooks/useBlogs'
 import useNotification from './hooks/useNotification'
 
 import Loader from './components/Loader'
@@ -20,19 +19,20 @@ import loginService from './services/login'
 import registerService from './services/register'
 
 import ErrorBoundary from './components/ErrorBoundary'
+import { useBlogActions } from './hooks/useBlogs'
 
 export default function App() {
   const [busy, setBusy] = useState(false)
   const { user, login, logout } = useAuth()
   const { notification, notify } = useNotification()
-  const blogState = useBlogs()
+  const actions = useBlogActions()
   const navigate = useNavigate()
 
   const fetchAll = async () => {
     setBusy(true)
     try {
       const data = await blogService.getAll()
-      blogState.set(data)
+      actions.set(data)
     } catch (err) {
       notify.error(err.response?.data?.error)
     } finally {
@@ -89,7 +89,7 @@ export default function App() {
         <Loader isLoading={busy} />
         <Routes>
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="/" element={<BlogsPage blogState={blogState} />} />
+          <Route path="/" element={<BlogsPage />} />
           <Route
             path="/login"
             element={
@@ -103,23 +103,13 @@ export default function App() {
           <Route
             path="/blogs/new"
             element={
-              <NewBlogPage
-                user={user}
-                logout={logout}
-                notify={notify}
-                blogState={blogState}
-              />
+              <NewBlogPage user={user} logout={logout} notify={notify} />
             }
           />
           <Route
             path="/blogs/:id"
             element={
-              <BlogDetailsPage
-                user={user}
-                logout={logout}
-                notify={notify}
-                blogState={blogState}
-              />
+              <BlogDetailsPage user={user} logout={logout} notify={notify} />
             }
           />
         </Routes>

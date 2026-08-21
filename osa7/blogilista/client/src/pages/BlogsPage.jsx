@@ -1,12 +1,15 @@
 import BlogList from '../components/BlogList'
 import { Section, Container, Title } from '../styles/Page.styles'
+import { useBlogs } from '../hooks/useBlogs'
 
-function BlogsPage({ blogState }) {
+function BlogsPage() {
+  const blogs = useBlogs()
+
   return (
     <Section>
       <Container>
         <Title>Blogs</Title>
-        <BlogList blogs={blogState.blogs} />
+        <BlogList blogs={blogs} />
       </Container>
     </Section>
   )

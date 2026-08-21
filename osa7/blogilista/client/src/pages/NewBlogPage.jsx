@@ -2,9 +2,11 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { Section } from '../styles/Page.styles'
 import BlogForm from '../components/BlogForm'
 import blogService from '../services/blogs'
+import { useBlogActions } from '../hooks/useBlogs'
 
-function NewBlogPage({ user, logout, notify, blogState }) {
+function NewBlogPage({ user, logout, notify }) {
   const navigate = useNavigate()
+  const actions = useBlogActions()
 
   if (!user) {
     return <Navigate replace to="/login" />
@@ -13,7 +15,7 @@ function NewBlogPage({ user, logout, notify, blogState }) {
   const handleCreate = async (newBlog) => {
     try {
       const created = await blogService.create(newBlog)
-      blogState.add(created)
+      actions.add(created)
       notify.success(`Added '${created.title}' successfully!`)
       navigate('/')
       return true
