@@ -35,6 +35,7 @@ export const OrderedList = styled.ol`
 export const ListItem = styled.li`
   margin-bottom: 0.25rem;
   color: #e8e8e8;
+  text-transform: capitalize;
 
   &:last-child {
     margin-bottom: 0;

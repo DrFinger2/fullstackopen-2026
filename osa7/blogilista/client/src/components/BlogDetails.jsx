@@ -12,7 +12,7 @@ function BlogDetails({ blog, user, onLike, onRemove, onComment }) {
     <Card>
       <Wrapper $alignX="left">
         <Title>{blog.title}</Title>
-        <Wrapper $alignX="left">
+        <Wrapper $alignX="left" $margin="10px auto 20px auto">
           <Paragraph>
             <strong>URL: </strong> <a href={blog.url}> {blog.url} </a>{' '}
           </Paragraph>

@@ -27,13 +27,22 @@ function LoginForm({ onLogin, onRegister }) {
   const handleLogin = async (e) => {
     e.preventDefault()
     const timer = startLoading()
-    await onLogin({ username, password })
+    await onLogin({
+      username: username.field.value,
+      password: password.field.value,
+    })
     stopLoading(timer)
   }
+
   const handleRegister = async (e) => {
     e.preventDefault()
     const timer = startLoading()
-    const success = await onRegister({ name, username, password })
+    const success = await onRegister({
+      name: name.field.value,
+      username: username.field.value,
+      password: password.field.value,
+    })
+
     stopLoading(timer)
     if (success) {
       setIsLogin(true)

@@ -89,6 +89,7 @@ export const Title = styled.h2`
   letter-spacing: -0.5px;
   width: auto;
   display: inline-block;
+  text-transform: capitalize;
 `
 
 const headingBase = `
@@ -97,6 +98,7 @@ const headingBase = `
   margin: 0 0 0.5em 0;
   line-height: 1.3;
   letter-spacing: -0.3px;
+  text-transform: capitalize;
 `
 
 export const H1 = styled.h1`
