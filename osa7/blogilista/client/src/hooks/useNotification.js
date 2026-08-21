@@ -1,7 +1,8 @@
 import { useNotificationStore } from '../stores/notificationStore'
 
-export const useNotification = () =>
-  useNotificationStore((state) => state.notification)
-
-export const useNotificationActions = () =>
-  useNotificationStore((state) => state.actions)
+export const useNotification = () => {
+  return useNotificationStore((state) => state.notification)
+}
+export const useNotificationActions = () => {
+  return useNotificationStore((state) => state.actions)
+}

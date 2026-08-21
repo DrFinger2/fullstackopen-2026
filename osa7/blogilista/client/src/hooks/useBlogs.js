@@ -1,5 +1,11 @@
 import useBlogStore from '../stores/blogStore'
 
-export const useBlogs = () => useBlogStore((state) => state.blogs)
-export const useBlogsLoading = () => useBlogStore((state) => state.loading)
-export const useBlogActions = () => useBlogStore((state) => state.actions)
+export const useBlogs = () => {
+  return useBlogStore((state) => state.blogs)
+}
+export const useBlogsLoading = () => {
+  return useBlogStore((state) => state.loading)
+}
+export const useBlogActions = () => {
+  return useBlogStore((state) => state.actions)
+}
