@@ -177,13 +177,11 @@ const resolvers = {
     },
 
     editAuthor: (parent, args) => {
-      const author = authors.find((a) => a.name === args.author);
+      const author = authors.find((a) => a.name === args.name);
       if (!author) {
         return null;
       }
-
-      author.born = args.setBornTo;
-      authors = authors.filter((a) => (a.name === args.author ? author : a));
+      author.born = args.setBornTo; // object - so modifying it is by reference
       return author;
     },
   },
