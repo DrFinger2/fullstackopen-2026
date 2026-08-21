@@ -31,7 +31,7 @@ const useBlogStore = create((set) => ({
       set({ loading: true })
       try {
         const data = await blogService.getAll()
-        set(() => ({ blogs: data }))
+        set(() => ({ blogs: sortByLikes(data) }))
       } catch (error) {
         handleError(error)
       } finally {
@@ -53,7 +53,7 @@ const useBlogStore = create((set) => ({
 
     like: async (blog) => {
       try {
-        const updated = blogService.like(blog)
+        const updated = await blogService.like(blog)
         set((state) => ({
           blogs: sortByLikes(
             state.blogs.map((blog) => (blog.id === updated.id ? updated : blog))
