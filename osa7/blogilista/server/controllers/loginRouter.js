@@ -34,13 +34,11 @@ loginRouter.post('/', async (request, response) => {
     expiresIn: 60 * 60 /*an hour*/,
   })
 
-  return response
-    .status(200)
-    .send({
-      token: token,
-      username: userInDatabase.username,
-      name: userInDatabase.name,
-    })
+  return response.status(200).send({
+    token: token,
+    username: userInDatabase.username,
+    name: userInDatabase.name,
+  })
 })
 
 module.exports = loginRouter

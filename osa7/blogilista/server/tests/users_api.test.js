@@ -29,7 +29,6 @@ const testData = [
   { name: 'Sam Garcia', username: 'sam', password: 'password123' },
 ]
 
-
 describe('POST /api/users', async () => {
   beforeEach(async () => {
     await User.deleteMany({})
