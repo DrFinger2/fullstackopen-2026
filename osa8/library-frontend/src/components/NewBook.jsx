@@ -1,11 +1,14 @@
 import { useState } from "react";
+import useField from "../hooks/useField";
+import useBooks from "../hooks/useBooks";
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [published, setPublished] = useState("");
-  const [genre, setGenre] = useState("");
+  const title = useField("text");
+  const author = useField("text");
+  const published = useField("number");
+  const genre = useField("text");
   const [genres, setGenres] = useState([]);
+  const { addBook } = useBooks();
 
   if (!props.show) {
     return null;
@@ -14,55 +17,47 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault();
 
-    console.log("add book...");
+    await addBook({
+      title: title.field.value,
+      author: author.field.value,
+      published: published.field.value,
+      genres,
+    });
 
-    setTitle("");
-    setPublished("");
-    setAuthor("");
+    console.log("added a book");
+    title.reset();
+    published.reset();
+    author.reset();
+    genre.reset();
     setGenres([]);
-    setGenre("");
   };
 
   const addGenre = () => {
-    setGenres(genres.concat(genre));
-    setGenre("");
+    if (genre.field.value.trim() === "") return;
+    setGenres(genres.concat(genre.field.value));
+    genre.reset();
   };
 
+  const genresString = genres.join(" ");
   return (
     <div>
       <form onSubmit={submit}>
         <div>
-          title
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          title <input {...title.field} />
         </div>
         <div>
-          author
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          author <input {...author.field} />
         </div>
         <div>
-          published
-          <input
-            type="number"
-            value={published}
-            onChange={({ target }) => setPublished(target.value)}
-          />
+          published <input {...published.field} />
         </div>
         <div>
-          <input
-            value={genre}
-            onChange={({ target }) => setGenre(target.value)}
-          />
+          <input {...genre.field} />
           <button onClick={addGenre} type="button">
             add genre
           </button>
         </div>
-        <div>genres: {genres.join(" ")}</div>
+        <div>genres: {genresString}</div>
         <button type="submit">create book</button>
       </form>
     </div>
