@@ -96,6 +96,26 @@ blogRouter.post('/:id/like', userExtractor, async (request, response) => {
   return response.status(200).json(populated)
 })
 
+blogRouter.post('/:id/comments', userExtractor, async (request, response) => {
+  const { comment } = request.body
+  const id = request.params.id
+
+  if (isBlank(comment)) {
+    return response.status(400).json({ error: 'Comment cannot be blank' })
+  }
+
+  const blog = await Blog.findById(id)
+  if (!blog) {
+    return response.status(404).end()
+  }
+
+  blog.comments = blog.comments.concat(comment)
+
+  const saved = await blog.save()
+  const populated = await saved.populate('user', { username: 1, name: 1 })
+  return response.status(201).json(populated)
+})
+
 blogRouter.post('/', userExtractor, async (request, response) => {
   const user = request.user
   const { title, author, url, likes } = request.body
