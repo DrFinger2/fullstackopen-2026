@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/Global.styles'
 
+import { useBlogActions } from './hooks/useBlogs'
+import { useUserActions } from './hooks/useUser'
+import { useNotificationActions } from './hooks/useNotification'
+
 import Loader from './components/Loader'
 import Navbar from './components/Navbar'
-
 import BlogDetailsPage from './pages/BlogDetailsPage'
 import BlogsPage from './pages/BlogsPage'
 import LoginPage from './pages/LoginPage'
@@ -12,9 +15,6 @@ import NewBlogPage from './pages/NewBlogPage'
 import NotFoundPage from './pages/NotFoundPage'
 import blogService from './services/blogs'
 import ErrorBoundary from './components/ErrorBoundary'
-import { useBlogActions } from './hooks/useBlogs'
-import { useUserActions } from './hooks/useUser'
-import { useNotificationActions } from './hooks/useNotification'
 
 export default function App() {
   const [busy, setBusy] = useState(false)
