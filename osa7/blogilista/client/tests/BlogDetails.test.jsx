@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { test, expect, describe, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import BlogDetails from '../src/components/BlogDetails'
+import { MemoryRouter } from 'react-router-dom'
 
 const blog = {
   id: '123',
@@ -15,12 +16,14 @@ const blog = {
 describe('BlogDetails', () => {
   test('when logged in, url, likes, author and username are shown', () => {
     render(
-      <BlogDetails
-        blog={blog}
-        user="admin"
-        onLike={() => {}}
-        onRemove={() => {}}
-      />
+      <MemoryRouter>
+        <BlogDetails
+          blog={blog}
+          user="admin"
+          onLike={() => {}}
+          onRemove={() => {}}
+        />
+      </MemoryRouter>
     )
 
     const urlLink = screen.getByRole('link', { name: 'https://example.com' })
@@ -35,12 +38,14 @@ describe('BlogDetails', () => {
     const user = userEvent.setup()
 
     render(
-      <BlogDetails
-        blog={blog}
-        user="admin"
-        onLike={mockHandler}
-        onRemove={() => {}}
-      />
+      <MemoryRouter>
+        <BlogDetails
+          blog={blog}
+          user="admin"
+          onLike={mockHandler}
+          onRemove={() => {}}
+        />
+      </MemoryRouter>
     )
     const likeButton = screen.getByText('Like')
     await user.click(likeButton)
@@ -51,12 +56,14 @@ describe('BlogDetails', () => {
 
   test('when not logged in, like and remove button are not shown', async () => {
     render(
-      <BlogDetails
-        blog={blog}
-        user={null}
-        onLike={() => {}}
-        onRemove={() => {}}
-      />
+      <MemoryRouter>
+        <BlogDetails
+          blog={blog}
+          user={null}
+          onLike={() => {}}
+          onRemove={() => {}}
+        />
+      </MemoryRouter>
     )
     expect(screen.queryByText('Like')).toBeNull()
     expect(screen.queryByText('Remove')).toBeNull()
@@ -64,12 +71,14 @@ describe('BlogDetails', () => {
 
   test('when logged in as someone else than creator, only like button is shown', async () => {
     render(
-      <BlogDetails
-        blog={blog}
-        user="someone"
-        onLike={() => {}}
-        onRemove={() => {}}
-      />
+      <MemoryRouter>
+        <BlogDetails
+          blog={blog}
+          user="someone"
+          onLike={() => {}}
+          onRemove={() => {}}
+        />
+      </MemoryRouter>
     )
     expect(screen.queryByText('Like')).toBeDefined()
     expect(screen.queryByText('Remove')).toBeNull()
@@ -77,12 +86,14 @@ describe('BlogDetails', () => {
 
   test('when logged in as creator, both like button and remove button are shown', async () => {
     render(
-      <BlogDetails
-        blog={blog}
-        user="admin"
-        onLike={() => {}}
-        onRemove={() => {}}
-      />
+      <MemoryRouter>
+        <BlogDetails
+          blog={blog}
+          user="admin"
+          onLike={() => {}}
+          onRemove={() => {}}
+        />
+      </MemoryRouter>
     )
     expect(screen.queryByText('Like')).toBeDefined()
     expect(screen.queryByText('Remove')).toBeDefined()
