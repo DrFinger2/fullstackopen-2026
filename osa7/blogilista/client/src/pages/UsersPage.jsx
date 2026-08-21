@@ -10,7 +10,7 @@ import {
 
 import { Wrapper } from '../styles/Page.styles'
 import { useUsers } from '../hooks/useUser'
-
+import { Link } from 'react-router-dom'
 function UsersPage() {
   const users = useUsers()
   const sortedUsers = [...users].sort((a, b) => b.blogs.length - a.blogs.length)
@@ -29,7 +29,9 @@ function UsersPage() {
           <TableBody>
             {sortedUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableData>{user.name}</TableData>
+                <TableData>
+                  <Link to={`/users/${user.username}`}>{user.name}</Link>
+                </TableData>
                 <TableData>{user.username}</TableData>
                 <TableData>{user.blogs.length}</TableData>
               </TableRow>

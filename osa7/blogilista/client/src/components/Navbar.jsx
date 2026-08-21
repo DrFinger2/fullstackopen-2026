@@ -14,12 +14,16 @@ function Navbar() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const isNew = location.pathname === '/blogs/new'
+  const isUsers = location.pathname === '/users'
 
   return (
     <Nav>
       <ToggleGroup>
         <ToggleOption as={Link} to="/" $active={isHome}>
           Home
+        </ToggleOption>
+        <ToggleOption as={Link} to="/users" $active={isUsers}>
+          Users
         </ToggleOption>
         {userExists && (
           <ToggleOption as={Link} to="/blogs/new" $active={isNew}>

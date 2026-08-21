@@ -23,7 +23,6 @@ const useUserStore = create((set) => ({
         blogService.setToken(user.token)
       }
     },
-
     fetchAll: async () => {
       set({ usersLoading: true })
       try {

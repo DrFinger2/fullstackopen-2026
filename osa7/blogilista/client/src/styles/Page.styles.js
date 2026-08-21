@@ -77,17 +77,16 @@ export const Section = styled.div`
 `
 
 export const Title = styled.h2`
-  margin: 1.5rem 0 0.5rem 0;
+  margin: ${({ $margin = '1.5rem 0 0.5rem 0' }) => $margin};
+  padding: ${({ $padding = '0 0 12px 0' }) => $padding};
   text-align: center;
   font-family: 'Inter', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: #f0f0f0;
   letter-spacing: -0.5px;
-  padding-bottom: 12px;
-  width: 100%;
-  display: inline-block;
   width: auto;
+  display: inline-block;
 `
 
 const headingBase = `
