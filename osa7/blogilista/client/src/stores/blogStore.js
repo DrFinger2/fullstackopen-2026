@@ -68,9 +68,9 @@ const useBlogStore = create((set) => ({
       }
     },
 
-    addComment: async (comment) => {
+    addComment: async (blogId, comment) => {
       try {
-        const updated = await blogService.addComment(comment)
+        const updated = await blogService.addComment(blogId, comment)
         set((state) => ({
           blogs: sortByLikes(
             state.blogs.map((blog) => (blog.id === updated.id ? updated : blog))

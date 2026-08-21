@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Container, Title, Section } from '../styles/Page.styles'
 import { Input, Form } from '../styles/Form.styles'
+import { Paragraph } from '../styles/Page.styles'
 
 import SubmitButton from './SubmitButton'
 import { useField } from '../hooks/useField'
