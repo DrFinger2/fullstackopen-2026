@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/Global.styles'
 
-import { useBlogActions } from './hooks/useBlogs'
+import { useBlogActions, useBlogsLoading } from './hooks/useBlogs'
 import { useUserActions } from './hooks/useUser'
-import { useNotificationActions } from './hooks/useNotification'
 
 import Loader from './components/Loader'
 import Navbar from './components/Navbar'
@@ -13,36 +12,22 @@ import BlogsPage from './pages/BlogsPage'
 import LoginPage from './pages/LoginPage'
 import NewBlogPage from './pages/NewBlogPage'
 import NotFoundPage from './pages/NotFoundPage'
-import blogService from './services/blogs'
 import ErrorBoundary from './components/ErrorBoundary'
 
 export default function App() {
-  const [busy, setBusy] = useState(false)
   const userActions = useUserActions()
   const blogActions = useBlogActions()
-  const notify = useNotificationActions()
+  const isLoading = useBlogsLoading()
   const navigate = useNavigate()
-
-  const fetchAll = async () => {
-    setBusy(true)
-    try {
-      const data = await blogService.getAll()
-      blogActions.set(data)
-    } catch (err) {
-      notify.error(err.response?.data?.error)
-    } finally {
-      setBusy(false)
-    }
-  }
 
   useEffect(() => {
     userActions.init()
-    fetchAll()
+    blogActions.fetchAll()
   }, [])
 
   const handleReset = async () => {
     navigate('/')
-    fetchAll()
+    blogActions.fetchAll()
   }
 
   return (
@@ -50,7 +35,7 @@ export default function App() {
       <GlobalStyle />
       <Navbar />
       <ErrorBoundary onReset={handleReset}>
-        <Loader isLoading={busy} />
+        <Loader isLoading={isLoading} />
         <Routes>
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/" element={<BlogsPage />} />
