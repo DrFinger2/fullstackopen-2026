@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/Global.styles'
-
-import { useBlogActions, useBlogsLoading } from './hooks/useBlogs'
+import { useBlogActions } from './hooks/useBlogs'
 import { useUserActions } from './hooks/useUser'
 
 import Loader from './components/Loader'
@@ -17,7 +16,6 @@ import ErrorBoundary from './components/ErrorBoundary'
 export default function App() {
   const userActions = useUserActions()
   const blogActions = useBlogActions()
-  const isLoading = useBlogsLoading()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -35,7 +33,7 @@ export default function App() {
       <GlobalStyle />
       <Navbar />
       <ErrorBoundary onReset={handleReset}>
-        <Loader isLoading={isLoading} />
+        <Loader />
         <Routes>
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/" element={<BlogsPage />} />

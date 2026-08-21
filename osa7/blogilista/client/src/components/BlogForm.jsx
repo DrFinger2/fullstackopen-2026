@@ -48,6 +48,7 @@ function BlogForm({ onCreateBlog }) {
         <Input name="title" placeholder="Title" {...title.field} />
         <Input name="author" placeholder="Author" {...author.field} />
         <Input name="url" placeholder="URL" {...url.field} />
+
         <SubmitButton
           text="Create"
           loadingText="Creating"

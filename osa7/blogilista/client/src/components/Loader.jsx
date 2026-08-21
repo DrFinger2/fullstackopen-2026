@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useBlogsLoading } from '../hooks/useBlogs'
 
-function Loader({ isLoading }) {
+function Loader() {
+  const isLoading = useBlogsLoading()
   const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
