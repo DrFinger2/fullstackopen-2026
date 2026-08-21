@@ -10,7 +10,7 @@ const success = (message) =>
 const failure = (message) =>
   useNotificationStore.getState().actions.error(message)
 
-const useUserStore = create((set, get) => ({
+const useUserStore = create((set) => ({
   usersLoading: false,
   username: null,
   users: [],
@@ -35,15 +35,6 @@ const useUserStore = create((set, get) => ({
         set({ usersLoading: false })
       }
     },
-
-    getDetailsById: (userid) => {
-      return get().users.find((user) => user.id === userid)
-    },
-
-    getDetails: (username) => {
-      return get().users.find((user) => user.username === username)
-    },
-
     login: async (userObj) => {
       try {
         const result = await userService.login(userObj)

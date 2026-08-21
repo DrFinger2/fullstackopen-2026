@@ -1,25 +1,29 @@
 import { useParams } from 'react-router-dom'
-import { useUserActions } from '../hooks/useUser'
+import { useUsers } from '../hooks/useUser'
 import { Container } from '../styles/Page.styles'
 import { Paragraph } from '../styles/Page.styles'
 import { Title } from '../styles/Page.styles'
 
 const UserDetailsPage = () => {
-  const actions = useUserActions()
+  const users = useUsers()
   const { username } = useParams()
 
-  const user = actions.getDetails(username)
+  const user = users.find((u) => u.username === username)
+
   if (!user) {
-    throw new Error('Invalid username')
+    return (
+      <Container>
+        <Paragraph>User not found</Paragraph>
+      </Container>
+    )
   }
 
   return (
     <Container>
       <Title>{user.username}</Title>
       {user.blogs.map((blog) => {
-        return <Paragrah>{blog.title}</Paragrah>
+        return <Paragraph>{blog.title}</Paragraph>
       })}
-      <Paragrah></Paragrah>
     </Container>
   )
 }
