@@ -13,6 +13,7 @@ import BlogDetailsPage from './pages/BlogDetailsPage'
 import BlogsPage from './pages/BlogsPage'
 import LoginPage from './pages/LoginPage'
 import NewBlogPage from './pages/NewBlogPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -28,20 +29,20 @@ export default function App() {
   const blogState = useBlogs()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      setBusy(true)
-      try {
-        const data = await blogService.getAll()
-        blogState.set(data)
-      } catch (err) {
-        notify.error(err.response?.data?.error)
-      } finally {
-        setBusy(false)
-      }
+  const fetchAll = async () => {
+    setBusy(true)
+    try {
+      const data = await blogService.getAll()
+      blogState.set(data)
+    } catch (err) {
+      notify.error(err.response?.data?.error)
+    } finally {
+      setBusy(false)
     }
+  }
+
+  useEffect(() => {
     fetchAll()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleLogin = async (creds) => {
@@ -75,17 +76,19 @@ export default function App() {
   }
 
   const handleReset = async () => {
-    console.log('Reset ran!')
+    navigate('/')
+    fetchAll()
+    console.log('Handle reset ran!')
   }
 
   return (
     <>
       <GlobalStyle />
-
       <Navbar user={user} onLogout={handleLogout} notification={notification} />
       <ErrorBoundary onReset={handleReset}>
         <Loader isLoading={busy} />
         <Routes>
+          <Route path="*" element={<NotFoundPage />} />
           <Route path="/" element={<BlogsPage blogState={blogState} />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} onRegister={handleRegister} user={user} />} />
           <Route path="/blogs/new" element={<NewBlogPage user={user} logout={logout} notify={notify} blogState={blogState} />} />

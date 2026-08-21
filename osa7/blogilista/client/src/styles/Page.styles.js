@@ -10,9 +10,31 @@ export const Container = styled.div`
   height: fit-content;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: ${({ $alignX = 'center' }) => {
+    switch ($alignX) {
+    case 'left':
+      return 'flex-start'
+    case 'right':
+      return 'flex-end'
+    default:
+      return 'center'
+    }
+  }};
+  justify-content: ${({ $alignY = 'start' }) => {
+    switch ($alignY) {
+    case 'top':
+      return 'flex-start'
+    case 'center':
+      return 'center'
+    case 'bottom':
+      return 'flex-end'
+    default:
+      return 'flex-start'
+    }
+  }};
   border: 1px solid #2c2c2e;
 `
+
 export const Wrapper = styled.div`
   margin: 20px auto;
   width: ${({ $width = '100%' }) => $width};
@@ -20,14 +42,26 @@ export const Wrapper = styled.div`
   height: fit-content;
   display: flex;
   flex-direction: column;
-  align-items: ${({ $align = 'center' }) => {
-    switch ($align) {
+  align-items: ${({ $alignX = 'center' }) => {
+    switch ($alignX) {
     case 'left':
       return 'flex-start'
     case 'right':
       return 'flex-end'
     default:
       return 'center'
+    }
+  }};
+  justify-content: ${({ $alignY = 'start' }) => {
+    switch ($alignY) {
+    case 'top':
+      return 'flex-start'
+    case 'center':
+      return 'center'
+    case 'bottom':
+      return 'flex-end'
+    default:
+      return 'flex-start'
     }
   }};
 `

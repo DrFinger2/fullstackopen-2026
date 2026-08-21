@@ -7,7 +7,7 @@ function BlogDetails({ blog, user, onLike, onRemove }) {
   return (
     <Card>
       <Title>{blog.title}</Title>
-      <Wrapper $align="left">
+      <Wrapper $alignX="left">
         <Paragraph><strong>URL: </strong> <a href={blog.url}> {blog.url} </a> </Paragraph>
         <Paragraph><strong>Author: </strong> {blog.author} </Paragraph>
         <Paragraph><strong>Likes: </strong> {blog.likes} {user && <ActionButton onClick={onLike}>Like</ActionButton> }</Paragraph>

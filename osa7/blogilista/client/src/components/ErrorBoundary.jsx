@@ -1,4 +1,6 @@
 import React from 'react'
+import { Button } from '../styles/Button.styles'
+import { Paragraph, H2, Container, Wrapper } from '../styles/Page.styles'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -23,13 +25,15 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div>
-          <h2>Something went wrong.</h2>
-          <p>{this.state.error.message}</p>
-          <button onClick={this.handleReset.bind(this)}>
+        <Container>
+          <H2>Something went wrong.</H2>
+          <Wrapper>
+            <Paragraph>{this.state.error.message}</Paragraph>
+          </Wrapper>
+          <Button onClick={this.handleReset.bind(this)}>
             Try Again
-          </button>
-        </div>
+          </Button>
+        </Container>
       )
     }
 
