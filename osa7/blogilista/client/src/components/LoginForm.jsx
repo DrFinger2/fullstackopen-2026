@@ -1,36 +1,17 @@
 import { useState } from 'react'
+
 import SubmitButton from './SubmitButton'
 import { Input, Form } from '../styles/Form.styles'
 import { Title, Container } from '../styles/Page.styles'
 import { ToggleGroup, ToggleOption } from '../styles/Button.styles'
-
-function TextInput({ value, onChange, placeholder }) {
-  return (
-    <Input
-      type="text"
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  )
-}
-
-function PasswordInput({ value, onChange, placeholder = 'Password' }) {
-  return (
-    <Input
-      type="password"
-      placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  )
-}
+import { useField } from '../hooks/useField'
 
 function LoginForm({ onLogin, onRegister }) {
   const [isLogin, setIsLogin] = useState(true)
-  const [name, setName] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const name = useField('text')
+  const username = useField('text')
+  const password = useField('password')
+
   const [loading, setLoading] = useState(false)
   const [showLoader, setShowLoader] = useState(false)
 
@@ -38,20 +19,17 @@ function LoginForm({ onLogin, onRegister }) {
     setLoading(true)
     return setTimeout(() => setShowLoader(true), 300)
   }
-
   const stopLoading = (timer) => {
     clearTimeout(timer)
     setLoading(false)
     setShowLoader(false)
   }
-
   const handleLogin = async (e) => {
     e.preventDefault()
     const timer = startLoading()
     await onLogin({ username, password })
     stopLoading(timer)
   }
-
   const handleRegister = async (e) => {
     e.preventDefault()
     const timer = startLoading()
@@ -59,9 +37,9 @@ function LoginForm({ onLogin, onRegister }) {
     stopLoading(timer)
     if (success) {
       setIsLogin(true)
-      setName('')
-      setUsername('')
-      setPassword('')
+      name.reset()
+      username.reset()
+      password.reset()
     }
   }
 
@@ -84,15 +62,11 @@ function LoginForm({ onLogin, onRegister }) {
         </ToggleOption>
       </ToggleGroup>
 
-      {isLogin ? (
+      {isLogin && (
         <Form onSubmit={handleLogin}>
           <Title>Login</Title>
-          <TextInput
-            placeholder="Username"
-            value={username}
-            onChange={setUsername}
-          />
-          <PasswordInput value={password} onChange={setPassword} />
+          <Input placeholder="Username" {...username.field} />
+          <Input placeholder="Username" {...password.field} />
           <SubmitButton
             text="Login"
             loadingText="Logging"
@@ -100,16 +74,14 @@ function LoginForm({ onLogin, onRegister }) {
             isLoading={loading}
           />
         </Form>
-      ) : (
+      )}
+
+      {!isLogin && (
         <Form onSubmit={handleRegister}>
           <Title>Register</Title>
-          <TextInput placeholder="Name" value={name} onChange={setName} />
-          <TextInput
-            placeholder="Username"
-            value={username}
-            onChange={setUsername}
-          />
-          <PasswordInput value={password} onChange={setPassword} />
+          <Input placeholder="Name" {...name.field} />
+          <Input placeholder="Username" {...username.field} />
+          <Input placeholder="Password" {...password.field} />
           <SubmitButton
             text="Register"
             loadingText="Registering"
