@@ -35,8 +35,8 @@ function BlogDetailsPage() {
     }
   }
 
-  const onComment = async (comment) => {
-    await actions.addComment(comment)
+  const onComment = async (blogId, comment) => {
+    await actions.addComment(blogId, comment)
   }
 
   return (

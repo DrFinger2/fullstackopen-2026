@@ -31,7 +31,11 @@ function BlogDetails({ blog, user, onLike, onRemove, onComment }) {
       </Wrapper>
       {isOwner && <ActionButton onClick={onRemove}>Remove</ActionButton>}
 
-      <CommentForm user={user} onSubmit={onComment}></CommentForm>
+      <CommentForm
+        blogId={blog.id}
+        user={user}
+        onSubmit={onComment}
+      ></CommentForm>
     </Card>
   )
 }
