@@ -4,7 +4,7 @@ export const Container = styled.div`
   background: #1c1c1e;
   border-radius: 16px;
   padding: 32px 36px;
-  margin: 20px auto;
+  margin: ${({ $margin = '20px auto' }) => $margin};
   width: ${({ $width = '100%' }) => $width};
   max-width: 500px;
   height: fit-content;
@@ -37,7 +37,7 @@ export const Container = styled.div`
 `
 
 export const Wrapper = styled.div`
-  margin: 20px auto;
+  margin: ${({ $margin = '20px auto' }) => $margin};
   width: ${({ $width = '100%' }) => $width};
   max-width: 500px;
   height: fit-content;

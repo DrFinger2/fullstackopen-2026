@@ -1,7 +1,7 @@
 import { useField } from '../hooks/useField'
 import { Form, Input } from '../styles/Form.styles'
 import { ActionButton, Button } from '../styles/Button.styles'
-import { Wrapper } from '../styles/Page.styles'
+import { Wrapper, Container } from '../styles/Page.styles'
 import { Paragraph } from '../styles/Page.styles'
 const CommentForm = ({ blogId, user, onSubmit }) => {
   const comment = useField('text')
@@ -10,7 +10,9 @@ const CommentForm = ({ blogId, user, onSubmit }) => {
     return <Paragraph>Log in to leave a comment</Paragraph>
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
     const succeeded = onSubmit(blogId, comment.field.value)
     if (succeeded) {
       comment.reset()
