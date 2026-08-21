@@ -3,11 +3,13 @@ import { Container, Title, Section } from '../styles/Page.styles'
 import { Input, Form } from '../styles/Form.styles'
 
 import SubmitButton from './SubmitButton'
+import { useField } from '../hooks/useField'
 
 function BlogForm({ onCreateBlog }) {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
+
   const [loading, setLoading] = useState(false)
   const [showLoader, setShowLoader] = useState(false)
 
@@ -25,12 +27,17 @@ function BlogForm({ onCreateBlog }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const timer = startLoading()
-    const result = await onCreateBlog({ title, author, url })
+    const result = await onCreateBlog({
+      title: title.field.value,
+      author: author.field.value,
+      url: url.field.value,
+    })
     stopLoading(timer)
+
     if (result) {
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset()
+      author.reset()
+      url.reset()
     }
   }
 
@@ -38,24 +45,9 @@ function BlogForm({ onCreateBlog }) {
     <Container>
       <Title> Create a new blog </Title>
       <Form onSubmit={handleSubmit}>
-        <Input
-          name="title"
-          placeholder="Title"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        <Input
-          name="author"
-          placeholder="Author"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-        <Input
-          name="url"
-          placeholder="URL"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
+        <Input name="title" placeholder="Title" {...title.field} />
+        <Input name="author" placeholder="Author" {...author.field} />
+        <Input name="url" placeholder="URL" {...url.field} />
         <SubmitButton
           text="Create"
           loadingText="Creating"
