@@ -2,8 +2,10 @@ import { Card, Title, Paragraph } from '../styles/Page.styles'
 import { Wrapper } from '../styles/Page.styles'
 import { ActionButton } from '../styles/Button.styles'
 import { Link } from 'react-router-dom'
-function BlogDetails({ blog, user, onLike, onRemove }) {
+import CommentForm from './CommentForm'
+function BlogDetails({ blog, user, onLike, onRemove, onComment }) {
   const isOwner = user && blog.user?.username === user
+
   return (
     <Card>
       <Title>{blog.title}</Title>
@@ -28,6 +30,8 @@ function BlogDetails({ blog, user, onLike, onRemove }) {
         </Paragraph>
       </Wrapper>
       {isOwner && <ActionButton onClick={onRemove}>Remove</ActionButton>}
+
+      <CommentForm user={user} onSubmit={onComment}></CommentForm>
     </Card>
   )
 }

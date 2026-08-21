@@ -35,6 +35,10 @@ function BlogDetailsPage() {
     }
   }
 
+  const onComment = async (comment) => {
+    await actions.addComment(comment)
+  }
+
   return (
     <Wrapper>
       <BlogDetails
@@ -42,6 +46,7 @@ function BlogDetailsPage() {
         user={user}
         onLike={onLike}
         onRemove={onRemove}
+        onComment={onComment}
       />
     </Wrapper>
   )

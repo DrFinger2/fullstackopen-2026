@@ -9,7 +9,8 @@ export const Container = styled.div`
   max-width: 500px;
   height: fit-content;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ $direction = 'column' }) => $direction};
+  gap: ${({ $gap = '0' }) => $gap};
   align-items: ${({ $alignX = 'center' }) => {
     switch ($alignX) {
       case 'left':
@@ -41,7 +42,8 @@ export const Wrapper = styled.div`
   max-width: 500px;
   height: fit-content;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({ $direction = 'column' }) => $direction};
+  gap: ${({ $gap = '0' }) => $gap};
   align-items: ${({ $alignX = 'center' }) => {
     switch ($alignX) {
       case 'left':
