@@ -33,7 +33,7 @@ const BookStoreProvider = ({ children }) => {
     const result = await editMutation({
       variables: {
         name: String(name),
-        setToBeBorn: Number(setToBeBorn),
+        setBornTo: Number(setToBeBorn),
       },
     });
     return result.data.editAuthor;
