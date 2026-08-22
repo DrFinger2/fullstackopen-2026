@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Authors from "./components/Authors";
-import Books from "./components/Books";
-import NewBook from "./components/NewBook";
+import AuthorsView from "./views/AuthorsView";
+import BooksView from "./views/BooksView";
+import NewBookView from "./views/NewBookView";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -14,9 +14,9 @@ const App = () => {
         <button onClick={() => setPage("add")}>add book</button>
       </div>
 
-      <Authors show={page === "authors"} />
-      <Books show={page === "books"} />
-      <NewBook show={page === "add"} />
+      <AuthorsView show={page === "authors"} />
+      <BooksView show={page === "books"} />
+      <NewBookView show={page === "add"} />
     </div>
   );
 };

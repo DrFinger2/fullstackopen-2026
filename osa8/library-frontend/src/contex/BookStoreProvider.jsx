@@ -7,6 +7,8 @@ import {
 } from "../queries";
 import BookStoreContext from "./BookStoreContex";
 
+// needs to be refactored pretty bad...
+
 const BookStoreProvider = ({ children }) => {
   const booksQuery = useQuery(GET_ALL_BOOKS);
   const authorsQuery = useQuery(GET_ALL_AUTHORS);
