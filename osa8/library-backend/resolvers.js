@@ -61,6 +61,10 @@ const resolvers = {
       return await author.save();
     },
   },
+
+  Book: {
+    author: (root) => (root.author ? root.author.name : null),
+  },
 };
 
 module.exports = resolvers;
