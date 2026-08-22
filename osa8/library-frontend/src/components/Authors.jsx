@@ -1,5 +1,5 @@
 import useAuthors from "../hooks/useAuthors";
-
+import UpdateAuthor from "./UpdateAuthor";
 const Authors = (props) => {
   const { authors, loading } = useAuthors();
 
@@ -29,6 +29,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <UpdateAuthor />
     </div>
   );
 };
