@@ -11,9 +11,12 @@ const BookStoreProvider = ({ children }) => {
   const booksQuery = useQuery(GET_ALL_BOOKS);
   const authorsQuery = useQuery(GET_ALL_AUTHORS);
 
-  const mutationOptions = { refetchQueries: [{ query: GET_ALL_BOOKS }] };
-  const [addMutation, addResult] = useMutation(ADD_BOOK, mutationOptions);
-  const [editMutation, editResult] = useMutation(EDIT_AUTHOR, mutationOptions);
+  const [addMutation, addResult] = useMutation(ADD_BOOK, {
+    refetchQueries: [{ query: GET_ALL_BOOKS }, { query: GET_ALL_AUTHORS }],
+  });
+  const [editMutation, editResult] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [{ query: GET_ALL_AUTHORS }],
+  });
 
   const addBook = async ({ title, author, published, genres }) => {
     const result = await addMutation({
