@@ -28,6 +28,7 @@ export const GET_ALL_AUTHORS = gql`
     allAuthors {
       name
       born
+      bookCount
     }
   }
 `;

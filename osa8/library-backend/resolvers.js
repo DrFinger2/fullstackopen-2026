@@ -11,32 +11,39 @@ const resolvers = {
     },
     allBooks: async (parent, args) => {
       const filter = {};
-      if (args.genre) filter.genres = args.genre;
 
-      let books = await Book.find(filter).populate("author");
-      if (args.author) {
-        books = books.filter((b) => b.author && b.author.name === args.author);
+      if (args.genre) {
+        filter.genres = args.genre;
       }
-      return books;
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author });
+        if (!author) return [];
+        filter.author = author._id;
+      }
+      return Book.find(filter).populate("author");
     },
-    allAuthors: async () => {
-      const books = await Book.find({}).populate("author");
-      const authorToCount = {};
 
-      books.forEach((book) => {
-        authorToCount[book.author.name] = authorToCount[book.author.name]
-          ? authorToCount[book.author.name] + 1
-          : 1;
+    allAuthors: async () => {
+      const counts = await Book.aggregate([
+        { $group: { _id: "$author", count: { $sum: 1 } } },
+      ]);
+
+      const authorToCount = {};
+      counts.forEach((entry) => {
+        const id = entry._id;
+        if (id) {
+          authorToCount[id.toString()] = entry.count;
+        }
       });
 
       const authors = await Author.find({});
       return authors.map((author) => ({
         name: author.name,
         born: author.born,
-        bookCount: authorToCount[author.name] || 0,
+        bookCount: authorToCount[author._id.toString()] || 0,
       }));
     },
-  },
+
 
   Mutation: {
     addBook: async (parent, args) => {
