@@ -33,10 +33,10 @@ const resolvers = {
 
   Mutation: {
     addBook: async (parent, args) => {
-      const author = await Author.findOne({ name: args.author });
+      let author = await Author.findOne({ name: args.author });
       if (!author) {
-        const newAuthor = new Author({ name: args.author });
-        await newAuthor.save();
+        author = new Author({ name: args.author });
+        await author.save();
       }
       const book = new Book({ ...args, author: author._id });
       await book.save();
