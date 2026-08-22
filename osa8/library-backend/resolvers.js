@@ -20,12 +20,12 @@ const resolvers = {
       return books;
     },
     allAuthors: async () => {
-      const books = await Book.find({});
+      const books = await Book.find({}).populate("author");
       const authorToCount = {};
 
       books.forEach((book) => {
-        authorToCount[book.author] = authorToCount[book.author]
-          ? authorToCount[book.author] + 1
+        authorToCount[book.author.name] = authorToCount[book.author.name]
+          ? authorToCount[book.author.name] + 1
           : 1;
       });
 
