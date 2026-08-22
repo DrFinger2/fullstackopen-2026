@@ -33,13 +33,14 @@ const resolvers = {
 
   Mutation: {
     addBook: async (parent, args) => {
-      const author = await Author.find({ name: args.author });
+      const author = await Author.findOne({ name: args.author });
       if (!author) {
         const newAuthor = new Author({ name: args.author });
         await newAuthor.save();
       }
-      const book = await new Book({ ...args });
+      const book = new Book({ ...args, author: author._id });
       await book.save();
+      await book.populate("author");
       return book;
     },
 
