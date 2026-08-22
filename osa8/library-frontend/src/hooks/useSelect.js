@@ -5,7 +5,6 @@ const useSelect = (initialValue = "") => {
 
   const field = {
     value,
-    defaultValue: initialValue,
     onChange: (e) => {
       setValue(e.target.value);
     },
