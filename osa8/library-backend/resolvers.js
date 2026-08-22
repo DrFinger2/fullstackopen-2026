@@ -45,13 +45,13 @@ const resolvers = {
     },
 
     editAuthor: async (parent, args) => {
-      const author = Author.find({ name: args.name });
+      const author = await Author.findOne({ name: args.name });
       if (!author) {
         return null;
       }
 
-      author.born = args.setBornTo; // object - so modifying it is by reference
-      return author.save();
+      author.born = args.setBornTo;
+      return await author.save();
     },
   },
 };
