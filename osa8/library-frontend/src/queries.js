@@ -28,7 +28,6 @@ export const GET_ALL_AUTHORS = gql`
     allAuthors {
       name
       born
-      bookCount
     }
   }
 `;
@@ -59,7 +58,6 @@ export const EDIT_AUTHOR = gql`
     editAuthor(name: $name, setBornTo: $setBornTo) {
       name
       born
-      bookCount
     }
   }
 `;
