@@ -1,5 +1,19 @@
+const { GraphQLError } = require("graphql");
 const Book = require("./models/BookModel.js");
 const Author = require("./models/AuthorModel.js");
+
+class UserInputError extends GraphQLError {
+  constructor(message, invalidArgs, error) {
+    super(message, {
+      extensions: {
+        code: "BAD_USER_INPUT",
+        invalidArgs: invalidArgs,
+        error: error,
+      },
+    });
+    this.name = "UserInputError";
+  }
+}
 
 const resolvers = {
   Query: {
@@ -48,14 +62,24 @@ const resolvers = {
 
   Mutation: {
     addBook: async (parent, args) => {
-      let author = await Author.findOne({ name: args.author });
-      if (!author) {
-        author = new Author({ name: args.author });
-        await author.save();
+      let authorInDb = await Author.findOne({ name: args.author });
+      if (!authorInDb) {
+        authorInDb = new Author({ name: args.author });
+        try {
+          await authorInDb.save();
+        } catch (error) {
+          throw new UserInputError("Saving author failed", args.author, error);
+        }
       }
-      const book = new Book({ ...args, author: author._id });
-      await book.save();
-      await book.populate("author");
+      const book = new Book({ ...args, author: authorInDb._id });
+
+      try {
+        await book.save();
+        await book.populate("author");
+      } catch (error) {
+        throw new UserInputError("Saving book failed", args, error);
+      }
+
       return book;
     },
 
@@ -66,7 +90,12 @@ const resolvers = {
       }
 
       author.born = args.setBornTo;
-      return await author.save();
+      try {
+        await author.save();
+      } catch (error) {
+        throw new UserInputError("Editing book failed", args, error);
+      }
+      return author;
     },
   },
 };
