@@ -43,7 +43,7 @@ const resolvers = {
         bookCount: authorToCount[author._id.toString()] || 0,
       }));
     },
-
+  },
 
   Mutation: {
     addBook: async (parent, args) => {
