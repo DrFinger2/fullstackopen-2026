@@ -15,7 +15,7 @@ const UpdateAuthor = () => {
     e.preventDefault();
     const message = `Do you really want to update persons ${author.field.value} birthyear to be ${born.field.value}`;
 
-    if (!born.field.value || !born.field.value.trim() === "") {
+    if (!born.field.value || born.field.value.trim() === "") {
       return;
     }
     if (!window.confirm(message)) {
