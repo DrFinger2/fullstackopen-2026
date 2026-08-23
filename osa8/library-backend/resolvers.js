@@ -124,7 +124,7 @@ const resolvers = {
 
     createUser: async (parent, args) => {
       const { username, favoriteGenre } = args;
-      const user = new User(username, favoriteGenre);
+      const user = new User({ username, favoriteGenre });
       try {
         user.save();
       } catch (error) {
