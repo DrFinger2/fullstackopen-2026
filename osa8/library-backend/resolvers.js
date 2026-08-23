@@ -126,7 +126,7 @@ const resolvers = {
       const { username, favoriteGenre } = args;
       const user = new User({ username, favoriteGenre });
       try {
-        user.save();
+        await user.save();
       } catch (error) {
         throw new UserInputError("Creating user failed", args, error);
       }
@@ -136,13 +136,13 @@ const resolvers = {
 
     login: async (parent, args) => {
       const { username, password } = args;
-      const user = User.findOne({ username: username });
+      const user = await User.findOne({ username: username });
 
       if (!user || password !== "secret") {
-        throw new UserInputError("Wrong credentials", args, error);
+        throw new UserInputError("Wrong credentials", args);
       }
 
-      const tokenDetails = { username: username, id: user._id };
+      const tokenDetails = { username: user.username, id: user._id };
       const secret = process.env.JWT_SECRET;
 
       return { value: jwt.sign(tokenDetails, secret) };
