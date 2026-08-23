@@ -12,11 +12,11 @@ const startServer = (port) => {
 
   startStandaloneServer(server, {
     listen: { port },
-    context: async ({ request }) => {
-      const authorization = request.headers.authorization;
+    context: async ({ req }) => {
+      const authorization = req.headers.authorization;
       const secret = process.env.JWT_SECRET;
       const user = await getUserFromAuthHeader(authorization, secret);
-      return user;
+      return { currentUser: user };
     },
   }).then(({ url }) => {
     console.log(`Server ready at ${url}`);
