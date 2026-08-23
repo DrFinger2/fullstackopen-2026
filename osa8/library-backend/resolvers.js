@@ -66,7 +66,11 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (parent, args) => {
+    addBook: async (parent, args, context) => {
+      if (!context.currentUser) {
+        throw new UserInputError("not authenticated", args, error);
+      }
+
       let authorInDb = await Author.findOne({ name: args.author });
       if (!authorInDb) {
         authorInDb = new Author({ name: args.author });
@@ -89,7 +93,11 @@ const resolvers = {
       return book;
     },
 
-    editAuthor: async (parent, args) => {
+    editAuthor: async (parent, args, context) => {
+      if (!context.currentUser) {
+        throw new UserInputError("not authenticated", args, error);
+      }
+
       const author = await Author.findOne({ name: args.name });
       if (!author) {
         return null;
