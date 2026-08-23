@@ -17,6 +17,16 @@ class UserInputError extends GraphQLError {
   }
 }
 
+class UserAuthError extends GraphQLError {
+  constructor() {
+    super("Not authenticated", {
+      extensions: {
+        code: "BAD_USER_INPUT",
+      },
+    });
+  }
+}
+
 const resolvers = {
   Query: {
     me: (root, args, context) => {
@@ -68,7 +78,7 @@ const resolvers = {
   Mutation: {
     addBook: async (parent, args, context) => {
       if (!context.currentUser) {
-        throw new UserInputError("not authenticated", args, error);
+        throw new UserAuthError();
       }
 
       let authorInDb = await Author.findOne({ name: args.author });
@@ -95,7 +105,7 @@ const resolvers = {
 
     editAuthor: async (parent, args, context) => {
       if (!context.currentUser) {
-        throw new UserInputError("not authenticated", args, error);
+        throw new UserAuthError();
       }
 
       const author = await Author.findOne({ name: args.name });
