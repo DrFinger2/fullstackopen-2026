@@ -19,6 +19,9 @@ class UserInputError extends GraphQLError {
 
 const resolvers = {
   Query: {
+    me: (root, args, context) => {
+      return context.currentUser;
+    },
     bookCount: async () => {
       return Book.collection.countDocuments();
     },
