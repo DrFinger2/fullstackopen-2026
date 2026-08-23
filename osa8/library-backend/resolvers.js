@@ -1,8 +1,8 @@
 const { GraphQLError } = require("graphql");
 const jwt = require("jsonwebtoken");
-const Book = require("./models/BookModel.js");
-const Author = require("./models/AuthorModel.js");
-const User = require("./models/UserModel.js");
+const Book = require("./models/book.js");
+const Author = require("./models/author.js");
+const User = require("./models/user.js");
 
 class UserInputError extends GraphQLError {
   constructor(message, invalidArgs, error) {

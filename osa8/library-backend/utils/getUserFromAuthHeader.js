@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/UserModel.js");
+const User = require("../models/user.js");
 
 const getUserFromAuthHeader = async (authHeader, secret) => {
   const exists = authHeader && authHeader.startsWith("Bearer ");
