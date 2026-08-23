@@ -1,6 +1,8 @@
 const { GraphQLError } = require("graphql");
+const jwt = require("jsonwebtoken");
 const Book = require("./models/BookModel.js");
 const Author = require("./models/AuthorModel.js");
+const User = require("./models/UserModel.js");
 
 class UserInputError extends GraphQLError {
   constructor(message, invalidArgs, error) {
@@ -71,6 +73,7 @@ const resolvers = {
           throw new UserInputError("Saving author failed", args.author, error);
         }
       }
+
       const book = new Book({ ...args, author: authorInDb._id });
 
       try {
@@ -96,6 +99,32 @@ const resolvers = {
         throw new UserInputError("Editing book failed", args, error);
       }
       return author;
+    },
+
+    createUser: async (parent, args) => {
+      const { username, favoriteGenre } = args;
+      const user = new User(username, favoriteGenre);
+      try {
+        user.save();
+      } catch (error) {
+        throw new UserInputError("Creating user failed", args, error);
+      }
+
+      return user;
+    },
+
+    login: async (parent, args) => {
+      const { username, password } = args;
+      const user = User.findOne({ username: username });
+
+      if (!user || password !== "secret") {
+        throw new UserInputError("Wrong credentials", args, error);
+      }
+
+      const tokenDetails = { username: username, id: user._id };
+      const secret = process.env.JWT_SECRET;
+
+      return { value: jwt.sign(tokenDetails, secret) };
     },
   },
 };
