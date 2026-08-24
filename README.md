@@ -10,4 +10,5 @@
 | 5 | [bloglista (osa5)](https://fullstackopen-2026-blogilista-2.onrender.com/) | ![Website](https://img.shields.io/website?url=https%3A%2F%2Ffullstackopen-2026-blogilista-2.onrender.com%2F) | [`osa5/blogilista`](./osa5/blogilista) & [`playwright`](./osa5/playwright) |
 | 6 | (local only) | – | [`osa6`](./osa6) |
 | 7 | (local only) | – | [`osa7`](./osa7) |
+| 8 | (local only) | – | [`osa8`](./osa8) |
 <!-- | X | [name](https://url) | ![Website](https://img.shields.io/website?url=https%3A%2F%2Furl) | [`osaX/folder`](./osaX/folder) | -->
